@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="Купить подсказки" android:id="@+id/buyHints" />
+    <item android:title="Сменить тему" android:id="@+id/themeChange" />
+    <item android:title="Достижения" android:id="@+id/achievementsButton" />
+    <item android:title="Статистика" android:id="@+id/statistics" />
+    <item android:title="Слово отсутствует" android:id="@+id/addWord" />
+    <!--<item android:title="Настройки" android:id="@+id/settings" />-->
+<!--    <item android:title="+1000 очков" android:id="@+id/extraScore" />-->
+    <!--<item android:title="+100 подсказок" android:id="@+id/extraHints" />-->
+</menu>

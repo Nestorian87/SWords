@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="KeyboardButtonStyle">
+        <item name="android:layout_rowWeight">-2</item>
+        <item name="android:layout_columnWeight">1</item>
+
+        <item name="android:text">А</item>
+        <item name="android:background">@drawable/letter_button</item>
+        <item name="android:textColor">?buttonText</item>
+<!--        <item name="android:typeface">@font/calibri</item>-->
+<!--        <item name="android:textStyle">bold</item>-->
+    </style>
+    <style name="KeyboardButtonStyle.LetterButton">
+        <item name="android:onClick">letterButtonOnClick</item>
+        <item name="android:textSize">20sp</item>
+<!--        <item name="android:typeface">@font/tahoma</item>-->
+    </style>
+</resources>

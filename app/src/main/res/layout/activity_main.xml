@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:translationZ="1000dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/menuButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:adjustViewBounds="true"
+        android:background="@drawable/image_button_selector"
+        android:onClick="showMenu"
+        android:padding="5dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/icon"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_margin="10dp" />
+
+    <ImageButton
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:adjustViewBounds="true"
+        android:background="@drawable/image_button_selector"
+        android:onClick="useHint"
+        android:paddingStart="6dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/hints_with_question"
+        android:id="@+id/useHintButton"
+        app:layout_constraintStart_toEndOf="@id/menuButton"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="30dp"/>
+
+    <ImageButton
+        android:id="@+id/dictionaryButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:adjustViewBounds="true"
+        android:background="@drawable/image_button_selector"
+        android:onClick="useDictionary"
+        android:paddingStart="6dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/dictionary"
+        android:layout_marginStart="20dp"
+        app:layout_constraintStart_toEndOf="@id/useHintButton"
+        app:layout_constraintTop_toTopOf="parent"
+
+        />
+
+    <TextView
+        android:id="@+id/score"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="2dp"
+        android:background="@drawable/gradient_background_score"
+        android:gravity="center"
+        android:paddingEnd="50dp"
+        android:text="0"
+        android:textColor="?scoreAndHintsText"
+        android:textSize="20sp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/scoreImage"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="2dp"
+        android:src="@drawable/score"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/hints"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="2dp"
+        android:gravity="center"
+        android:paddingEnd="50dp"
+        android:text="0"
+        android:textColor="?scoreAndHintsText"
+        android:textSize="20sp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/scoreImage" />
+
+    <ImageView
+        android:id="@+id/hintsImage"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="2dp"
+        android:src="@drawable/hints"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/scoreImage" />
+
+    <TextView
+        android:id="@+id/word"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/segoe_print"
+        android:gravity="center"
+        android:textColor="?wordText"
+        android:textSize="34sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/keyboard"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/menuButton" />
+
+    <GridLayout
+        android:id="@+id/keyboard"
+        android:layout_width="match_parent"
+        android:layout_height="230dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="5dp"
+        android:columnCount="5"
+        android:orientation="horizontal"
+
+        android:rowCount="5"
+        android:useDefaultMargins="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+
+        >
+
+
+        <Button
+            android:id="@+id/letter1"
+
+            style="@style/KeyboardButtonStyle.LetterButton" />
+
+        <Button
+            android:id="@+id/letter2"
+            style="@style/KeyboardButtonStyle.LetterButton" />
+
+        <Button
+            android:id="@+id/letter3"
+            style="@style/KeyboardButtonStyle.LetterButton" />
+
+        <Button
+            android:id="@+id/letter4"
+            style="@style/KeyboardButtonStyle.LetterButton" />
+
+        <Button
+            android:id="@+id/letter5"
+            style="@style/KeyboardButtonStyle.LetterButton" />
+
+        <Button
+            android:id="@+id/letter6"
+            style="@style/KeyboardButtonStyle.LetterButton" />
+
+        <Button
+            android:id="@+id/letter7"
+            style="@style/KeyboardButtonStyle.LetterButton" />
+
+        <Button
+            android:id="@+id/letter8"
+            style="@style/KeyboardButtonStyle.LetterButton" />
+
+        <Button
+            android:id="@+id/letter9"
+            style="@style/KeyboardButtonStyle.LetterButton" />
+
+        <Button
+            android:id="@+id/letter10"
+            style="@style/KeyboardButtonStyle.LetterButton" />
+
+        <Button
+            android:id="@+id/letter11"
+            style="@style/KeyboardButtonStyle.LetterButton" />
+
+        <Button
+            android:id="@+id/letter12"
+            style="@style/KeyboardButtonStyle.LetterButton" />
+
+        <Button
+            android:id="@+id/letter13"
+            style="@style/KeyboardButtonStyle.LetterButton" />
+
+        <Button
+            android:id="@+id/letter14"
+            style="@style/KeyboardButtonStyle.LetterButton" />
+
+        <Button
+            android:id="@+id/letter15"
+            style="@style/KeyboardButtonStyle.LetterButton" />
+
+        <Button
+            android:id="@+id/erase"
+            style="@style/KeyboardButtonStyle"
+            android:onClick="eraseWord"
+            android:text="Стереть" />
+
+        <Button
+            android:id="@+id/setWord"
+            style="@style/KeyboardButtonStyle"
+            android:layout_columnSpan="3"
+            android:enabled="false"
+            android:onClick="setWord"
+            android:text="Составить слово" />
+
+        <Button
+            android:id="@+id/mix"
+            style="@style/KeyboardButtonStyle"
+            android:onClick="mixLetters"
+            android:text="Перемешать"
+            android:textSize="12.5sp" />
+
+    </GridLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="buttonBackground" format="color" />
+    <attr name="buttonPressedBackground" format="color" />
+    <attr name="buttonText" format="color" />
+    <attr name="buttonBorder" format="color" />
+    <attr name="scoreAndHintsText" format="color" />
+    <attr name="wordText" format="color" />
+    <attr name="disabled" format="color" />
+    <attr name="hint" format="color" />
+    <attr name="hintButtonBackground" format="color" />
+    <attr name="hintButtonBackgroundPressed" format="color" />
+    <attr name="redButton" format="color" />
+    <attr name="redButtonDisabled" format="color" />
+    <attr name="blueButton" format="color" />
+    <attr name="blueButtonDisabled" format="color" />
+    <attr name="yellowButton" format="color" />
+    <attr name="yellowButtonDisabled" format="color" />
+
+    <declare-styleable name="LetterButtonState">
+        <attr name="state_letter_hint" format="boolean" />
+    </declare-styleable>
+</resources>

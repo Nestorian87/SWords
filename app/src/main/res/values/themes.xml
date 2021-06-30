@@ -1,0 +1,87 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+
+
+    <style name="SWords.standard" parent="Theme.AppCompat.Light.NoActionBar">
+
+        <item name="android:windowBackground">@color/white_smoke</item>
+        <item name="buttonBackground">@color/white_smoke</item>
+        <item name="buttonPressedBackground">@color/gray</item>
+        <item name="buttonText">@color/black_pearl</item>
+        <item name="buttonBorder">@color/black</item>
+        <item name="scoreAndHintsText">@color/black_pearl</item>
+        <item name="wordText">@color/black</item>
+        <item name="disabled">@color/gray</item>
+        <item name="hint">#47D160</item>
+        <item name="redButton">#DB356F</item>
+        <item name="redButtonDisabled">#9C4E6C</item>
+        <item name="blueButton">#4F6BDB</item>
+        <item name="blueButtonDisabled">#444880</item>
+        <item name="yellowButton">#D0DB56</item>
+        <item name="yellowButtonDisabled">#959953</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+    <style name="SWords.white" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowBackground">@color/background_white</item>
+        <item name="buttonBackground">#fdf3e7</item>
+        <item name="buttonPressedBackground">#e0cab6</item>
+        <item name="buttonBorder">@color/black</item>
+        <item name="buttonText">#464646</item>
+        <item name="scoreAndHintsText">#685646</item>
+        <item name="wordText">#7c7c64</item>
+        <item name="disabled">#7c7c64</item>
+        <item name="hint">#34D5A9</item>
+        <item name="redButton">#DB356F</item>
+        <item name="redButtonDisabled">#9C4E6C</item>
+        <item name="blueButton">#4F6BDB</item>
+        <item name="blueButtonDisabled">#444880</item>
+        <item name="yellowButton">#D0DB56</item>
+        <item name="yellowButtonDisabled">#959953</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+    <style name="SWords.dark" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@color/dark_theme_background</item>
+        <item name="buttonBackground">#383b40</item>
+        <item name="buttonPressedBackground">#33363b</item>
+        <item name="buttonText">#f8fafa</item>
+        <item name="buttonBorder">#fcf9fa</item>
+        <item name="scoreAndHintsText">#fcf9fa</item>
+        <item name="wordText">#fffaf0</item>
+        <item name="disabled">#999999</item>
+        <item name="hint">#3cc771</item>
+        <item name="redButton">#DB356F</item>
+        <item name="redButtonDisabled">#9C4E6C</item>
+        <item name="blueButton">#4F6BDB</item>
+        <item name="blueButtonDisabled">#444880</item>
+        <item name="yellowButton">#D0DB56</item>
+        <item name="yellowButtonDisabled">#959953</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+    <style name="SWords.darkBlue" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@color/dark_blue_theme_background</item>
+        <item name="buttonBackground">#383b64</item>
+        <item name="buttonPressedBackground">#2c2f4f</item>
+        <item name="buttonText">#f2f3f4</item>
+        <item name="buttonBorder">#cac4ff</item>
+        <item name="scoreAndHintsText">#f2f3f4</item>
+        <item name="wordText">#c3beff</item>
+        <item name="disabled">#808080</item>
+        <item name="hint">#56cc8b</item>
+        <item name="redButton">#DB356F</item>
+        <item name="redButtonDisabled">#9C4E6C</item>
+        <item name="blueButton">#4F6BDB</item>
+        <item name="blueButtonDisabled">#444880</item>
+        <item name="yellowButton">#D0DB56</item>
+        <item name="yellowButtonDisabled">#959953</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+    <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@drawable/launch_screen</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+</resources>
