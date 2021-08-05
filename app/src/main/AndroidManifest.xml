@@ -3,13 +3,8 @@
     xmlns:aapt="http://schemas.android.com/aapt"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     package="com.nestor87.swords"
-    platformBuildVersionCode="30"
-    platformBuildVersionName="11"
     android:compileSdkVersion="30"
     android:compileSdkVersionCodename="11">
-    <!-- <uses-sdk -->
-    <!-- android:minSdkVersion="21" -->
-    <!-- android:targetSdkVersion="30" /> -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
