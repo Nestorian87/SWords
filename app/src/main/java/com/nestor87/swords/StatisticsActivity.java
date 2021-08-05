@@ -10,9 +10,13 @@ import android.widget.TextView;
 
 import com.blogspot.atifsoftwares.animatoolib.Animatoo;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -23,7 +27,7 @@ import static com.nestor87.swords.MainActivity.APP_PREFERENCES_FILE_NAME;
 
 public class StatisticsActivity extends AppCompatActivity {
 
-    TextView wordsCountTextView, wordOftenTextView, wordLongestTextView, wordAverageLengthTextView, timeInGameTextView;
+    TextView wordsCountTextView, wordOftenTextView, wordLongestTextView, wordAverageLengthTextView, timeInGameTextView, uniqueWordsCountTextView, todayWordsCountTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +36,8 @@ public class StatisticsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_statistics);
 
         wordsCountTextView = findViewById(R.id.wordCount);
+        uniqueWordsCountTextView = findViewById(R.id.uniqueWordCount);
+        todayWordsCountTextView = findViewById(R.id.todayWordCount);
         wordOftenTextView = findViewById(R.id.wordOften);
         wordLongestTextView = findViewById(R.id.wordLongest);
         wordAverageLengthTextView = findViewById(R.id.wordAverageLength);
@@ -42,7 +48,23 @@ public class StatisticsActivity extends AppCompatActivity {
 
         String[] statisticsWords = dataManager.getStatisticsWords();
 
+        int todayWordsCount = 0;
+
+        for (int i = 0; i < statisticsWords.length; i++) {
+            if (statisticsWords[i].split("/").length == 2) {
+                long timestamp = Long.parseLong(statisticsWords[i].split("/")[1]);
+                long millisecondsInDay = 86400000;
+                if (System.currentTimeMillis() - timestamp <= millisecondsInDay) {
+                    todayWordsCount++;
+                }
+                statisticsWords[i] = statisticsWords[i].split("/")[0];
+            }
+        }
+
         int wordsCount = statisticsWords.length;
+
+        int uniqueWordsCount = new HashSet<String>(Arrays.asList(statisticsWords)).size();
+
         String wordOften = null,
                lastWord = null;
         int wordOftenCount = 1,
@@ -85,6 +107,8 @@ public class StatisticsActivity extends AppCompatActivity {
         int minutesInGame = getSharedPreferences(APP_PREFERENCES_FILE_NAME, MODE_PRIVATE).getInt("minutesInGame", 0);
 
         wordsCountTextView.setText(wordsCountTextView.getText() + Integer.toString(wordsCount));
+        uniqueWordsCountTextView.setText(uniqueWordsCountTextView.getText() + Integer.toString(uniqueWordsCount));
+        todayWordsCountTextView.setText(todayWordsCountTextView.getText() + Integer.toString(todayWordsCount));
         wordOftenTextView.setText(wordOftenTextView.getText() + (wordOften == null ? "-" : wordOften));
         wordLongestTextView.setText(wordLongestTextView.getText() + (longestWord == null ? "-" : longestWord));
         wordAverageLengthTextView.setText(wordAverageLengthTextView.getText() + String.format(Locale.US, "%.2f", wordAverageLength));

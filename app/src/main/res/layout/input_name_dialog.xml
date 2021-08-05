@@ -9,7 +9,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Введите своё имя"
+        android:text="Введите cвой игровой ник. Под этим ником Вас будут видеть другие игроки"
         android:textAlignment="center"
         android:textColor="?scoreAndHintsText"
         android:textSize="20sp"

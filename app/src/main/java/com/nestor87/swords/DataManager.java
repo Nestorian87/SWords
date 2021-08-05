@@ -1,17 +1,17 @@
 package com.nestor87.swords;
 
-import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -22,15 +22,16 @@ import com.android.volley.toolbox.Volley;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.nestor87.swords.MainActivity.APP_PREFERENCES_FILE_NAME;
 import static com.nestor87.swords.MainActivity.LOG_TAG;
-import static com.nestor87.swords.MainActivity.accountManagerPassword;
 import static com.nestor87.swords.MainActivity.getColorFromTheme;
-import static com.nestor87.swords.MainActivity.uuid;
 
 public class DataManager {
 
@@ -44,6 +45,8 @@ public class DataManager {
     private Word hintWord = null;
     private int hintIndex = 0;
     public ArrayList<Integer> lettersWithHintsIndexes = new ArrayList<>();
+    private Player selfPlayer;
+    private MutableLiveData<List<Player>> allUsers = new MutableLiveData<>();
 
     public DataManager(TextView scoreTextView, TextView hintsTextView, TextView wordTextView, Button[] letterButtons, DBHelper dbHelper, Context context) {
         this.scoreTextView = scoreTextView;
@@ -69,6 +72,9 @@ public class DataManager {
         db.close();
 
         this.allWords = allWords;
+
+        SharedPreferences preferences = context.getSharedPreferences(APP_PREFERENCES_FILE_NAME, MODE_PRIVATE);
+        selfPlayer = new Player(preferences.getString("accountId", ""), preferences.getString("name", ""), score, hints);
     }
 
     public int getScore() {
@@ -231,27 +237,10 @@ public class DataManager {
         db.update("data", contentValues, "_ID = 0", null);
         db.close();
 
-        RequestQueue queue = Volley.newRequestQueue(context);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://ananiev-nestor.kl.com.ua/SWords_account_manager.php",
-                response -> {
+        selfPlayer.setScore(score);
+        selfPlayer.setHints(hints);
 
-                },
-                error -> {
-
-                }
-        ) {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("edit", "true");
-                params.put("score", String.valueOf(score));
-                params.put("hints", String.valueOf(hints));
-                params.put("uuid", uuid);
-                params.put("password", accountManagerPassword);
-                return params;
-            }
-        };
-        queue.add(stringRequest);
+        updateAccount();
     }
 
     public String[] getStatisticsWords() {
@@ -272,7 +261,7 @@ public class DataManager {
     public void addWordToStatistics(String word) {
         SQLiteDatabase db = dbHelper.openDB();
         ContentValues contentValues = new ContentValues();
-        contentValues.put("word", word);
+        contentValues.put("word", word + "/" + System.currentTimeMillis());
         db.insert("statisticsWords", null, contentValues);
         db.close();
     }
@@ -418,5 +407,67 @@ public class DataManager {
         queue.add(stringRequest);
     }
 
+
+    public void registerAccount() {
+        NetworkService.getInstance().getSWordsApi().registerPlayer(selfPlayer).enqueue(
+                new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        Log.i(LOG_TAG, "success");
+                        SharedPreferences preferences = context.getSharedPreferences(APP_PREFERENCES_FILE_NAME, MODE_PRIVATE);
+                        SharedPreferences.Editor preferencesEditor = preferences.edit();
+                        preferencesEditor.putBoolean("isAccountRegistered", true);
+                        preferencesEditor.apply();
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        Log.i(LOG_TAG, "failure");
+                    }
+                }
+        );
+    }
+
+    public void updateAccount() {
+        NetworkService.getInstance().getSWordsApi().updateUser(selfPlayer).enqueue(
+                new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        Log.i(LOG_TAG, "success");
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        Log.i(LOG_TAG, "failure");
+                    }
+                }
+        );
+    }
+
+    private void getAllUsersFromApi() {
+        NetworkService.getInstance().getSWordsApi().getAllUsers().enqueue(
+                new Callback<List<Player>>() {
+                    @Override
+                    public void onResponse(Call<List<Player>> call, Response<List<Player>> response) {
+                        allUsers.setValue(response.body());
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<Player>> call, Throwable t) {
+                        Log.i(LOG_TAG, "failure");
+                    }
+                }
+        );
+    }
+
+
+    public LiveData<List<Player>> getAllUsers() {
+        getAllUsersFromApi();
+        return allUsers;
+    }
+
+    public void setName(String name) {
+        selfPlayer.setName(name);
+    }
 }
 

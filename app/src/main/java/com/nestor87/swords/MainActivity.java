@@ -1,15 +1,27 @@
 package com.nestor87.swords;
 
+import android.Manifest;
+import android.app.Dialog;
+import android.app.DownloadManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.graphics.Color;
+import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.Uri;
+import android.os.Environment;
 import android.os.Vibrator;
 import androidx.annotation.ColorInt;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
+
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -27,21 +39,19 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.blogspot.atifsoftwares.animatoolib.Animatoo;
 
+import java.io.File;
+import java.security.Permission;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.nestor87.swords.Achievement.ACHIEVEMENTS;
 import static com.nestor87.swords.Achievement.HINTS_CURRENCY;
@@ -58,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
     private DBHelper dbHelper;
     private ProgressBar progressBar;
 
-
+    private int permissionCheck;
 
     public static final String LOG_TAG = "SWORDS_DEBUG";
     public static final String APP_PREFERENCES_FILE_NAME = "preferences";
@@ -66,6 +76,9 @@ public class MainActivity extends AppCompatActivity {
     public static int startedActivitiesCount = 0;
     public static final String accountManagerPassword = "$2y$10$6UiaU230HP2IuSn.QUeyoulrm7YUBvSMv44QThkasbkQQagZvBj3K";
     public static String uuid;
+
+    private ArrayList<Letter> lettersPressed = new ArrayList<>();
+    private boolean isDialogShowing = false;
 
 
     @Override
@@ -76,6 +89,9 @@ public class MainActivity extends AppCompatActivity {
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_FULLSCREEN  | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
         setContentView(R.layout.activity_main);
 
+        requestPermission();
+
+
         SharedPreferences preferences = getSharedPreferences(APP_PREFERENCES_FILE_NAME, MODE_PRIVATE);
         SharedPreferences.Editor preferencesEditor = preferences.edit();
         preferencesEditor.putString("accountId", preferences.getString("accountId", UUID.randomUUID().toString()));
@@ -83,47 +99,7 @@ public class MainActivity extends AppCompatActivity {
 
         uuid = preferences.getString("accountId", "");
 
-        if (!preferences.contains("name")) {
-            LayoutInflater layoutInflater = LayoutInflater.from(this);
-            View nameView = layoutInflater.inflate(R.layout.input_name_dialog, null);
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setView(nameView);
-            EditText nameEditText = nameView.findViewById(R.id.nameEditText);
-            builder.setCancelable(false).setNeutralButton("OK", (dialog, which) -> {
-                if (nameEditText.getText().toString().isEmpty()) {
-                    Toast.makeText(this, "Введите имя!", Toast.LENGTH_SHORT).show();
-                    builder.show();
-                } else {
-                    preferencesEditor.putString("name", nameEditText.getText().toString());
-                    preferencesEditor.apply();
-                }
-            });
-            builder.show();
-        }
 
-        if (!preferences.getBoolean("isAccountRegistered", false)) {
-            RequestQueue queue = Volley.newRequestQueue(this);
-            StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://ananiev-nestor.kl.com.ua/SWords_account_manager.php",
-                    response -> {
-                        preferencesEditor.putBoolean("isAccountRegistered", true);
-                        preferencesEditor.apply();
-                    },
-                    error -> {
-
-                    }
-            ) {
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("add", "true");
-                    params.put("name", preferences.getString("name", ""));
-                    params.put("uuid", uuid);
-                    params.put("password", accountManagerPassword);
-                    return params;
-                }
-            };
-            queue.add(stringRequest);
-        }
 
         scoreTextView = findViewById(R.id.score);
         hintsTextView = findViewById(R.id.hints);
@@ -144,9 +120,17 @@ public class MainActivity extends AppCompatActivity {
         dbHelper.copyDBIfNotExists();
         dataManager = new DataManager(scoreTextView, hintsTextView, wordTextView, letterButtons, dbHelper, this);
 
-        buttonSetEnabled(eraseButton, false);        dataManager.loadData();
+        buttonSetEnabled(eraseButton, false);
+        dataManager.loadData();
 
         buttonSetEnabled(setWordButton, false);
+
+        if (preferences.getString("name", "").equals(""))
+            dataManager.getAllUsers().observe(this, this::showNameDialog);
+
+
+        if (!preferences.getBoolean("isAccountRegistered", false) && !preferences.getString("name", "").equals(""))
+            dataManager.registerAccount();
 
         if (ACHIEVEMENTS.isEmpty()) {
             ACHIEVEMENTS.add(new Achievement(this, "score.beginner", "Начинающий", "Заработать {x}", 100, SCORE_INCREASE_TRIGGER, HINTS_CURRENCY, 20));
@@ -163,11 +147,197 @@ public class MainActivity extends AppCompatActivity {
             ACHIEVEMENTS.add(new Achievement(this, "hints.DStudent", "Двоечник", "Использовать {x}", 1000, HINTS_REDUCE_TRIGGER, SCORE_CURRENCY, 2500));
         }
 
+        eraseButton.setOnLongClickListener(v -> {
+            MainActivity.playSound(R.raw.erase, this);
+            if (wordTextView.getText().length() == 1) {
+                eraseWord(null);
+            } else {
+                Letter lastLetter = lettersPressed.remove(lettersPressed.size() - 1);
+                for (Button letterButton : letterButtons) {
+                    if (!letterButton.isEnabled() && letterButton.getText().equals(Character.toString(lastLetter.getSymbol()).toUpperCase())) {
+                        Log.i(LOG_TAG, "btn color: " + letterButton.getCurrentTextColor() + "\nlet color: " + lastLetter.getColor() + "\n" + getColorFromTheme(R.attr.redButtonDisabled) + "\n" + getColorFromTheme(R.attr.buttonText));
+                        if (
+                                (letterButton.getCurrentTextColor() == getColorFromTheme(R.attr.redButtonDisabled) && lastLetter.getColor() == Letter.COLOR_RED)
+                                || (letterButton.getCurrentTextColor() == getColorFromTheme(R.attr.blueButtonDisabled) && lastLetter.getColor() == Letter.COLOR_BLUE)
+                                || (letterButton.getCurrentTextColor() == getColorFromTheme(R.attr.yellowButtonDisabled) && lastLetter.getColor() == Letter.COLOR_YELLOW)
+                                || (letterButton.getCurrentTextColor() == getColorFromTheme(R.attr.disabled) && lastLetter.getColor() == Letter.COLOR_NONE)
 
+                        ) {
+                            buttonSetEnabled(letterButton, true);
+                        }
+                    }
+                }
+                dataManager.clearWord();
+                for (Letter letter : lettersPressed) {
+                    dataManager.addLetterToWord(letter);
+                }
+                buttonSetEnabled(setWordButton, dataManager.getWord().exists(dbHelper));
+
+            }
+            return true;
+        });
 
     }
 
+    private void requestPermission() {
+        permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
+        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+            new AlertDialog.Builder(this)
+                    .setIcon(R.drawable.icon)
+                    .setTitle("Предоставление разрешения")
+                    .setMessage("Для правильной работы игры требуется разрешение. Оно будет использоваться для обновления SWords. Примите его в следуюшем окне")
+                    .setCancelable(false)
+                    .setPositiveButton("OK", (dialog, which) -> {
+                        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 164);
+                    })
+                    .show();
+
+        } else {
+            checkForNewVersion();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 164:
+                if ((grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    checkForNewVersion();
+                } else {
+                    requestPermission();
+                }
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    private void checkForNewVersion() {
+        NetworkService.getInstance().getSWordsApi().getLatestAppVersion().enqueue(
+                new Callback<VersionInfo>() {
+                    @Override
+                    public void onResponse(Call<VersionInfo> call, Response<VersionInfo> response) {
+                        if (response.body().getCode() > BuildConfig.VERSION_CODE) {
+                            Dialog dialog = new AlertDialog.Builder(MainActivity.this)
+                                    .setTitle("Доступна новая версия " + response.body().getName())
+                                    .setMessage(response.body().getChanges())
+                                    .setCancelable(false)
+                                    .setPositiveButton("Cкачать", null)
+                                    .create();
+                            dialog.setOnShowListener(alertDialog -> {
+                                Button button = ((AlertDialog) alertDialog).getButton(AlertDialog.BUTTON_POSITIVE);
+                                button.setOnClickListener(v -> {
+                                    ((Button) button).setText("Скачивание...");
+                                    ((Button) button).setEnabled(false);
+                                    DownloadManager downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+                                    Uri uri = Uri.parse("https://github.com/Nestorian87/SWords/raw/master/app/release/app-release.apk");
+
+                                    DownloadManager.Request request = new DownloadManager.Request(uri);
+                                    request.setTitle("SWords");
+                                    request.setDescription("Скачивание новой версии...");
+                                    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
+                                    request.setVisibleInDownloadsUi(true);
+                                    request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS,"SWords-" + response.body().getName() + ".apk");
+                                    downloadManager.enqueue(request);
+
+                                    BroadcastReceiver onComplete = new BroadcastReceiver() {
+                                        public void onReceive(Context context, Intent intent) {
+                                            if (intent.getAction() == DownloadManager.ACTION_DOWNLOAD_COMPLETE) {
+                                                ((Button) button).setText("Скачать");
+                                                ((Button) button).setEnabled(true);
+                                                Uri downloadUri = FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".provider", new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "SWords-" + response.body().getName() + ".apk"));//Uri.fromFile(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "SWords.apk"));
+                                                Intent intent1 = new Intent(Intent.ACTION_VIEW);
+                                                intent1.setDataAndType(downloadUri, "application/vnd.android.package-archive");
+                                                intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                intent1.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                                startActivity(intent1);
+                                                unregisterReceiver(this);
+                                            }
+                                        }
+                                    };
+                                    registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+
+                                });
+                            });
+
+                            dialog.show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<VersionInfo> call, Throwable t) {
+
+                    }
+                }
+        );
+    }
+
+
+    private void showNameDialog(List<Player> allPlayers) {
+        if (!isDialogShowing) {
+            isDialogShowing = true;
+            SharedPreferences preferences = getSharedPreferences(APP_PREFERENCES_FILE_NAME, MODE_PRIVATE);
+            SharedPreferences.Editor preferencesEditor = preferences.edit();
+
+            LayoutInflater layoutInflater = LayoutInflater.from(this);
+            View nameView = layoutInflater.inflate(R.layout.input_name_dialog, null);
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setView(nameView);
+            EditText nameEditText = nameView.findViewById(R.id.nameEditText);
+            nameEditText.setText(preferences.getString("name", ""));
+            builder.setCancelable(false).setNeutralButton("OK", (dialog, which) -> {
+                if (nameEditText.getText().toString().isEmpty()) {
+                    Toast.makeText(this, "Введите ник!", Toast.LENGTH_SHORT).show();
+                    dialog.cancel();
+                    isDialogShowing = false;
+                    if (isConnectedToInternet())
+                        dataManager.getAllUsers().observe(this, this::showNameDialog);
+                    else
+                        Toast.makeText(MainActivity.this, "Произошла ошибка. Проверьте подключение к интернету", Toast.LENGTH_LONG).show();
+                } else {
+                    boolean isNameDuplicated = false;
+                    for (Player player : allPlayers) {
+                        if (player.getName().equals(nameEditText.getText().toString())) {
+                            isNameDuplicated = true;
+                        }
+                    }
+
+                    if (!isNameDuplicated) {
+                        if (nameEditText.getText().toString().length() <= 20) {
+                            preferencesEditor.putString("name", nameEditText.getText().toString());
+                            preferencesEditor.apply();
+                            dataManager.setName(nameEditText.getText().toString());
+                            if (preferences.getBoolean("isAccountRegistered", false)) {
+                                dataManager.updateAccount();
+                            } else {
+                                dataManager.registerAccount();
+                            }
+                            isDialogShowing = false;
+                        } else {
+                            Toast.makeText(this, "Максимальная длина ника - 20 символов", Toast.LENGTH_LONG).show();
+                            dialog.cancel();
+                            isDialogShowing = false;
+                            if (isConnectedToInternet())
+                                dataManager.getAllUsers().observe(this, this::showNameDialog);
+                            else
+                                Toast.makeText(MainActivity.this, "Произошла ошибка. Проверьте подключение к интернету", Toast.LENGTH_LONG).show();
+                        }
+                    } else {
+                        Toast.makeText(this, "Такой ник уже используется. Выберите другой", Toast.LENGTH_LONG).show();
+                        dialog.cancel();
+                        isDialogShowing = false;
+                        if (isConnectedToInternet())
+                            dataManager.getAllUsers().observe(this, this::showNameDialog);
+                        else
+                            Toast.makeText(MainActivity.this, "Произошла ошибка. Проверьте подключение к интернету", Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
+            builder.show();
+        }
+    }
 
     public void letterButtonOnClick(View view) {
         try {
@@ -184,6 +354,7 @@ public class MainActivity extends AppCompatActivity {
             buttonSetEnabled(pressedButton, false);
 
             dataManager.addLetterToWord(pressedLetter);
+            lettersPressed.add(pressedLetter);
             buttonSetEnabled(eraseButton, true);
             buttonSetEnabled(mixButton, false);
             buttonSetEnabled(setWordButton, dataManager.getWord().exists(dbHelper));
@@ -194,6 +365,7 @@ public class MainActivity extends AppCompatActivity {
         if (view != null)
             MainActivity.playSound(R.raw.erase, this);
         dataManager.clearWord();
+        lettersPressed.clear();
         for (Button letterButton : letterButtons) {
             buttonSetEnabled(letterButton, true);
         }
@@ -493,25 +665,45 @@ public class MainActivity extends AppCompatActivity {
                                 .setMessage("Вы точно хотите предложить добавить слово \"" + wordToAdd + "\" в словарь?")
                                 .setPositiveButton("Да", (dialog, which) -> {
                                     progressBar.setVisibility(View.VISIBLE);
-                                    RequestQueue queue = Volley.newRequestQueue(this);
-                                    StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://ananiev-nestor.kl.com.ua/addWord.php?word=" + wordToAdd + "&uuid=" + uuid,
-                                            response -> {
-                                                progressBar.setVisibility(View.INVISIBLE);
-                                                Toast.makeText(MainActivity.this, "Спасибо. Ваше предложение будет рассмотрено", Toast.LENGTH_LONG).show();
-                                            },
-                                            error -> {
-                                                MainActivity.playSound(R.raw.error, this);
-                                                progressBar.setVisibility(View.INVISIBLE);
-                                                Toast.makeText(MainActivity.this, "Произошла ошибка. Проверьте подключение к интернету", Toast.LENGTH_LONG).show();
+                                    HashMap<String, String> body = new HashMap<>();
+                                    body.put("word", wordToAdd);
+                                    body.put("uuid", uuid);
+                                    NetworkService.getInstance().getSWordsApi().addWordRequest(body).enqueue(
+                                            new Callback<Void>() {
+                                                @Override
+                                                public void onResponse(Call<Void> call, Response<Void> response) {
+                                                    progressBar.setVisibility(View.INVISIBLE);
+                                                    Toast.makeText(MainActivity.this, "Спасибо. Ваше предложение будет рассмотрено", Toast.LENGTH_LONG).show();
+                                                }
+
+                                                @Override
+                                                public void onFailure(Call<Void> call, Throwable t) {
+                                                    progressBar.setVisibility(View.INVISIBLE);
+                                                    MainActivity.playSound(R.raw.error, MainActivity.this);
+                                                    Toast.makeText(MainActivity.this, "Произошла ошибка. Проверьте подключение к интернету", Toast.LENGTH_LONG).show();
+
+                                                }
                                             }
                                     );
-                                    queue.add(stringRequest);
+
                                 }).setNegativeButton("Отмена", null)
                                 .setIcon(R.drawable.icon)
                                 .show();
                     } else {
                         Toast.makeText(MainActivity.this, "Для того, чтобы предложить слово, сначала составьте его из букв", Toast.LENGTH_LONG).show();
                     }
+                    return true;
+                case R.id.changeName:
+                    if (isConnectedToInternet()) {
+                        dataManager.getAllUsers().observe(this, this::showNameDialog);
+                    } else {
+                        Toast.makeText(MainActivity.this, "Произошла ошибка. Проверьте подключение к интернету", Toast.LENGTH_LONG).show();
+                    }
+
+                    return true;
+                case R.id.bestPlayers:
+                    startActivity(new Intent(this, BestPlayersActivity.class));
+                    Animatoo.animateSlideLeft(this);
                     return true;
                 default:
                     return false;
@@ -525,28 +717,45 @@ public class MainActivity extends AppCompatActivity {
 
         if (lastWordMade != null) {
             progressBar.setVisibility(View.VISIBLE);
-            RequestQueue queue = Volley.newRequestQueue(this);
-            StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://ananiev-nestor.kl.com.ua/meaning.php?word=" + lastWordMade,
-                    response -> {
-                        progressBar.setVisibility(View.INVISIBLE);
-                        new AlertDialog.Builder(MainActivity.this)
-                                .setTitle("Словарик")
-                                .setMessage(response)
-                                .setNeutralButton("OK", null)
-                                .setIcon(R.drawable.dictionary)
-                                .show();
-                    },
-                    error -> {
-                        MainActivity.playSound(R.raw.error, this);
-                        progressBar.setVisibility(View.INVISIBLE);
-                        Toast.makeText(MainActivity.this, "Произошла ошибка. Проверьте подключение к интернету", Toast.LENGTH_LONG).show();
+            NetworkService.getInstance().getSWordsApi().getWordMeaning(lastWordMade).enqueue(
+                    new Callback<Word>() {
+                        @Override
+                        public void onResponse(Call<Word> call, Response<Word> response) {
+                            progressBar.setVisibility(View.INVISIBLE);
+                            new AlertDialog.Builder(MainActivity.this)
+                                    .setTitle("Словарик")
+                                    .setMessage(response.body().getMeaning())
+                                    .setNeutralButton("OK", null)
+                                    .setIcon(R.drawable.dictionary)
+                                    .show();
+                        }
+
+                        @Override
+                        public void onFailure(Call<Word> call, Throwable t) {
+                            MainActivity.playSound(R.raw.error, MainActivity.this);
+                            progressBar.setVisibility(View.INVISIBLE);
+                            Toast.makeText(MainActivity.this, "Произошла ошибка. Проверьте подключение к интернету", Toast.LENGTH_LONG).show();
+                        }
                     }
             );
-            queue.add(stringRequest);
         } else {
             MainActivity.playSound(R.raw.error, this);
             Toast.makeText(this, "Для использования словаря Вам нужно составить хотя бы одно слово", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public boolean isConnectedToInternet() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        if (activeNetwork != null) {
+            if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
+                return true;
+            } else if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public static void onActivityStop(Context context) {

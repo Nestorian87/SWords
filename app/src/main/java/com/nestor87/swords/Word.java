@@ -11,6 +11,7 @@ public class Word {
     private ArrayList<Letter> letters = new ArrayList<>();
     private int color = Letter.COLOR_NONE;
     private boolean red = false, blue = false, yellow = false;
+    private String meaning;
     public Word(String text) {
         this.text = text;
         for (char letter : text.toCharArray()) {
@@ -128,5 +129,17 @@ public class Word {
 
     public void setYellow(boolean yellow) {
         this.yellow = yellow;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public void setMeaning(String meaning) {
+        this.meaning = meaning;
+    }
+
+    public String getMeaning() {
+        return meaning;
     }
 }

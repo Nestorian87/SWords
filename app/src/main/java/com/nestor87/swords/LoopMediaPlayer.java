@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.util.Log;
 
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -27,6 +28,8 @@ public class LoopMediaPlayer {
     SharedPreferences preferences;
     SharedPreferences.Editor preferencesEditor;
     Timer timer;
+    
+    private final int[] musicFiles = new int[] { R.raw.swords_theme_1, R.raw.swords_theme_2 };
 
     public static LoopMediaPlayer create(Context context, float volume) {
         return new LoopMediaPlayer(context, volume);
@@ -44,7 +47,7 @@ public class LoopMediaPlayer {
             public void run() {
                 if (mPausedPlayer == null) {
                     preferencesEditor.putInt("minutesInGame", preferences.getInt("minutesInGame", 0) + 1);
-                    preferencesEditor.commit();
+                    preferencesEditor.apply();
                 }
             }
         }, 0, 60000);
@@ -55,7 +58,7 @@ public class LoopMediaPlayer {
 
 
         mIntroPlayer = MediaPlayer.create(mContext, R.raw.swords_intro);
-        mCurrentPlayer = MediaPlayer.create(mContext, R.raw.swords_main);
+        mCurrentPlayer = MediaPlayer.create(mContext, R.raw.swords_theme_1);
         mIntroPlayer.setVolume(volume, volume);
         mCurrentPlayer.setVolume(volume, volume);
         mIntroPlayer.setOnPreparedListener(mediaPlayer -> mIntroPlayer.start());
@@ -65,7 +68,7 @@ public class LoopMediaPlayer {
     }
 
     private void createNextMediaPlayer() {
-        mNextPlayer = MediaPlayer.create(mContext, R.raw.swords_main);
+        mNextPlayer = MediaPlayer.create(mContext, musicFiles[new Random().nextInt(musicFiles.length)]);
         mNextPlayer.setVolume(volume, volume);
         mCurrentPlayer.setNextMediaPlayer(mNextPlayer);
         mCurrentPlayer.setOnCompletionListener(onCompletionListener);

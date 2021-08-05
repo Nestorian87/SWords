@@ -192,6 +192,7 @@ public class Letter implements Cloneable {
             return MainActivity.getColorFromTheme(R.attr.buttonText, context);
     }
 
+
     @NonNull
     @Override
     public Letter clone() throws CloneNotSupportedException {
