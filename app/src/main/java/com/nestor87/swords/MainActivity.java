@@ -319,6 +319,10 @@ public class MainActivity extends AppCompatActivity {
                                         dataManager.setScore(20064);
                                         dataManager.setHints(377);
                                         break;
+                                    case "_Eliz71_":
+                                        dataManager.setScore(873);
+                                        dataManager.setHints(32);
+                                        break;
                                 }
                             }
                             isDialogShowing = false;
