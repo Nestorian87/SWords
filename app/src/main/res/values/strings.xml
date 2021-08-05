@@ -2,8 +2,8 @@
     <string name="app_name">SWords</string>
     <string-array name="themes">
         <item>Стандартная</item>
-        <item>Белая</item>
         <item>Тёмная</item>
+        <item>Белая</item>
         <item>Тёмно-синяя</item>
     </string-array>
 </resources>

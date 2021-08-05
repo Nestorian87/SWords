@@ -24,7 +24,7 @@ public class ThemeChangeActivity extends AppCompatActivity {
     ImageView scoreImageView;
     DataManager dataManager;
 
-    int[] themePrices = new int[] {0, 850, 2500, 5000};
+    int[] themePrices = new int[] {0, 0, 2500, 5000};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +48,7 @@ public class ThemeChangeActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int themeId, long id) {
 //                MainActivity.buttonSetEnabled(getApplicationContext(), button, true);
-                boolean isThemeAvailable = preferences.getBoolean("theme" + themeId, false) || themeId == 0;
+                boolean isThemeAvailable = preferences.getBoolean("theme" + themeId, false) || themePrices[themeId] == 0;
                 button.setText(isThemeAvailable ? "Применить" : "Купить");
                 if (!isThemeAvailable) {
                     priceTextView.setText("Цена: " + themePrices[themeId]);

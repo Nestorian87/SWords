@@ -360,10 +360,10 @@ public class DataManager {
         SharedPreferences preferences = context.getSharedPreferences(APP_PREFERENCES_FILE_NAME, MODE_PRIVATE);
         switch (preferences.getInt("currentThemeId", 0)) {
             case 1:
-                context.setTheme(R.style.SWords_white);
+                context.setTheme(R.style.SWords_dark);
                 break;
             case 2:
-                context.setTheme(R.style.SWords_dark);
+                context.setTheme(R.style.SWords_white);
                 break;
             case 3:
                 context.setTheme(R.style.SWords_darkBlue);

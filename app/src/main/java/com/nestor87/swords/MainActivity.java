@@ -319,9 +319,9 @@ public class MainActivity extends AppCompatActivity {
                                         dataManager.setScore(20064);
                                         dataManager.setHints(377);
                                         break;
-                                    case "_Eliz71_":
-                                        dataManager.setScore(873);
-                                        dataManager.setHints(32);
+                                    case "Nestorian87":
+                                        dataManager.setScore(121);
+                                        dataManager.setHints(9);
                                         break;
                                 }
                             }
