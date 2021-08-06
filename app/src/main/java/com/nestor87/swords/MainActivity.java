@@ -13,6 +13,7 @@ import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Vibrator;
 import androidx.annotation.ColorInt;
@@ -30,6 +31,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -235,24 +237,31 @@ public class MainActivity extends AppCompatActivity {
                                     Uri uri = Uri.parse("https://github.com/Nestorian87/SWords/raw/master/app/release/app-release.apk");
 
                                     DownloadManager.Request request = new DownloadManager.Request(uri);
-                                    request.setTitle("SWords");
-                                    request.setDescription("Скачивание новой версии...");
+                                    request.setTitle("SWords v" + response.body().getName());
+                                    request.setDescription("Новая версия");
                                     request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
                                     request.setVisibleInDownloadsUi(true);
                                     request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS,"SWords-" + response.body().getName() + ".apk");
+                                    request.setMimeType(MimeTypeMap.getSingleton().getMimeTypeFromExtension("apk"));
                                     downloadManager.enqueue(request);
 
                                     BroadcastReceiver onComplete = new BroadcastReceiver() {
                                         public void onReceive(Context context, Intent intent) {
-                                            if (intent.getAction() == DownloadManager.ACTION_DOWNLOAD_COMPLETE) {
+                                            if (intent.getAction().equals(DownloadManager.ACTION_DOWNLOAD_COMPLETE)) {
                                                 ((Button) button).setText("Скачать");
                                                 ((Button) button).setEnabled(true);
-                                                Uri downloadUri = FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".provider", new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "SWords-" + response.body().getName() + ".apk"));//Uri.fromFile(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "SWords.apk"));
-                                                Intent intent1 = new Intent(Intent.ACTION_VIEW);
-                                                intent1.setDataAndType(downloadUri, "application/vnd.android.package-archive");
-                                                intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                                intent1.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                                                startActivity(intent1);
+                                                if (isSamsung()) {
+                                                    Intent intent1 = getPackageManager()
+                                                            .getLaunchIntentForPackage("com.sec.android.app.myfiles");
+                                                    intent1.setAction("samsung.myfiles.intent.action.LAUNCH_MY_FILES");
+                                                    intent1.putExtra("samsung.myfiles.intent.extra.START_PATH",
+                                                            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath());
+                                                    startActivity(intent1);
+                                                } else {
+                                                    startActivity(new Intent(DownloadManager.ACTION_VIEW_DOWNLOADS));
+                                                }
+                                                Toast.makeText(MainActivity.this, "Установите скачанный файл", Toast.LENGTH_LONG).show();
+
                                                 unregisterReceiver(this);
                                             }
                                         }
@@ -272,6 +281,12 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
         );
+    }
+
+    public static boolean isSamsung() {
+        String manufacturer = Build.MANUFACTURER;
+        if (manufacturer != null) return manufacturer.toLowerCase().equals("samsung");
+        return false;
     }
 
 
@@ -322,7 +337,7 @@ public class MainActivity extends AppCompatActivity {
                                     case "Nestorian87":
                                         dataManager.setScore(121);
                                         dataManager.setHints(9);
-                                        break;
+                                break;
                                 }
                             }
                             isDialogShowing = false;

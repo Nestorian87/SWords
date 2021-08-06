@@ -64,7 +64,7 @@
                 android:id="@+id/isOnline"
                 android:layout_width="15dp"
                 android:layout_height="15dp"
-                app:cardBackgroundColor="?redButton"
+                app:cardBackgroundColor="?hint"
                 app:cardCornerRadius="20dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
