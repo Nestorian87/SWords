@@ -20,6 +20,7 @@ import retrofit2.Response;
 
 public class BestPlayersActivity extends AppCompatActivity {
     ProgressBar progressBar;
+    PlayersAdapter playersAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,12 +48,16 @@ public class BestPlayersActivity extends AppCompatActivity {
     private void loadPlayers(boolean update) {
         if (!update)
             progressBar.setVisibility(View.VISIBLE);
-        NetworkService.getInstance().getSWordsApi().getAllUsers().enqueue(
+        NetworkService.getInstance().getSWordsApi().getAllUsers(MainActivity.getBearerToken()).enqueue(
                 new Callback<List<Player>>() {
                     @Override
                     public void onResponse(Call<List<Player>> call, Response<List<Player>> response) {
                         progressBar.setVisibility(View.GONE);
-                        initRecyclerView(response.body());
+                        if (update) {
+                            playersAdapter.setPlayers(response.body());
+                        } else {
+                            initRecyclerView(response.body());
+                        }
                     }
 
                     @Override
@@ -75,7 +80,7 @@ public class BestPlayersActivity extends AppCompatActivity {
 
     private void initRecyclerView(List<Player> players) {
         RecyclerView recyclerView = findViewById(R.id.bestPlayersList);
-        PlayersAdapter playersAdapter = new PlayersAdapter(BestPlayersActivity.this, players);
+        playersAdapter = new PlayersAdapter(BestPlayersActivity.this, players);
         recyclerView.setAdapter(playersAdapter);
     }
 

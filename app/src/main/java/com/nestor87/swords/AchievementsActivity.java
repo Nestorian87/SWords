@@ -9,6 +9,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.blogspot.atifsoftwares.animatoolib.Animatoo;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class AchievementsActivity extends AppCompatActivity {
 
     @Override
@@ -18,7 +21,7 @@ public class AchievementsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_achievements);
 
         RecyclerView recyclerView = findViewById(R.id.achievementsList);
-        AchievementAdapter achievementAdapter = new AchievementAdapter( this, Achievement.ACHIEVEMENTS);
+        AchievementAdapter achievementAdapter = new AchievementAdapter( this, getAchievementsSortedByGroupName(Achievement.ACHIEVEMENTS));
         recyclerView.setAdapter(achievementAdapter);
 
         String scrollToId = getIntent().getStringExtra("scrollTo");
@@ -31,6 +34,27 @@ public class AchievementsActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    public List<List<Achievement>> getAchievementsSortedByGroupName(List<Achievement> achievements) {
+        ArrayList<List<Achievement>> achievementGroups = new ArrayList<>();
+        for (Achievement achievement : achievements) {
+            boolean isAchievementAdded = false;
+            for (List<Achievement> achievementGroup: achievementGroups) {
+                if (achievementGroup.get(0).getGroupName().equals(achievement.getGroupName())) {
+                    achievementGroup.add(achievement);
+                    isAchievementAdded = true;
+                    break;
+                }
+            }
+            if (!isAchievementAdded) {
+                List<Achievement> group = new ArrayList<>();
+                group.add(achievement);
+                achievementGroups.add(group);
+            }
+        }
+
+        return achievementGroups;
     }
 
     public void goBack(View view) {

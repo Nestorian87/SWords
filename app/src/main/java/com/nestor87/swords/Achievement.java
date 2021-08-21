@@ -10,6 +10,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.view.View;
 
+import androidx.annotation.IdRes;
+
 import com.blogspot.atifsoftwares.animatoolib.Animatoo;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -60,7 +62,7 @@ class Currency {
 }
 
 
-public class Achievement {
+public class Achievement implements Comparable {
     public static ArrayList<Achievement> ACHIEVEMENTS = new ArrayList();
     public static final int CUSTOM_TRIGGER = 5;
     public static final Currency HINTS_CURRENCY = new Currency((int) R.drawable.hints);
@@ -83,12 +85,12 @@ public class Achievement {
     private String title;
 
     public static int getCurrencyImageByTrigger(int progressTrigger) {
-        if (progressTrigger == 0 || progressTrigger == 1) {
+        if (progressTrigger == SCORE_INCREASE_TRIGGER || progressTrigger == SCORE_REDUCE_TRIGGER)
             return R.drawable.score;
-        }
-        if (progressTrigger == 2 || progressTrigger == 3) {
+
+        if (progressTrigger == HINTS_INCREASE_TRIGGER || progressTrigger == HINTS_REDUCE_TRIGGER)
             return R.drawable.hints;
-        }
+
         return -1;
     }
 
@@ -183,6 +185,26 @@ public class Achievement {
         this.isRewardReceived = rewardReceived;
         SharedPreferences.Editor edit = this.context.getSharedPreferences(MainActivity.APP_PREFERENCES_FILE_NAME, 0).edit();
         edit.putBoolean("IsRewardReceived.Achievement." + this.id, rewardReceived).apply();
+    }
+
+    public int getPluralsResource() {
+        if (progressTrigger == WORD_COMPOSING_TRIGGER)
+            return R.plurals.word;
+
+        return -1;
+    }
+
+    public String getGroupName() {
+        return id.split("\\.")[0];
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        assert o instanceof Achievement;
+        if (!((Achievement) o).getGroupName().equals(this.getGroupName())) {
+            throw new IllegalArgumentException("Cannot compare achievements from different groups");
+        }
+        return this.getMaxProgress() - ((Achievement) o).getMaxProgress();
     }
 }
 

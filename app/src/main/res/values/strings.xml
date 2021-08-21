@@ -6,4 +6,11 @@
         <item>Белая</item>
         <item>Тёмно-синяя</item>
     </string-array>
+
+    <plurals name="word">
+        <item quantity="one">слово</item>
+        <item quantity="few">слова</item>
+        <item quantity="many">слов</item>
+        <item quantity="other">слов</item>
+    </plurals>
 </resources>

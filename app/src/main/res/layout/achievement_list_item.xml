@@ -1,103 +1,152 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="5dp">
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:paddingTop="10dp"
+    android:paddingBottom="15dp"
+    android:clipToPadding="false">
 
-    <TextView
-        android:id="@+id/textViewProgress"
+    <androidx.cardview.widget.CardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="10 / 10"
-        android:textColor="?wordText"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/achievementProgressBar" />
+        android:layout_gravity="center_horizontal"
+        app:cardBackgroundColor="?buttonBackground"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="10dp">
 
-    <TextView
-        android:id="@+id/textViewTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Название"
-        android:textColor="?scoreAndHintsText"
-        android:textSize="40sp"
-        app:layout_constraintBottom_toTopOf="@+id/textViewTask"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp"
+            android:gravity="center_horizontal">
 
-    <TextView
-        android:id="@+id/textViewTask"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Задание: "
-        android:textColor="?wordText"
-        android:textSize="15sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/textViewReward" />
+            <TextView
+                android:id="@+id/stageTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Этап 1 из 6"
+                android:textColor="?wordText"
+                android:textSize="15sp"
+                android:textAlignment="textEnd"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
-        android:id="@+id/textViewReward"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Награда: "
-        android:textColor="?wordText"
-        android:textSize="15sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/achievementProgressBar" />
+            <TextView
+                android:id="@+id/textViewTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Название"
+                android:textAlignment="center"
+                android:textColor="?scoreAndHintsText"
+                android:textSize="40sp"
+                app:layout_constraintBottom_toTopOf="@+id/textViewTask"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/currencyImageView1"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:src="@drawable/score"
-        app:layout_constraintBottom_toBottomOf="@+id/textViewTask"
-        app:layout_constraintStart_toEndOf="@+id/textViewTask"
-        app:layout_constraintTop_toTopOf="@+id/textViewTask"
-        android:visibility="invisible" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-    <ImageView
-        android:id="@+id/currencyImageView2"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:src="@drawable/score"
-        app:layout_constraintBottom_toBottomOf="@+id/textViewReward"
-        app:layout_constraintStart_toEndOf="@+id/textViewReward"
-        app:layout_constraintTop_toTopOf="@+id/textViewReward"
-        android:visibility="invisible" />
+                <TextView
+                    android:id="@+id/textViewTask"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Задание: "
+                    android:textColor="?wordText"
+                    android:textSize="15sp"
+                    app:layout_constraintBottom_toTopOf="@+id/textViewReward"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:text="Забрать награду"
-        android:id="@+id/getRewardButton"
-        android:background="?buttonBackground"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewProgress"
-        android:padding="8dp"
-        android:layout_margin="5dp"
-        android:textColor="?buttonText"
-        android:backgroundTint="?hint"
-        android:visibility="invisible"/>
+                <ImageView
+                    android:id="@+id/currencyImageView1"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/score"
+                    android:visibility="invisible"
+                    app:layout_constraintBottom_toBottomOf="@+id/textViewTask"
+                    app:layout_constraintStart_toEndOf="@+id/textViewTask"
+                    app:layout_constraintTop_toTopOf="@+id/textViewTask" />
 
-    <ProgressBar
-        android:id="@+id/achievementProgressBar"
-        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-        android:layout_width="500dp"
-        android:layout_height="wrap_content"
-        android:progress="100"
-        android:progressTint="?buttonText"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+            </LinearLayout>
 
-        />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/textViewReward"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Награда: "
+                    android:textColor="?wordText"
+                    android:textSize="15sp"
+                    app:layout_constraintBottom_toTopOf="@+id/achievementProgressBar"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <ImageView
+                    android:id="@+id/currencyImageView2"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/score"
+                    android:visibility="invisible"
+                    app:layout_constraintBottom_toBottomOf="@+id/textViewReward"
+                    app:layout_constraintStart_toEndOf="@+id/textViewReward"
+                    app:layout_constraintTop_toTopOf="@+id/textViewReward" />
+
+            </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/achievementProgressBar"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="500dp"
+            android:layout_height="wrap_content"
+            android:progress="100"
+            android:progressTint="?buttonText"
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textViewProgress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="10 / 10"
+            android:textColor="?wordText"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/achievementProgressBar" />
+
+        <Button
+            android:id="@+id/getRewardButton"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_margin="5dp"
+            android:background="?buttonBackground"
+            android:backgroundTint="?hint"
+            android:padding="8dp"
+            android:text="Забрать награду"
+            android:textColor="?buttonText"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewProgress" />
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+</LinearLayout>

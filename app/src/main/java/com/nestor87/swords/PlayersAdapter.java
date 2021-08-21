@@ -18,6 +18,7 @@ import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PlayersAdapter extends RecyclerView.Adapter<PlayersAdapter.ViewHolder> {
@@ -26,8 +27,13 @@ public class PlayersAdapter extends RecyclerView.Adapter<PlayersAdapter.ViewHold
     private List<Player> players;
 
     PlayersAdapter(Context context, List<Player> players) {
-        this.players = players;
         this.inflater = LayoutInflater.from(context);
+        setPlayers(players);
+    }
+
+    public void setPlayers(List<Player> players) {
+        this.players = players;
+        notifyDataSetChanged();
     }
 
     @NonNull

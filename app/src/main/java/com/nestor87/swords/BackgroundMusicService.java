@@ -58,7 +58,7 @@ public class BackgroundMusicService extends Service {
         handlerRunnable = new Runnable() {
             @Override
             public void run() {
-                NetworkService.getInstance().getSWordsApi().setStatusOnline(new Player(preferences.getString("accountId", ""))).enqueue(
+                NetworkService.getInstance().getSWordsApi().setStatusOnline(MainActivity.getBearerToken(), new Player(preferences.getString("accountId", ""))).enqueue(
                         new Callback<Void>() {
                             @Override
                             public void onResponse(Call<Void> call, Response<Void> response) {

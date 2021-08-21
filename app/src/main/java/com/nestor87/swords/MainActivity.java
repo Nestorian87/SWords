@@ -60,6 +60,7 @@ import static com.nestor87.swords.Achievement.HINTS_CURRENCY;
 import static com.nestor87.swords.Achievement.HINTS_REDUCE_TRIGGER;
 import static com.nestor87.swords.Achievement.SCORE_CURRENCY;
 import static com.nestor87.swords.Achievement.SCORE_INCREASE_TRIGGER;
+import static com.nestor87.swords.Achievement.WORD_COMPOSING_TRIGGER;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -141,12 +142,22 @@ public class MainActivity extends AppCompatActivity {
             ACHIEVEMENTS.add(new Achievement(this, "score.master", "Мастер", "Заработать {x}", 8000, SCORE_INCREASE_TRIGGER, HINTS_CURRENCY, 200));
             ACHIEVEMENTS.add(new Achievement(this, "score.expert", "Эксперт", "Заработать {x}", 15000, SCORE_INCREASE_TRIGGER, HINTS_CURRENCY, 400));
             ACHIEVEMENTS.add(new Achievement(this, "score.champion", "Чемпион", "Заработать {x}", 30000, SCORE_INCREASE_TRIGGER, HINTS_CURRENCY, 1000));
-//            ACHIEVEMENTS.add(new Achievement(this, "score.crazy", "Ненормальный", "Заработать {x}", 100000, SCORE_INCREASE_TRIGGER, HINTS_CURRENCY, 300));
+            ACHIEVEMENTS.add(new Achievement(this, "score.fan", "Фанат", "Заработать {x}", 50000, SCORE_INCREASE_TRIGGER, HINTS_CURRENCY, 1500));
+            ACHIEVEMENTS.add(new Achievement(this, "score.crazy", "Чокнутый", "Заработать {x}", 100000, SCORE_INCREASE_TRIGGER, HINTS_CURRENCY, 2000));
 
             ACHIEVEMENTS.add(new Achievement(this, "hints.curious", "Любопытный", "Использовать {x}", 50, HINTS_REDUCE_TRIGGER, SCORE_CURRENCY, 200));
             ACHIEVEMENTS.add(new Achievement(this, "hints.veryCurious", "Очень любопытный", "Использовать {x}", 250, HINTS_REDUCE_TRIGGER, SCORE_CURRENCY, 600));
             ACHIEVEMENTS.add(new Achievement(this, "hints.lazy", "Лентяй", "Использовать {x}", 500, HINTS_REDUCE_TRIGGER, SCORE_CURRENCY, 1000));
             ACHIEVEMENTS.add(new Achievement(this, "hints.DStudent", "Двоечник", "Использовать {x}", 1000, HINTS_REDUCE_TRIGGER, SCORE_CURRENCY, 2500));
+//            ACHIEVEMENTS.add(new Achievement(this, "hints.DStudent", "Двоечник", "Использовать {x}", 3500, HINTS_REDUCE_TRIGGER, SCORE_CURRENCY, 5000));
+
+//            ACHIEVEMENTS.add(new Achievement(this, "words.1", "1", "Составить {x} {w}", 20, WORD_COMPOSING_TRIGGER, HINTS_CURRENCY, 10));
+//            ACHIEVEMENTS.add(new Achievement(this, "words.2", "2", "Составить {x} {w}", 50, WORD_COMPOSING_TRIGGER, SCORE_CURRENCY, 75));
+//            ACHIEVEMENTS.add(new Achievement(this, "words.3", "3", "Составить {x} {w}", 100, WORD_COMPOSING_TRIGGER, HINTS_CURRENCY, 30));
+//            ACHIEVEMENTS.add(new Achievement(this, "words.4", "4", "Составить {x} {w}", 200, WORD_COMPOSING_TRIGGER, SCORE_CURRENCY, 200));
+//            ACHIEVEMENTS.add(new Achievement(this, "words.5", "5", "Составить {x} {w}", 500, WORD_COMPOSING_TRIGGER, HINTS_CURRENCY, 85));
+//            ACHIEVEMENTS.add(new Achievement(this, "words.6", "6", "Составить {x} {w}", 750, WORD_COMPOSING_TRIGGER, SCORE_CURRENCY, 500));
+//            ACHIEVEMENTS.add(new Achievement(this, "words.7", "7", "Составить {x} {w}", 750, WORD_COMPOSING_TRIGGER, SCORE_CURRENCY, 500));
         }
 
         eraseButton.setOnLongClickListener(v -> {
@@ -217,7 +228,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void checkForNewVersion() {
-        NetworkService.getInstance().getSWordsApi().getLatestAppVersion().enqueue(
+        NetworkService.getInstance().getSWordsApi().getLatestAppVersion(getBearerToken()).enqueue(
                 new Callback<VersionInfo>() {
                     @Override
                     public void onResponse(Call<VersionInfo> call, Response<VersionInfo> response) {
@@ -569,6 +580,8 @@ public class MainActivity extends AppCompatActivity {
         wordPriceToast.setView(layout);
         wordPriceToast.show();
 
+        Achievement.addProgress(Achievement.WORD_COMPOSING_TRIGGER, 1, this);
+
     }
 
     public void useHint(View view) {
@@ -694,7 +707,7 @@ public class MainActivity extends AppCompatActivity {
                                     HashMap<String, String> body = new HashMap<>();
                                     body.put("word", wordToAdd);
                                     body.put("uuid", uuid);
-                                    NetworkService.getInstance().getSWordsApi().addWordRequest(body).enqueue(
+                                    NetworkService.getInstance().getSWordsApi().addWordRequest(getBearerToken(), body).enqueue(
                                             new Callback<Void>() {
                                                 @Override
                                                 public void onResponse(Call<Void> call, Response<Void> response) {
@@ -743,7 +756,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (lastWordMade != null) {
             progressBar.setVisibility(View.VISIBLE);
-            NetworkService.getInstance().getSWordsApi().getWordMeaning(lastWordMade).enqueue(
+            NetworkService.getInstance().getSWordsApi().getWordMeaning(getBearerToken(), lastWordMade).enqueue(
                     new Callback<Word>() {
                         @Override
                         public void onResponse(Call<Word> call, Response<Word> response) {
@@ -782,6 +795,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return false;
+    }
+
+    public static String getBearerToken() {
+        return "Bearer " + uuid;
     }
 
     public static void onActivityStop(Context context) {
