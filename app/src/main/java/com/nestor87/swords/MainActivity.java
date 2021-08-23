@@ -271,7 +271,7 @@ public class MainActivity extends AppCompatActivity {
                                                 } else {
                                                     startActivity(new Intent(DownloadManager.ACTION_VIEW_DOWNLOADS));
                                                 }
-                                                Toast.makeText(MainActivity.this, "Установите скачанный файл", Toast.LENGTH_LONG).show();
+                                                Toast.makeText(MainActivity.this, "Установите скачанный файл (" + "SWords-" + response.body().getName() + ".apk" + ")", Toast.LENGTH_LONG).show();
 
                                                 unregisterReceiver(this);
                                             }
@@ -345,9 +345,9 @@ public class MainActivity extends AppCompatActivity {
                                         dataManager.setScore(20064);
                                         dataManager.setHints(377);
                                         break;
-                                    case "Nestorian87":
-                                        dataManager.setScore(121);
-                                        dataManager.setHints(9);
+                                    case "Eliz71":
+                                        dataManager.setScore(2860);
+                                        dataManager.setHints(57);
                                 break;
                                 }
                             }

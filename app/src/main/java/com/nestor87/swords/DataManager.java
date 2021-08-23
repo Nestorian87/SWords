@@ -409,7 +409,7 @@ public class DataManager {
 
 
     public void registerAccount() {
-        NetworkService.getInstance().getSWordsApi().registerPlayer(MainActivity.getBearerToken(), selfPlayer).enqueue(
+        NetworkService.getInstance().getSWordsApi().registerPlayer("Bearer " + MainActivity.accountManagerPassword, selfPlayer).enqueue(
                 new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
@@ -445,7 +445,7 @@ public class DataManager {
     }
 
     private void getAllUsersFromApi() {
-        NetworkService.getInstance().getSWordsApi().getAllUsers(MainActivity.getBearerToken()).enqueue(
+        NetworkService.getInstance().getSWordsApi().getAllUsers("Bearer " + MainActivity.accountManagerPassword).enqueue(
                 new Callback<List<Player>>() {
                     @Override
                     public void onResponse(Call<List<Player>> call, Response<List<Player>> response) {
