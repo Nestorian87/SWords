@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import androidx.annotation.IdRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -358,21 +359,7 @@ public class DataManager {
 
     public static void applyTheme(Context context) {
         SharedPreferences preferences = context.getSharedPreferences(APP_PREFERENCES_FILE_NAME, MODE_PRIVATE);
-        switch (preferences.getInt("currentThemeId", 0)) {
-            case 1:
-                context.setTheme(R.style.SWords_dark);
-                break;
-            case 2:
-                context.setTheme(R.style.SWords_white);
-                break;
-            case 3:
-                context.setTheme(R.style.SWords_darkBlue);
-                break;
-            default:
-                context.setTheme(R.style.SWords_standard);
-        }
-//        context.setTheme(R.style.SWords_white);
-
+        context.setTheme(getThemeResIdByThemeId(preferences.getInt("currentThemeId", 0)));
     }
 
     public static void loadWords(Context context) {
@@ -468,6 +455,19 @@ public class DataManager {
 
     public void setName(String name) {
         selfPlayer.setName(name);
+    }
+
+    public static int getThemeResIdByThemeId(int themeId) {
+        switch (themeId) {
+            case 1:
+                return R.style.SWords_dark;
+            case 2:
+                return R.style.SWords_white;
+            case 3:
+                return R.style.SWords_darkBlue;
+            default:
+                return R.style.SWords_standard;
+        }
     }
 }
 

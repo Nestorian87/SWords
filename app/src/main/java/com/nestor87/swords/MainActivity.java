@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -34,6 +35,7 @@ import android.view.Window;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
@@ -70,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
     private Button eraseButton, mixButton, setWordButton;
     private DBHelper dbHelper;
     private ProgressBar progressBar;
+    private ImageButton menuButton, hintsButton, dictionaryButton;
 
     private int permissionCheck;
 
@@ -82,11 +85,18 @@ public class MainActivity extends AppCompatActivity {
 
     private ArrayList<Letter> lettersPressed = new ArrayList<>();
     private boolean isDialogShowing = false;
+    private boolean isThemePreviewMode = false;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        DataManager.applyTheme(this);
+        isThemePreviewMode = getIntent().getIntExtra("themePreviewId", -1) != -1;
+
+        if (!isThemePreviewMode) {
+            DataManager.applyTheme(this);
+        } else {
+            setTheme(DataManager.getThemeResIdByThemeId(getIntent().getIntExtra("themePreviewId", -1)));
+        }
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_FULLSCREEN  | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
@@ -111,6 +121,10 @@ public class MainActivity extends AppCompatActivity {
         mixButton = findViewById(R.id.mix);
         setWordButton = findViewById(R.id.setWord);
         progressBar = findViewById(R.id.progressBar);
+        menuButton = findViewById(R.id.menuButton);
+        dictionaryButton = findViewById(R.id.dictionaryButton);
+        hintsButton = findViewById(R.id.useHintButton);
+
 
         letterButtons = new Button[] {
                 findViewById(R.id.letter1), findViewById(R.id.letter2), findViewById(R.id.letter3), findViewById(R.id.letter4),
@@ -190,6 +204,22 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
 
+
+        if (isThemePreviewMode) {
+            menuButton.setImageResource(R.drawable.ic_left_arrow);
+            menuButton.setOnClickListener(v -> {
+                Intent intent = new Intent(this, ThemeChangeActivity.class);
+                intent.putExtra("selectThemeId", getIntent().getIntExtra("themePreviewId", -1));
+                startActivity(intent);
+                Animatoo.animateSlideRight(this);
+            });
+            for (Button button : letterButtons)  {
+                button.setEnabled(false);
+            }
+            hintsButton.setEnabled(false);
+            dictionaryButton.setEnabled(false);
+            mixButton.setEnabled(false);
+        }
     }
 
     private void requestPermission() {
@@ -549,6 +579,12 @@ public class MainActivity extends AppCompatActivity {
         return typedValue.data;
     }
 
+    public static @ColorInt int getColorFromTheme(int attr, Resources.Theme theme, Context context) {
+        TypedValue typedValue = new TypedValue();
+        theme.resolveAttribute(attr, typedValue, true);
+        return typedValue.data;
+    }
+
     public void setWord(View view) {
         MainActivity.playSound(R.raw.set_word, this);
         lastWordMade = dataManager.getWord().getText().toLowerCase();
@@ -626,130 +662,131 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showMenu(View view) {
-        PopupMenu menu = new PopupMenu(this, view);
-        menu.setOnMenuItemClickListener(item -> {
-            switch (item.getItemId()) {
-                case R.id.themeChange:
-                    startActivity(new Intent(this, ThemeChangeActivity.class));
-                    Animatoo.animateSlideLeft(this);
-                    return true;
+        if (!isThemePreviewMode) {
+            PopupMenu menu = new PopupMenu(this, view);
+            menu.setOnMenuItemClickListener(item -> {
+                switch (item.getItemId()) {
+                    case R.id.themeChange:
+                        startActivity(new Intent(this, ThemeChangeActivity.class));
+                        Animatoo.animateSlideLeft(this);
+                        return true;
 //                case R.id.extraScore:
 //                    dataManager.addScore(400);
 //                    return true;
 //                case R.id.extraHints:
 //                    dataManager.addHints(100);
 //                    return true;
-                case R.id.achievementsButton:
-                    startActivity(new Intent(this, AchievementsActivity.class));
-                    Animatoo.animateSlideLeft(this);
-                    return true;
-                case R.id.buyHints:
-                    TextView textView = new TextView(this);
-                    textView.setText("Стоимость 1 подсказки – 5 очков");
+                    case R.id.achievementsButton:
+                        startActivity(new Intent(this, AchievementsActivity.class));
+                        Animatoo.animateSlideLeft(this);
+                        return true;
+                    case R.id.buyHints:
+                        TextView textView = new TextView(this);
+                        textView.setText("Стоимость 1 подсказки – 5 очков");
 
-                    EditText input = new EditText(this);
-                    input.setInputType(InputType.TYPE_CLASS_NUMBER);
-                    input.setHint("Введите количество подсказок");
+                        EditText input = new EditText(this);
+                        input.setInputType(InputType.TYPE_CLASS_NUMBER);
+                        input.setHint("Введите количество подсказок");
 
-                    LinearLayout layout = new LinearLayout(this);
-                    layout.setOrientation(LinearLayout.VERTICAL);
-                    layout.setGravity(Gravity.CENTER_HORIZONTAL);
-                    layout.addView(textView);
-                    layout.addView(input);
+                        LinearLayout layout = new LinearLayout(this);
+                        layout.setOrientation(LinearLayout.VERTICAL);
+                        layout.setGravity(Gravity.CENTER_HORIZONTAL);
+                        layout.addView(textView);
+                        layout.addView(input);
 
-                    new AlertDialog.Builder(this)
-                            .setTitle("Покупка подсказок")
-                            .setIcon(R.drawable.hints)
-                            .setView(layout)
-                            .setPositiveButton(" Купить", (dialog, which) -> {
-                                try {
-                                int hintsCount = Integer.parseInt(input.getText().toString());
-                                int hintsPrice = hintsCount * 5;
-
-
-
-                                    new AlertDialog.Builder(this)
-                                            .setTitle("Покупка подсказок")
-                                            .setIcon(R.drawable.hints)
-                                            .setMessage("Вы точно хотите купить подсказки (" + hintsCount + ") за " + hintsPrice + " очков?")
-                                            .setPositiveButton("Да", (dialog1, which1) -> {
-                                                try {
-                                                    dataManager.removeScore(hintsPrice);
-                                                    MainActivity.playSound(R.raw.buy, this);
-                                                    dataManager.addHints(hintsCount);
-                                                } catch (IllegalArgumentException e) {
-                                                }
-                                            })
-                                            .setNegativeButton("Нет", null)
-                                            .show();
-
-                                } catch (Exception e) {
-                                    Toast.makeText(this, "Число слишком большое", Toast.LENGTH_SHORT).show();
-                                }
-                            })
-                            .setNegativeButton("Отмена ", null)
-                            .show();
-                    return true;
-                case R.id.statistics:
-                    startActivity(new Intent(this, StatisticsActivity.class));
-                    Animatoo.animateSlideLeft(this);
-                    return true;
-                case R.id.addWord:
-                    String wordToAdd = wordTextView.getText().toString().toLowerCase();
-                    if (setWordButton.isEnabled()) {
-                        Toast.makeText(MainActivity.this, "Это слово уже пристутствует в словаре", Toast.LENGTH_LONG).show();
-                    } else if (!wordToAdd.isEmpty()) {
                         new AlertDialog.Builder(this)
-                                .setTitle("Слово отсутствует в словаре")
-                                .setMessage("Вы точно хотите предложить добавить слово \"" + wordToAdd + "\" в словарь?")
-                                .setPositiveButton("Да", (dialog, which) -> {
-                                    progressBar.setVisibility(View.VISIBLE);
-                                    HashMap<String, String> body = new HashMap<>();
-                                    body.put("word", wordToAdd);
-                                    body.put("uuid", uuid);
-                                    NetworkService.getInstance().getSWordsApi().addWordRequest(getBearerToken(), body).enqueue(
-                                            new Callback<Void>() {
-                                                @Override
-                                                public void onResponse(Call<Void> call, Response<Void> response) {
-                                                    progressBar.setVisibility(View.INVISIBLE);
-                                                    Toast.makeText(MainActivity.this, "Спасибо. Ваше предложение будет рассмотрено", Toast.LENGTH_LONG).show();
-                                                }
+                                .setTitle("Покупка подсказок")
+                                .setIcon(R.drawable.hints)
+                                .setView(layout)
+                                .setPositiveButton(" Купить", (dialog, which) -> {
+                                    try {
+                                        int hintsCount = Integer.parseInt(input.getText().toString());
+                                        int hintsPrice = hintsCount * 5;
 
-                                                @Override
-                                                public void onFailure(Call<Void> call, Throwable t) {
-                                                    progressBar.setVisibility(View.INVISIBLE);
-                                                    MainActivity.playSound(R.raw.error, MainActivity.this);
-                                                    Toast.makeText(MainActivity.this, "Произошла ошибка. Проверьте подключение к интернету", Toast.LENGTH_LONG).show();
 
-                                                }
-                                            }
-                                    );
+                                        new AlertDialog.Builder(this)
+                                                .setTitle("Покупка подсказок")
+                                                .setIcon(R.drawable.hints)
+                                                .setMessage("Вы точно хотите купить подсказки (" + hintsCount + ") за " + hintsPrice + " очков?")
+                                                .setPositiveButton("Да", (dialog1, which1) -> {
+                                                    try {
+                                                        dataManager.removeScore(hintsPrice);
+                                                        MainActivity.playSound(R.raw.buy, this);
+                                                        dataManager.addHints(hintsCount);
+                                                    } catch (IllegalArgumentException e) {
+                                                    }
+                                                })
+                                                .setNegativeButton("Нет", null)
+                                                .show();
 
-                                }).setNegativeButton("Отмена", null)
-                                .setIcon(R.drawable.icon)
+                                    } catch (Exception e) {
+                                        Toast.makeText(this, "Число слишком большое", Toast.LENGTH_SHORT).show();
+                                    }
+                                })
+                                .setNegativeButton("Отмена ", null)
                                 .show();
-                    } else {
-                        Toast.makeText(MainActivity.this, "Для того, чтобы предложить слово, сначала составьте его из букв", Toast.LENGTH_LONG).show();
-                    }
-                    return true;
-                case R.id.changeName:
-                    if (isConnectedToInternet()) {
-                        dataManager.getAllUsers().observe(this, this::showNameDialog);
-                    } else {
-                        Toast.makeText(MainActivity.this, "Произошла ошибка. Проверьте подключение к интернету", Toast.LENGTH_LONG).show();
-                    }
+                        return true;
+                    case R.id.statistics:
+                        startActivity(new Intent(this, StatisticsActivity.class));
+                        Animatoo.animateSlideLeft(this);
+                        return true;
+                    case R.id.addWord:
+                        String wordToAdd = wordTextView.getText().toString().toLowerCase();
+                        if (setWordButton.isEnabled()) {
+                            Toast.makeText(MainActivity.this, "Это слово уже пристутствует в словаре", Toast.LENGTH_LONG).show();
+                        } else if (!wordToAdd.isEmpty()) {
+                            new AlertDialog.Builder(this)
+                                    .setTitle("Слово отсутствует в словаре")
+                                    .setMessage("Вы точно хотите предложить добавить слово \"" + wordToAdd + "\" в словарь?")
+                                    .setPositiveButton("Да", (dialog, which) -> {
+                                        progressBar.setVisibility(View.VISIBLE);
+                                        HashMap<String, String> body = new HashMap<>();
+                                        body.put("word", wordToAdd);
+                                        body.put("uuid", uuid);
+                                        NetworkService.getInstance().getSWordsApi().addWordRequest(getBearerToken(), body).enqueue(
+                                                new Callback<Void>() {
+                                                    @Override
+                                                    public void onResponse(Call<Void> call, Response<Void> response) {
+                                                        progressBar.setVisibility(View.INVISIBLE);
+                                                        Toast.makeText(MainActivity.this, "Спасибо. Ваше предложение будет рассмотрено", Toast.LENGTH_LONG).show();
+                                                    }
 
-                    return true;
-                case R.id.bestPlayers:
-                    startActivity(new Intent(this, BestPlayersActivity.class));
-                    Animatoo.animateSlideLeft(this);
-                    return true;
-                default:
-                    return false;
-            }
-        });
-        menu.inflate(R.menu.menu);
-        menu.show();
+                                                    @Override
+                                                    public void onFailure(Call<Void> call, Throwable t) {
+                                                        progressBar.setVisibility(View.INVISIBLE);
+                                                        MainActivity.playSound(R.raw.error, MainActivity.this);
+                                                        Toast.makeText(MainActivity.this, "Произошла ошибка. Проверьте подключение к интернету", Toast.LENGTH_LONG).show();
+
+                                                    }
+                                                }
+                                        );
+
+                                    }).setNegativeButton("Отмена", null)
+                                    .setIcon(R.drawable.icon)
+                                    .show();
+                        } else {
+                            Toast.makeText(MainActivity.this, "Для того, чтобы предложить слово, сначала составьте его из букв", Toast.LENGTH_LONG).show();
+                        }
+                        return true;
+                    case R.id.changeName:
+                        if (isConnectedToInternet()) {
+                            dataManager.getAllUsers().observe(this, this::showNameDialog);
+                        } else {
+                            Toast.makeText(MainActivity.this, "Произошла ошибка. Проверьте подключение к интернету", Toast.LENGTH_LONG).show();
+                        }
+
+                        return true;
+                    case R.id.bestPlayers:
+                        startActivity(new Intent(this, BestPlayersActivity.class));
+                        Animatoo.animateSlideLeft(this);
+                        return true;
+                    default:
+                        return false;
+                }
+            });
+            menu.inflate(R.menu.menu);
+            menu.show();
+        }
     }
 
     public void useDictionary(View view) {
@@ -843,14 +880,20 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        new AlertDialog.Builder(this)
-                        .setTitle("Подтверждение выхода")
-                        .setMessage("Вы точно хотите выйти?")
-                        .setPositiveButton("Выход ", (dialog, which) -> {
-                            finishAffinity();
-                        }).setNegativeButton(" Отмена", null)
-                        .setIcon(R.drawable.icon)
-                        .show();
-
+        if (!isThemePreviewMode) {
+            new AlertDialog.Builder(this)
+                    .setTitle("Подтверждение выхода")
+                    .setMessage("Вы точно хотите выйти?")
+                    .setPositiveButton("Выход ", (dialog, which) -> {
+                        finishAffinity();
+                    }).setNegativeButton(" Отмена", null)
+                    .setIcon(R.drawable.icon)
+                    .show();
+        } else {
+            Intent intent = new Intent(this, ThemeChangeActivity.class);
+            intent.putExtra("selectThemeId", getIntent().getIntExtra("themePreviewId", -1));
+            startActivity(intent);
+            Animatoo.animateSlideRight(this);
+        }
     }
 }
