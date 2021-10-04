@@ -7,6 +7,7 @@
     <item android:title="Лучшие игроки" android:id="@+id/bestPlayers" />
     <item android:title="Слово отсутствует" android:id="@+id/addWord" />
     <item android:title="Изменить никнейм" android:id="@+id/changeName" />
+    <item android:title="Выход" android:id="@+id/exit" />
     <!--<item android:title="Настройки" android:id="@+id/settings" />-->
 <!--    <item android:title="+1000 очков" android:id="@+id/extraScore" />-->
     <!--<item android:title="+100 подсказок" android:id="@+id/extraHints" />-->

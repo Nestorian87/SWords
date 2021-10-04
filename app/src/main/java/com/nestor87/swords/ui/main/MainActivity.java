@@ -791,6 +791,9 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(new Intent(this, BestPlayersActivity.class));
                         Animatoo.animateSlideLeft(this);
                         return true;
+                    case R.id.exit:
+                        finishAffinity();
+                        return true;
                     default:
                         return false;
                 }
