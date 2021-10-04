@@ -1,4 +1,4 @@
-package com.nestor87.swords;
+package com.nestor87.swords.data.models;
 
 public class VersionInfo {
     private int code;

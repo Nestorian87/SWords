@@ -1,8 +1,12 @@
-package com.nestor87.swords;
+package com.nestor87.swords.data.models;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+
+import com.nestor87.swords.data.DBHelper;
+import com.nestor87.swords.data.models.Letter;
+import com.nestor87.swords.ui.main.MainActivity;
 
 import java.util.ArrayList;
 
@@ -82,7 +86,7 @@ public class Word {
 
     }
 
-    boolean exists(DBHelper dbHelper) {
+    public boolean exists(DBHelper dbHelper) {
 
         boolean exists = false;
         SQLiteDatabase db = dbHelper.openDB();

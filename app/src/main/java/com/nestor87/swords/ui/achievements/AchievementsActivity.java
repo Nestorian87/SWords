@@ -1,4 +1,4 @@
-package com.nestor87.swords;
+package com.nestor87.swords.ui.achievements;
 
 import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,6 +8,10 @@ import android.view.View;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.blogspot.atifsoftwares.animatoolib.Animatoo;
+import com.nestor87.swords.data.DataManager;
+import com.nestor87.swords.ui.main.MainActivity;
+import com.nestor87.swords.R;
+import com.nestor87.swords.data.models.Achievement;
 
 import java.util.ArrayList;
 import java.util.List;

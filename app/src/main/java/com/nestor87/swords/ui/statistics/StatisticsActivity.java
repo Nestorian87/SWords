@@ -1,4 +1,4 @@
-package com.nestor87.swords;
+package com.nestor87.swords.ui.statistics;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -9,21 +9,17 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.blogspot.atifsoftwares.animatoolib.Animatoo;
+import com.nestor87.swords.R;
+import com.nestor87.swords.data.DBHelper;
+import com.nestor87.swords.data.DataManager;
+import com.nestor87.swords.ui.main.MainActivity;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
-import static com.nestor87.swords.AchievementAdapter.dataManager;
-import static com.nestor87.swords.MainActivity.APP_PREFERENCES_FILE_NAME;
+import static com.nestor87.swords.ui.achievements.AchievementAdapter.dataManager;
+import static com.nestor87.swords.ui.main.MainActivity.APP_PREFERENCES_FILE_NAME;
 
 public class StatisticsActivity extends AppCompatActivity {
 

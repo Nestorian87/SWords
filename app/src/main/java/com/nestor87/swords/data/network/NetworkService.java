@@ -1,4 +1,4 @@
-package com.nestor87.swords;
+package com.nestor87.swords.data.network;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;

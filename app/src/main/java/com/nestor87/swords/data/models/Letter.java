@@ -1,19 +1,16 @@
-package com.nestor87.swords;
+package com.nestor87.swords.data.models;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.util.Log;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 
-import com.google.android.material.internal.ViewUtils;
+import com.nestor87.swords.ui.main.MainActivity;
+import com.nestor87.swords.R;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Objects;
 
 public class Letter implements Cloneable {
     public static final ArrayList<Letter> LETTERS = new ArrayList<>(Arrays.asList(

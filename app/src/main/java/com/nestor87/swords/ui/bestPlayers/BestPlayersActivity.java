@@ -1,4 +1,4 @@
-package com.nestor87.swords;
+package com.nestor87.swords.ui.bestPlayers;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,6 +11,11 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.blogspot.atifsoftwares.animatoolib.Animatoo;
+import com.nestor87.swords.data.DataManager;
+import com.nestor87.swords.ui.main.MainActivity;
+import com.nestor87.swords.data.network.NetworkService;
+import com.nestor87.swords.data.models.Player;
+import com.nestor87.swords.R;
 
 import java.util.List;
 

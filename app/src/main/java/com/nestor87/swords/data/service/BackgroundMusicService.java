@@ -1,22 +1,26 @@
-package com.nestor87.swords;
+package com.nestor87.swords.data.service;
 
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.media.MediaPlayer;
-import android.media.effect.Effect;
 import android.os.Handler;
 import android.os.IBinder;
 
 import androidx.annotation.Nullable;
 
+import com.nestor87.swords.data.LoopMediaPlayer;
+import com.nestor87.swords.data.network.NetworkService;
+import com.nestor87.swords.ui.main.MainActivity;
+import com.nestor87.swords.data.models.Player;
+import com.nestor87.swords.data.receiver.ScreenOffReceiver;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.nestor87.swords.MainActivity.APP_PREFERENCES_FILE_NAME;
+import static com.nestor87.swords.ui.main.MainActivity.APP_PREFERENCES_FILE_NAME;
 
 public class BackgroundMusicService extends Service {
 

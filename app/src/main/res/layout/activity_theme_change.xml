@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ThemeChangeActivity">
+    tools:context=".ui.themeChange.ThemeChangeActivity">
 
     <ImageButton
         android:id="@+id/goBackButton"
@@ -26,7 +26,7 @@
         android:layout_height="30dp"
         android:layout_marginTop="2dp"
         android:layout_marginEnd="2dp"
-        android:background="@drawable/gradient_background_score"
+        android:background="@drawable/icon_gradient"
         android:gravity="center"
         android:paddingEnd="50dp"
         android:text="0"

@@ -1,18 +1,17 @@
-package com.nestor87.swords;
+package com.nestor87.swords.data;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import java.io.BufferedReader;
+import com.nestor87.swords.ui.main.MainActivity;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.net.URL;
 
 public class DBHelper extends SQLiteOpenHelper {
     private static final String DB_NAME = "SWords";

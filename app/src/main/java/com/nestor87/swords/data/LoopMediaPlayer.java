@@ -1,16 +1,18 @@
-package com.nestor87.swords;
+package com.nestor87.swords.data;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.util.Log;
 
+import com.nestor87.swords.R;
+
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import static android.content.Context.MODE_PRIVATE;
-import static com.nestor87.swords.MainActivity.APP_PREFERENCES_FILE_NAME;
+import static com.nestor87.swords.ui.main.MainActivity.APP_PREFERENCES_FILE_NAME;
 
 public class LoopMediaPlayer {
 

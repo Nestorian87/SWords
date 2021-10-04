@@ -1,4 +1,4 @@
-package com.nestor87.swords;
+package com.nestor87.swords.data;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import androidx.annotation.IdRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -20,6 +19,13 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.nestor87.swords.data.models.Letter;
+import com.nestor87.swords.ui.main.MainActivity;
+import com.nestor87.swords.data.network.NetworkService;
+import com.nestor87.swords.data.models.Player;
+import com.nestor87.swords.R;
+import com.nestor87.swords.data.models.Word;
+import com.nestor87.swords.data.models.Achievement;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,9 +36,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.content.Context.MODE_PRIVATE;
-import static com.nestor87.swords.MainActivity.APP_PREFERENCES_FILE_NAME;
-import static com.nestor87.swords.MainActivity.LOG_TAG;
-import static com.nestor87.swords.MainActivity.getColorFromTheme;
+import static com.nestor87.swords.ui.main.MainActivity.APP_PREFERENCES_FILE_NAME;
+import static com.nestor87.swords.ui.main.MainActivity.LOG_TAG;
+import static com.nestor87.swords.ui.main.MainActivity.getColorFromTheme;
 
 public class DataManager {
 

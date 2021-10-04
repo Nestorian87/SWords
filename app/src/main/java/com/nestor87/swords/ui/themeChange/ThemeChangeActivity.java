@@ -1,8 +1,8 @@
-package com.nestor87.swords;
+package com.nestor87.swords.ui.themeChange;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import androidx.appcompat.app.AlertDialog;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
@@ -16,9 +16,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.blogspot.atifsoftwares.animatoolib.Animatoo;
+import com.nestor87.swords.R;
+import com.nestor87.swords.data.DBHelper;
+import com.nestor87.swords.data.DataManager;
+import com.nestor87.swords.ui.main.MainActivity;
 
-import static com.nestor87.swords.MainActivity.APP_PREFERENCES_FILE_NAME;
-import static com.nestor87.swords.MainActivity.getColorFromTheme;
+import static com.nestor87.swords.ui.main.MainActivity.APP_PREFERENCES_FILE_NAME;
+import static com.nestor87.swords.ui.main.MainActivity.getColorFromTheme;
 
 public class ThemeChangeActivity extends AppCompatActivity {
 

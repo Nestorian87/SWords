@@ -1,4 +1,4 @@
-package com.nestor87.swords;
+package com.nestor87.swords.ui.main;
 
 import android.Manifest;
 import android.app.Dialog;
@@ -22,7 +22,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
 
 import android.os.Bundle;
 import android.text.InputType;
@@ -44,9 +43,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.blogspot.atifsoftwares.animatoolib.Animatoo;
+import com.nestor87.swords.BuildConfig;
+import com.nestor87.swords.data.network.NetworkService;
+import com.nestor87.swords.R;
+import com.nestor87.swords.ui.statistics.StatisticsActivity;
+import com.nestor87.swords.ui.themeChange.ThemeChangeActivity;
+import com.nestor87.swords.data.models.VersionInfo;
+import com.nestor87.swords.data.models.Word;
+import com.nestor87.swords.data.DBHelper;
+import com.nestor87.swords.data.DataManager;
+import com.nestor87.swords.data.models.Achievement;
+import com.nestor87.swords.data.models.Letter;
+import com.nestor87.swords.data.models.Player;
+import com.nestor87.swords.data.service.BackgroundMusicService;
+import com.nestor87.swords.ui.achievements.AchievementsActivity;
+import com.nestor87.swords.ui.bestPlayers.BestPlayersActivity;
 
-import java.io.File;
-import java.security.Permission;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -57,12 +69,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.nestor87.swords.Achievement.ACHIEVEMENTS;
-import static com.nestor87.swords.Achievement.HINTS_CURRENCY;
-import static com.nestor87.swords.Achievement.HINTS_REDUCE_TRIGGER;
-import static com.nestor87.swords.Achievement.SCORE_CURRENCY;
-import static com.nestor87.swords.Achievement.SCORE_INCREASE_TRIGGER;
-import static com.nestor87.swords.Achievement.WORD_COMPOSING_TRIGGER;
+import static com.nestor87.swords.data.models.Achievement.ACHIEVEMENTS;
+import static com.nestor87.swords.data.models.Achievement.HINTS_CURRENCY;
+import static com.nestor87.swords.data.models.Achievement.HINTS_REDUCE_TRIGGER;
+import static com.nestor87.swords.data.models.Achievement.SCORE_CURRENCY;
+import static com.nestor87.swords.data.models.Achievement.SCORE_INCREASE_TRIGGER;
 
 public class MainActivity extends AppCompatActivity {
 

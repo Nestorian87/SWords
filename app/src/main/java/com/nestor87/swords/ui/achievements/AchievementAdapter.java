@@ -1,4 +1,4 @@
-package com.nestor87.swords;
+package com.nestor87.swords.ui.achievements;
 
 
 import android.content.Context;
@@ -14,6 +14,12 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.nestor87.swords.data.DBHelper;
+import com.nestor87.swords.data.DataManager;
+import com.nestor87.swords.ui.main.MainActivity;
+import com.nestor87.swords.R;
+import com.nestor87.swords.data.models.Achievement;
 
 import java.util.ArrayList;
 import java.util.List;

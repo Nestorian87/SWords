@@ -1,7 +1,6 @@
-package com.nestor87.swords;
+package com.nestor87.swords.data.models;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Objects;
 
 import android.app.Activity;
@@ -10,57 +9,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.view.View;
 
-import androidx.annotation.IdRes;
-
 import com.blogspot.atifsoftwares.animatoolib.Animatoo;
 import com.google.android.material.snackbar.Snackbar;
-
-
-class Currency {
-    private boolean custom = false;
-    private int icon;
-    private String text;
-
-    public Currency(int icon2) {
-        this.icon = icon2;
-    }
-
-    public Currency(String text2) {
-        this.text = text2;
-        this.custom = true;
-    }
-
-    public int getIcon() {
-        return this.icon;
-    }
-
-    public String getText() {
-        return this.text;
-    }
-
-    public boolean isCustom() {
-        return this.custom;
-    }
-
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Currency currency = (Currency) o;
-        if (this.icon != currency.icon || !Objects.equals(this.text, currency.text)) {
-            return false;
-        }
-        return true;
-    }
-
-    public int hashCode() {
-        return Objects.hash(Integer.valueOf(this.icon), this.text);
-    }
-}
-
+import com.nestor87.swords.ui.achievements.AchievementsActivity;
+import com.nestor87.swords.ui.main.MainActivity;
+import com.nestor87.swords.R;
 
 public class Achievement implements Comparable {
     public static ArrayList<Achievement> ACHIEVEMENTS = new ArrayList();

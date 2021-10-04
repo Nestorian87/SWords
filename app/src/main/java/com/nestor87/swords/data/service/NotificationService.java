@@ -1,7 +1,6 @@
-package com.nestor87.swords;
+package com.nestor87.swords.data.service;
 
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
@@ -13,14 +12,16 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.nestor87.swords.R;
+import com.nestor87.swords.data.DataManager;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static com.nestor87.swords.MainActivity.accountManagerPassword;
-import static com.nestor87.swords.MainActivity.uuid;
+import static com.nestor87.swords.ui.main.MainActivity.accountManagerPassword;
+import static com.nestor87.swords.ui.main.MainActivity.uuid;
 
 public class NotificationService extends Service {
     int notificationId = 100;
