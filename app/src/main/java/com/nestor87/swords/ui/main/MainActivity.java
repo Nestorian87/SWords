@@ -413,6 +413,9 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             });
+            if (preferences.getBoolean("isAccountRegistered", false)) {
+                builder.setNegativeButton("Отмена", (dialog, which) -> dialog.cancel());
+            }
             builder.show();
         }
     }
