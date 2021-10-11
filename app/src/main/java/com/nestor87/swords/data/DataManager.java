@@ -11,6 +11,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -452,6 +453,16 @@ public class DataManager {
             default:
                 return R.style.SWords_standard;
         }
+    }
+
+    public int dpToPx(int dp) {
+        return (int) Math.round(
+                TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        dp,
+                        context.getResources().getDisplayMetrics()
+                )
+        );
     }
 }
 

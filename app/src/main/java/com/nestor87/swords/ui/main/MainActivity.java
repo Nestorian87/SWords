@@ -17,57 +17,61 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Environment;
 import android.os.Vibrator;
-import androidx.annotation.ColorInt;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
-import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.ColorInt;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 import com.blogspot.atifsoftwares.animatoolib.Animatoo;
 import com.nestor87.swords.BuildConfig;
-import com.nestor87.swords.data.models.UsernameAvailabilityResponse;
-import com.nestor87.swords.data.network.NetworkService;
 import com.nestor87.swords.R;
-import com.nestor87.swords.ui.statistics.StatisticsActivity;
-import com.nestor87.swords.ui.themeChange.ThemeChangeActivity;
-import com.nestor87.swords.data.models.VersionResponse;
-import com.nestor87.swords.data.models.Word;
 import com.nestor87.swords.data.DBHelper;
 import com.nestor87.swords.data.DataManager;
+import com.nestor87.swords.data.markdownviewCssStyle.VersionCssStyle;
 import com.nestor87.swords.data.models.Achievement;
 import com.nestor87.swords.data.models.Letter;
-import com.nestor87.swords.data.models.Player;
+import com.nestor87.swords.data.models.UsernameAvailabilityResponse;
+import com.nestor87.swords.data.models.VersionResponse;
+import com.nestor87.swords.data.models.Word;
+import com.nestor87.swords.data.network.NetworkService;
 import com.nestor87.swords.data.service.BackgroundMusicService;
 import com.nestor87.swords.ui.achievements.AchievementsActivity;
 import com.nestor87.swords.ui.bestPlayers.BestPlayersActivity;
+import com.nestor87.swords.ui.statistics.StatisticsActivity;
+import com.nestor87.swords.ui.themeChange.ThemeChangeActivity;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.UUID;
 
+import br.tiagohm.markdownview.MarkdownView;
+import br.tiagohm.markdownview.css.styles.Github;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -101,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean isDialogShowing = false;
     private boolean isThemePreviewMode = false;
 
+    public static boolean isNewVersionRequested = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -269,70 +274,95 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void checkForNewVersion() {
-        NetworkService.getInstance().getSWordsApi().getLatestAppVersion(getBearerToken()).enqueue(
-                new Callback<VersionResponse>() {
-                    @Override
-                    public void onResponse(Call<VersionResponse> call, Response<VersionResponse> response) {
-                        if (response.body().getCode() > BuildConfig.VERSION_CODE) {
-                            Dialog dialog = new AlertDialog.Builder(MainActivity.this)
-                                    .setTitle("Доступна новая версия " + response.body().getName())
-                                    .setMessage(response.body().getChanges())
-                                    .setCancelable(false)
-                                    .setPositiveButton("Cкачать", null)
-                                    .create();
-                            dialog.setOnShowListener(alertDialog -> {
-                                Button button = ((AlertDialog) alertDialog).getButton(AlertDialog.BUTTON_POSITIVE);
-                                button.setOnClickListener(v -> {
-                                    ((Button) button).setText("Скачивание...");
-                                    ((Button) button).setEnabled(false);
-                                    DownloadManager downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
-                                    Uri uri = Uri.parse("https://github.com/Nestorian87/SWords/raw/master/app/release/app-release.apk");
+        if (!isNewVersionRequested) {
+            isNewVersionRequested = true;
 
-                                    DownloadManager.Request request = new DownloadManager.Request(uri);
-                                    request.setTitle("SWords v" + response.body().getName());
-                                    request.setDescription("Новая версия");
-                                    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
-                                    request.setVisibleInDownloadsUi(true);
-                                    request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS,"SWords-" + response.body().getName() + ".apk");
-                                    request.setMimeType(MimeTypeMap.getSingleton().getMimeTypeFromExtension("apk"));
-                                    downloadManager.enqueue(request);
+            NetworkService.getInstance().getSWordsApi().getLatestAppVersion(getBearerToken()).enqueue(
+                    new Callback<VersionResponse>() {
+                        @Override
+                        public void onResponse(Call<VersionResponse> call, Response<VersionResponse> response) {
+                            if (response.body().getCode() > BuildConfig.VERSION_CODE) {
+                                MarkdownView markdownView = new MarkdownView(MainActivity.this);
+                                markdownView.addStyleSheet(new VersionCssStyle());
+                                markdownView.loadMarkdown(response.body().getChanges());
+                                markdownView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
 
-                                    BroadcastReceiver onComplete = new BroadcastReceiver() {
-                                        public void onReceive(Context context, Intent intent) {
-                                            if (intent.getAction().equals(DownloadManager.ACTION_DOWNLOAD_COMPLETE)) {
-                                                ((Button) button).setText("Скачать");
-                                                ((Button) button).setEnabled(true);
-                                                if (isSamsung()) {
-                                                    Intent intent1 = getPackageManager()
-                                                            .getLaunchIntentForPackage("com.sec.android.app.myfiles");
-                                                    intent1.setAction("samsung.myfiles.intent.action.LAUNCH_MY_FILES");
-                                                    intent1.putExtra("samsung.myfiles.intent.extra.START_PATH",
-                                                            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath());
-                                                    startActivity(intent1);
-                                                } else {
-                                                    startActivity(new Intent(DownloadManager.ACTION_VIEW_DOWNLOADS));
+                                ScrollView scrollView = new ScrollView(MainActivity.this);
+                                scrollView.addView(markdownView);
+
+                                scrollView.setLayoutParams(
+                                        new ViewGroup.LayoutParams(dataManager.dpToPx(350), dataManager.dpToPx(30))
+                                );
+
+                                TextView titleTextView = new TextView(MainActivity.this);
+                                titleTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                                titleTextView.setTextSize(22);
+                                titleTextView.setPadding(0, 10, 0, 20);
+                                titleTextView.setTextColor(Color.BLACK);
+                                titleTextView.setTypeface(Typeface.DEFAULT_BOLD);
+                                titleTextView.setText("Доступна новая версия " + response.body().getName());
+
+
+                                Dialog dialog = new AlertDialog.Builder(MainActivity.this)
+                                        .setCustomTitle(titleTextView)
+                                        .setView(scrollView)
+                                        .setCancelable(false)
+                                        .setPositiveButton("Cкачать", null)
+                                        .create();
+                                dialog.setOnShowListener(alertDialog -> {
+                                    Button button = ((AlertDialog) alertDialog).getButton(AlertDialog.BUTTON_POSITIVE);
+                                    button.setOnClickListener(v -> {
+                                        ((Button) button).setText("Скачивание...");
+                                        ((Button) button).setEnabled(false);
+                                        DownloadManager downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+                                        Uri uri = Uri.parse("https://github.com/Nestorian87/SWords/raw/master/app/release/app-release.apk");
+
+                                        DownloadManager.Request request = new DownloadManager.Request(uri);
+                                        request.setTitle("SWords v" + response.body().getName());
+                                        request.setDescription("Новая версия");
+                                        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
+                                        request.setVisibleInDownloadsUi(true);
+                                        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "SWords-" + response.body().getName() + ".apk");
+                                        request.setMimeType(MimeTypeMap.getSingleton().getMimeTypeFromExtension("apk"));
+                                        downloadManager.enqueue(request);
+
+                                        BroadcastReceiver onComplete = new BroadcastReceiver() {
+                                            public void onReceive(Context context, Intent intent) {
+                                                if (intent.getAction().equals(DownloadManager.ACTION_DOWNLOAD_COMPLETE)) {
+                                                    ((Button) button).setText("Скачать");
+                                                    ((Button) button).setEnabled(true);
+                                                    if (isSamsung()) {
+                                                        Intent intent1 = getPackageManager()
+                                                                .getLaunchIntentForPackage("com.sec.android.app.myfiles");
+                                                        intent1.setAction("samsung.myfiles.intent.action.LAUNCH_MY_FILES");
+                                                        intent1.putExtra("samsung.myfiles.intent.extra.START_PATH",
+                                                                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath());
+                                                        startActivity(intent1);
+                                                    } else {
+                                                        startActivity(new Intent(DownloadManager.ACTION_VIEW_DOWNLOADS));
+                                                    }
+                                                    Toast.makeText(MainActivity.this, "Установите скачанный файл (" + "SWords-" + response.body().getName() + ".apk" + ")", Toast.LENGTH_LONG).show();
+
+                                                    unregisterReceiver(this);
                                                 }
-                                                Toast.makeText(MainActivity.this, "Установите скачанный файл (" + "SWords-" + response.body().getName() + ".apk" + ")", Toast.LENGTH_LONG).show();
-
-                                                unregisterReceiver(this);
                                             }
-                                        }
-                                    };
-                                    registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+                                        };
+                                        registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
 
+                                    });
                                 });
-                            });
 
-                            dialog.show();
+                                dialog.show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<VersionResponse> call, Throwable t) {
+
                         }
                     }
-
-                    @Override
-                    public void onFailure(Call<VersionResponse> call, Throwable t) {
-
-                    }
-                }
-        );
+            );
+        }
     }
 
     public static boolean isSamsung() {
