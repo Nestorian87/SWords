@@ -20,6 +20,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.nestor87.swords.data.models.Letter;
+import com.nestor87.swords.data.models.UsernameAvailabilityResponse;
 import com.nestor87.swords.ui.main.MainActivity;
 import com.nestor87.swords.data.network.NetworkService;
 import com.nestor87.swords.data.models.Player;
@@ -53,7 +54,6 @@ public class DataManager {
     private int hintIndex = 0;
     public ArrayList<Integer> lettersWithHintsIndexes = new ArrayList<>();
     private Player selfPlayer;
-    private MutableLiveData<List<Player>> allUsers = new MutableLiveData<>();
 
     public DataManager(TextView scoreTextView, TextView hintsTextView, TextView wordTextView, Button[] letterButtons, DBHelper dbHelper, Context context) {
         this.scoreTextView = scoreTextView;
@@ -435,28 +435,6 @@ public class DataManager {
                     }
                 }
         );
-    }
-
-    private void getAllUsersFromApi() {
-        NetworkService.getInstance().getSWordsApi().getAllUsers("Bearer " + MainActivity.accountManagerPassword).enqueue(
-                new Callback<List<Player>>() {
-                    @Override
-                    public void onResponse(Call<List<Player>> call, Response<List<Player>> response) {
-                        allUsers.setValue(response.body());
-                    }
-
-                    @Override
-                    public void onFailure(Call<List<Player>> call, Throwable t) {
-                        Log.i(LOG_TAG, "failure");
-                    }
-                }
-        );
-    }
-
-
-    public LiveData<List<Player>> getAllUsers() {
-        getAllUsersFromApi();
-        return allUsers;
     }
 
     public void setName(String name) {

@@ -1,6 +1,6 @@
 package com.nestor87.swords.data.models;
 
-public class VersionInfo {
+public class VersionResponse {
     private int code;
     private String name;
     private String changes;

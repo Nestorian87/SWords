@@ -1,6 +1,7 @@
 package com.nestor87.swords.data.network;
 
-import com.nestor87.swords.data.models.VersionInfo;
+import com.nestor87.swords.data.models.UsernameAvailabilityResponse;
+import com.nestor87.swords.data.models.VersionResponse;
 import com.nestor87.swords.data.models.Word;
 import com.nestor87.swords.data.models.Player;
 
@@ -35,6 +36,9 @@ public interface SWordsApi {
     @POST("/SWordsApi/user.php")
     Call<Void> setStatusOnline(@Header("Authorization") String bearerToken, @Body Player player);
 
-    @POST("/SWordsApi/version.php")
-    Call<VersionInfo> getLatestAppVersion(@Header("Authorization") String bearerToken);
+    @GET("/SWordsApi/version.php")
+    Call<VersionResponse> getLatestAppVersion(@Header("Authorization") String bearerToken);
+
+    @GET("/SWordsApi/username_availability.php")
+    Call<UsernameAvailabilityResponse> checkUsernameAvailability(@Header("Authorization") String bearerToken, @Query("username") String username);
 }

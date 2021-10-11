@@ -46,11 +46,12 @@ import android.widget.Toast;
 
 import com.blogspot.atifsoftwares.animatoolib.Animatoo;
 import com.nestor87.swords.BuildConfig;
+import com.nestor87.swords.data.models.UsernameAvailabilityResponse;
 import com.nestor87.swords.data.network.NetworkService;
 import com.nestor87.swords.R;
 import com.nestor87.swords.ui.statistics.StatisticsActivity;
 import com.nestor87.swords.ui.themeChange.ThemeChangeActivity;
-import com.nestor87.swords.data.models.VersionInfo;
+import com.nestor87.swords.data.models.VersionResponse;
 import com.nestor87.swords.data.models.Word;
 import com.nestor87.swords.data.DBHelper;
 import com.nestor87.swords.data.DataManager;
@@ -153,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
         buttonSetEnabled(setWordButton, false);
 
         if (preferences.getString("name", "").equals(""))
-            dataManager.getAllUsers().observe(this, this::showNameDialog);
+            showNameDialog();
 
 
         if (!preferences.getBoolean("isAccountRegistered", false) && !preferences.getString("name", "").equals(""))
@@ -269,9 +270,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void checkForNewVersion() {
         NetworkService.getInstance().getSWordsApi().getLatestAppVersion(getBearerToken()).enqueue(
-                new Callback<VersionInfo>() {
+                new Callback<VersionResponse>() {
                     @Override
-                    public void onResponse(Call<VersionInfo> call, Response<VersionInfo> response) {
+                    public void onResponse(Call<VersionResponse> call, Response<VersionResponse> response) {
                         if (response.body().getCode() > BuildConfig.VERSION_CODE) {
                             Dialog dialog = new AlertDialog.Builder(MainActivity.this)
                                     .setTitle("Доступна новая версия " + response.body().getName())
@@ -327,7 +328,7 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onFailure(Call<VersionInfo> call, Throwable t) {
+                    public void onFailure(Call<VersionResponse> call, Throwable t) {
 
                     }
                 }
@@ -341,83 +342,85 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void showNameDialog(List<Player> allPlayers) {
-        if (!isDialogShowing) {
-            isDialogShowing = true;
-            SharedPreferences preferences = getSharedPreferences(APP_PREFERENCES_FILE_NAME, MODE_PRIVATE);
-            SharedPreferences.Editor preferencesEditor = preferences.edit();
+    private void showNameDialog() {
+        if (isConnectedToInternet()) {
+            if (!isDialogShowing) {
+                isDialogShowing = true;
+                SharedPreferences preferences = getSharedPreferences(APP_PREFERENCES_FILE_NAME, MODE_PRIVATE);
+                SharedPreferences.Editor preferencesEditor = preferences.edit();
 
-            LayoutInflater layoutInflater = LayoutInflater.from(this);
-            View nameView = layoutInflater.inflate(R.layout.input_name_dialog, null);
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setView(nameView);
-            EditText nameEditText = nameView.findViewById(R.id.nameEditText);
-            nameEditText.setText(preferences.getString("name", ""));
-            builder.setCancelable(false).setNeutralButton("OK", (dialog, which) -> {
-                if (nameEditText.getText().toString().isEmpty()) {
-                    Toast.makeText(this, "Введите ник!", Toast.LENGTH_SHORT).show();
-                    dialog.cancel();
-                    isDialogShowing = false;
-                    if (isConnectedToInternet())
-                        dataManager.getAllUsers().observe(this, this::showNameDialog);
-                    else
-                        Toast.makeText(MainActivity.this, "Произошла ошибка. Проверьте подключение к интернету", Toast.LENGTH_LONG).show();
-                } else {
-                    boolean isNameDuplicated = false;
-                    for (Player player : allPlayers) {
-                        if (player.getName().equals(nameEditText.getText().toString())) {
-                            isNameDuplicated = true;
-                        }
-                    }
-
-                    if (!isNameDuplicated) {
-                        if (nameEditText.getText().toString().length() <= 20) {
-                            preferencesEditor.putString("name", nameEditText.getText().toString());
-                            preferencesEditor.apply();
-                            dataManager.setName(nameEditText.getText().toString());
-                            if (preferences.getBoolean("isAccountRegistered", false)) {
-                                dataManager.updateAccount();
-                            } else {
-                                dataManager.registerAccount();
-
-                                switch (nameEditText.getText().toString()) {
-                                    case "Lydmila":
-                                        dataManager.setScore(20064);
-                                        dataManager.setHints(377);
-                                        break;
-                                    case "Eliz71":
-                                        dataManager.setScore(2860);
-                                        dataManager.setHints(57);
-                                break;
-                                }
-
-                                dataManager.updateAccount();
-                            }
-                            isDialogShowing = false;
-                        } else {
-                            Toast.makeText(this, "Максимальная длина ника - 20 символов", Toast.LENGTH_LONG).show();
-                            dialog.cancel();
-                            isDialogShowing = false;
-                            if (isConnectedToInternet())
-                                dataManager.getAllUsers().observe(this, this::showNameDialog);
-                            else
-                                Toast.makeText(MainActivity.this, "Произошла ошибка. Проверьте подключение к интернету", Toast.LENGTH_LONG).show();
-                        }
-                    } else {
-                        Toast.makeText(this, "Такой ник уже используется. Выберите другой", Toast.LENGTH_LONG).show();
+                LayoutInflater layoutInflater = LayoutInflater.from(this);
+                View nameView = layoutInflater.inflate(R.layout.input_name_dialog, null);
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setView(nameView);
+                EditText nameEditText = nameView.findViewById(R.id.nameEditText);
+                nameEditText.setText(preferences.getString("name", ""));
+                builder.setCancelable(false).setNeutralButton("OK", (dialog, which) -> {
+                    if (nameEditText.getText().toString().isEmpty()) {
+                        Toast.makeText(this, "Введите ник!", Toast.LENGTH_SHORT).show();
                         dialog.cancel();
                         isDialogShowing = false;
-                        if (isConnectedToInternet())
-                            dataManager.getAllUsers().observe(this, this::showNameDialog);
-                        else
-                            Toast.makeText(MainActivity.this, "Произошла ошибка. Проверьте подключение к интернету", Toast.LENGTH_LONG).show();
+                        showNameDialog();
+                    } else {
+                        NetworkService.getInstance().getSWordsApi().checkUsernameAvailability("Bearer " + accountManagerPassword, nameEditText.getText().toString()).enqueue(
+                                new Callback<UsernameAvailabilityResponse>() {
+                                    @Override
+                                    public void onResponse(Call<UsernameAvailabilityResponse> call, Response<UsernameAvailabilityResponse> response) {
+                                        if (response.body().isAvailable()) {
+                                            if (nameEditText.getText().toString().length() <= 20) {
+                                                preferencesEditor.putString("name", nameEditText.getText().toString());
+                                                preferencesEditor.apply();
+                                                dataManager.setName(nameEditText.getText().toString());
+                                                if (preferences.getBoolean("isAccountRegistered", false)) {
+                                                    dataManager.updateAccount();
+                                                } else {
+                                                    dataManager.registerAccount();
+
+                                                    switch (nameEditText.getText().toString()) {
+                                                        case "Lydmila":
+                                                            dataManager.setScore(20064);
+                                                            dataManager.setHints(377);
+                                                            break;
+                                                        case "Eliz71":
+                                                            dataManager.setScore(2860);
+                                                            dataManager.setHints(57);
+                                                            break;
+                                                    }
+
+                                                    dataManager.updateAccount();
+                                                }
+                                                isDialogShowing = false;
+                                            } else {
+                                                Toast.makeText(MainActivity.this, "Максимальная длина ника - 20 символов", Toast.LENGTH_LONG).show();
+                                                dialog.cancel();
+                                                isDialogShowing = false;
+                                                showNameDialog();
+                                            }
+                                        } else {
+                                            Toast.makeText(MainActivity.this, "Такой ник уже используется. Выберите другой", Toast.LENGTH_LONG).show();
+                                            dialog.cancel();
+                                            isDialogShowing = false;
+                                            showNameDialog();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<UsernameAvailabilityResponse> call, Throwable t) {
+                                        Log.i(LOG_TAG, "failure");
+                                        Toast.makeText(MainActivity.this, "Произошла ошибка. Проверьте подключение к интернету", Toast.LENGTH_LONG).show();
+                                        showNameDialog();
+                                    }
+                                }
+                        );
                     }
+                });
+                if (preferences.getBoolean("isAccountRegistered", false)) {
+                    builder.setNegativeButton("Отмена", (dialog, which) -> dialog.cancel());
                 }
-            });
-            if (preferences.getBoolean("isAccountRegistered", false)) {
-                builder.setNegativeButton("Отмена", (dialog, which) -> dialog.cancel());
+                builder.show();
             }
-            builder.show();
+        } else {
+            Toast.makeText(MainActivity.this, "Произошла ошибка. Проверьте подключение к интернету", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -794,11 +797,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                         return true;
                     case R.id.changeName:
-                        if (isConnectedToInternet()) {
-                            dataManager.getAllUsers().observe(this, this::showNameDialog);
-                        } else {
-                            Toast.makeText(MainActivity.this, "Произошла ошибка. Проверьте подключение к интернету", Toast.LENGTH_LONG).show();
-                        }
+                        showNameDialog();
 
                         return true;
                     case R.id.bestPlayers:
