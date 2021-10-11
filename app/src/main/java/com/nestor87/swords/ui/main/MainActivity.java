@@ -390,6 +390,8 @@ public class MainActivity extends AppCompatActivity {
                                         dataManager.setHints(57);
                                 break;
                                 }
+
+                                dataManager.updateAccount();
                             }
                             isDialogShowing = false;
                         } else {
