@@ -10,6 +10,8 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -693,11 +695,21 @@ public class MainActivity extends AppCompatActivity {
                         return true;
                     case R.id.buyHints:
                         TextView textView = new TextView(this);
+                        textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                         textView.setText("Стоимость 1 подсказки – 5 очков");
 
                         EditText input = new EditText(this);
                         input.setInputType(InputType.TYPE_CLASS_NUMBER);
+                        input.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                         input.setHint("Введите количество подсказок");
+
+                        TextView customTitleTextView = new TextView(this);
+                        customTitleTextView.setText("Покупка подсказок");
+                        customTitleTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                        customTitleTextView.setTextSize(22);
+                        customTitleTextView.setPadding(0, 0, 0, 10);
+                        customTitleTextView.setTypeface(Typeface.DEFAULT_BOLD);
+                        customTitleTextView.setTextColor(Color.BLACK);
 
                         LinearLayout layout = new LinearLayout(this);
                         layout.setOrientation(LinearLayout.VERTICAL);
@@ -706,7 +718,7 @@ public class MainActivity extends AppCompatActivity {
                         layout.addView(input);
 
                         new AlertDialog.Builder(this)
-                                .setTitle("Покупка подсказок")
+                                .setCustomTitle(customTitleTextView)
                                 .setIcon(R.drawable.hints)
                                 .setView(layout)
                                 .setPositiveButton(" Купить", (dialog, which) -> {
