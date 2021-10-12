@@ -53,7 +53,7 @@ public class BestPlayersActivity extends AppCompatActivity {
     private void loadPlayers(boolean update) {
         if (!update)
             progressBar.setVisibility(View.VISIBLE);
-        NetworkService.getInstance().getSWordsApi().getAllUsers(MainActivity.getBearerToken()).enqueue(
+        NetworkService.getInstance().getSWordsApi().getBestPlayers(MainActivity.getBearerToken()).enqueue(
                 new Callback<List<Player>>() {
                     @Override
                     public void onResponse(Call<List<Player>> call, Response<List<Player>> response) {

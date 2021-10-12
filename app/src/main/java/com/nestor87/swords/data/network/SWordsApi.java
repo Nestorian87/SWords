@@ -21,6 +21,9 @@ public interface SWordsApi {
     @GET("/SWordsApi/user.php")
     Call<List<Player>> getAllUsers(@Header("Authorization") String bearerToken);
 
+    @GET("/SWordsApi/best_players.php")
+    Call<List<Player>> getBestPlayers(@Header("Authorization") String bearerToken);
+
     @PUT("/SWordsApi/user.php")
     Call<Void> registerPlayer(@Header("Authorization") String bearerToken, @Body Player player);
 
