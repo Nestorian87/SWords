@@ -82,6 +82,15 @@ public class BestPlayersActivity extends AppCompatActivity {
                                     public void onResponse(Call<UserRankResponse> call, Response<UserRankResponse> response) {
                                         ((View) selfRank.getParent()).setVisibility(View.VISIBLE);
                                         selfRank.setText(response.body().getRank() == -1 ? "-" : Integer.toString(response.body().getRank()));
+                                        if (response.body().getRank() == 1) {
+                                            selfRank.setTextColor(MainActivity.getColorFromTheme(R.attr.redButton, BestPlayersActivity.this));
+                                        } else if (response.body().getRank() == 2) {
+                                            selfRank.setTextColor(MainActivity.getColorFromTheme(R.attr.blueButton, BestPlayersActivity.this));
+                                        } else if (response.body().getRank() == 3) {
+                                            selfRank.setTextColor(MainActivity.getColorFromTheme(R.attr.yellowButton, BestPlayersActivity.this));
+                                        } else {
+                                            selfRank.setTextColor(MainActivity.getColorFromTheme(R.attr.wordText, BestPlayersActivity.this));
+                                        }
                                     }
 
                                     @Override

@@ -2,6 +2,7 @@ package com.nestor87.swords.ui.bestPlayers;
 
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,12 +45,20 @@ public class PlayersAdapter extends RecyclerView.Adapter<PlayersAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
         Player player = players.get(position);
         holder.nicknameTextView.setText(player.getName());
         holder.scoreTextView.setText(Integer.toString(player.getScore()));
         holder.hintsTextView.setText(Integer.toString(player.getHints()));
         holder.orderNumberTextView.setText(Integer.toString(position + 1));
+
+        SharedPreferences preferences = inflater.getContext().getSharedPreferences(MainActivity.APP_PREFERENCES_FILE_NAME, Context.MODE_PRIVATE);
+        boolean isSelfPlayer = preferences.getString("name", "").equals(player.getName());
+
+        if (isSelfPlayer) {
+            holder.parentLayout.setBackgroundColor(MainActivity.getColorFromTheme(R.attr.buttonBackground, inflater.getContext()));
+        } else {
+            holder.parentLayout.setBackgroundColor(MainActivity.getColorFromTheme(android.R.attr.windowBackground, inflater.getContext()));
+        }
 
         holder.nicknameTextView.setTextColor(MainActivity.getColorFromTheme(R.attr.buttonText, inflater.getContext()));
 
