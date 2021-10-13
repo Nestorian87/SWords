@@ -5,29 +5,21 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-
-import androidx.appcompat.app.AlertDialog;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.nestor87.swords.data.models.Letter;
-import com.nestor87.swords.data.models.UsernameAvailabilityResponse;
-import com.nestor87.swords.ui.main.MainActivity;
-import com.nestor87.swords.data.network.NetworkService;
-import com.nestor87.swords.data.models.Player;
+import androidx.appcompat.app.AlertDialog;
+
 import com.nestor87.swords.R;
-import com.nestor87.swords.data.models.Word;
 import com.nestor87.swords.data.models.Achievement;
+import com.nestor87.swords.data.models.Letter;
+import com.nestor87.swords.data.models.Player;
+import com.nestor87.swords.data.models.Word;
+import com.nestor87.swords.data.network.NetworkService;
+import com.nestor87.swords.ui.main.MainActivity;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -372,33 +364,37 @@ public class DataManager {
     public static void loadWords(Context context) {
         DBHelper dbHelper = new DBHelper(context);
 
-        RequestQueue queue = Volley.newRequestQueue(context);
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://ananiev-nestor.kl.com.ua/words.php",
-                response -> {
-                    if (!response.trim().isEmpty()) {
-                        SQLiteDatabase db = dbHelper.openDB();
-                        long time = System.currentTimeMillis();
-                        db.beginTransaction();
-                        db.delete("words", null, null);
+        NetworkService.getInstance().getSWordsApi().getAllWords().enqueue(
+                new Callback<List<String>>() {
+                    @Override
+                    public void onResponse(Call<List<String>> call, Response<List<String>> response) {
+                        if (!response.body().isEmpty()) {
+                            long startLoadWordsTime = System.currentTimeMillis();
+                            SQLiteDatabase db = dbHelper.openDB();
 
-                        StringBuilder sql = new StringBuilder("INSERT INTO words (word) VALUES ");
-                        for (String word : response.split("\n")) {
-                            sql.append("(\"").append(word).append("\"), ");
+                            db.beginTransaction();
+                            db.delete("words", null, null);
+
+                            StringBuilder sql = new StringBuilder("INSERT INTO words (word) VALUES ");
+                            for (String word : response.body()) {
+                                sql.append("(\"").append(word).append("\"), ");
+                            }
+                            sql = new StringBuilder(sql.substring(0, sql.length() - 2));
+                            Log.i(LOG_TAG, "LOAD_WORDS SQL_PREPARED: " + (System.currentTimeMillis() - startLoadWordsTime) + " ms");
+                            db.execSQL(sql.toString());
+                            db.setTransactionSuccessful();
+                            db.endTransaction();
+                            Log.i(LOG_TAG, "LOAD_WORDS: " + (System.currentTimeMillis() - startLoadWordsTime) + " ms");
+                            db.close();
                         }
-                        sql = new StringBuilder(sql.substring(0, sql.length() - 2));
-                        Log.i(LOG_TAG, "LOAD_WORDS SQL_PREPARED: " + (System.currentTimeMillis() - time) + " ms");
-                        db.execSQL(sql.toString());
-                        db.setTransactionSuccessful();
-                        db.endTransaction();
-                        Log.i(LOG_TAG, "LOAD_WORDS: " + (System.currentTimeMillis() - time) + " ms");
-                        db.close();
                     }
-                },
-                error -> {
-                    Log.i(MainActivity.LOG_TAG, "ERROR LOAD_WORDS: " + error.getMessage());
+
+                    @Override
+                    public void onFailure(Call<List<String>> call, Throwable t) {
+                        Log.e(MainActivity.LOG_TAG, "ERROR LOAD_WORDS: " + t.getMessage());
+                    }
                 }
         );
-        queue.add(stringRequest);
     }
 
 

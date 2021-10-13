@@ -46,7 +46,7 @@
         </receiver>
 
         <service
-            android:name=".data.service.NotificationService"
+            android:name=".data.services.NotificationService"
             android:enabled="true"
             android:exported="true" />
 
@@ -70,7 +70,7 @@
             android:screenOrientation="landscape" />
 
         <service
-            android:name=".data.service.BackgroundMusicService"
+            android:name=".data.services.BackgroundMusicService"
             android:enabled="true"
             android:exported="false" />
 

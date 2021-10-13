@@ -7,8 +7,8 @@ import android.os.Bundle;
 
 import com.blogspot.atifsoftwares.animatoolib.Animatoo;
 import com.nestor87.swords.data.DataManager;
-import com.nestor87.swords.data.service.BackgroundMusicService;
-import com.nestor87.swords.data.service.NotificationService;
+import com.nestor87.swords.data.services.BackgroundMusicService;
+import com.nestor87.swords.data.services.NotificationService;
 import com.nestor87.swords.ui.main.MainActivity;
 
 

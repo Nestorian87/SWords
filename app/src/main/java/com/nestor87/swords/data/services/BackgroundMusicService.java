@@ -1,4 +1,4 @@
-package com.nestor87.swords.data.service;
+package com.nestor87.swords.data.services;
 
 import android.app.Service;
 import android.content.BroadcastReceiver;

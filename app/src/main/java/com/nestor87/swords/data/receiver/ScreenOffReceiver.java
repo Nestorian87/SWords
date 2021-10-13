@@ -4,7 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.nestor87.swords.data.service.BackgroundMusicService;
+import com.nestor87.swords.data.services.BackgroundMusicService;
 
 public class ScreenOffReceiver extends BroadcastReceiver {
 

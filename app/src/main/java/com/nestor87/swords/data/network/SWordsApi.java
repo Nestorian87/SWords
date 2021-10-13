@@ -18,6 +18,9 @@ import retrofit2.http.PUT;
 import retrofit2.http.Query;
 
 public interface SWordsApi {
+    @GET("/words")
+    Call<List<String>> getAllWords();
+
     @GET("/user")
     Call<List<Player>> getAllUsers(@Header("Authorization") String bearerToken);
 
