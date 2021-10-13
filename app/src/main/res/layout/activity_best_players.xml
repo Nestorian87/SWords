@@ -17,11 +17,18 @@
         android:textColor="?scoreAndHintsText"
         android:textSize="45sp"
         android:textStyle="bold"
+        android:paddingBottom="5dp"
         app:layout_constraintBottom_toBottomOf="@+id/goBackButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?buttonText"
+        app:layout_constraintTop_toBottomOf="@id/bestPlayersTextView"
+        />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/bestPlayersList"
