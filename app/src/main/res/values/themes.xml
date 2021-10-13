@@ -1,9 +1,15 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
+    <style name="SWords.base.dark" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+    <style name="SWords.base.light" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowFullscreen">true</item>
+    </style>
 
 
-    <style name="SWords.standard" parent="Theme.AppCompat.Light.NoActionBar">
-
+    <style name="SWords.standard" parent="SWords.base.light">
         <item name="android:windowBackground">@color/white_smoke</item>
         <item name="buttonBackground">@color/white_smoke</item>
         <item name="buttonPressedBackground">@color/gray</item>
@@ -19,10 +25,9 @@
         <item name="blueButtonDisabled">#444880</item>
         <item name="yellowButton">#D0DB56</item>
         <item name="yellowButtonDisabled">#959953</item>
-        <item name="android:windowFullscreen">true</item>
     </style>
 
-    <style name="SWords.white" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="SWords.white" parent="SWords.base.light">
         <item name="android:windowBackground">@color/background_white</item>
         <item name="buttonBackground">#fdf3e7</item>
         <item name="buttonPressedBackground">#e0cab6</item>
@@ -38,10 +43,9 @@
         <item name="blueButtonDisabled">#444880</item>
         <item name="yellowButton">#D0DB56</item>
         <item name="yellowButtonDisabled">#959953</item>
-        <item name="android:windowFullscreen">true</item>
     </style>
 
-    <style name="SWords.dark" parent="Theme.AppCompat.NoActionBar">
+    <style name="SWords.dark" parent="SWords.base.dark">
         <item name="android:windowBackground">@color/dark_theme_background</item>
         <item name="buttonBackground">#383b40</item>
         <item name="buttonPressedBackground">#33363b</item>
@@ -57,10 +61,9 @@
         <item name="blueButtonDisabled">#444880</item>
         <item name="yellowButton">#D0DB56</item>
         <item name="yellowButtonDisabled">#959953</item>
-        <item name="android:windowFullscreen">true</item>
     </style>
 
-    <style name="SWords.darkBlue" parent="Theme.AppCompat.NoActionBar">
+    <style name="SWords.darkBlue" parent="SWords.base.dark">
         <item name="android:windowBackground">@color/dark_blue_theme_background</item>
         <item name="buttonBackground">#383b64</item>
         <item name="buttonPressedBackground">#2c2f4f</item>
@@ -76,12 +79,10 @@
         <item name="blueButtonDisabled">#444880</item>
         <item name="yellowButton">#D0DB56</item>
         <item name="yellowButtonDisabled">#959953</item>
-        <item name="android:windowFullscreen">true</item>
     </style>
 
-    <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
+    <style name="SplashTheme" parent="SWords.base.light">
         <item name="android:windowBackground">@drawable/launch_screen</item>
-        <item name="android:windowFullscreen">true</item>
     </style>
 
 </resources>
