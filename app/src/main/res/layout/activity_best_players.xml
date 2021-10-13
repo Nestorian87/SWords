@@ -9,7 +9,7 @@
 
     <TextView
         android:id="@+id/bestPlayersTextView"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/century_gothic"
         android:text="Лучшие игроки"
@@ -18,32 +18,69 @@
         android:textSize="45sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/goBackButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/bestPlayersList"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:id="@+id/bestPlayersList"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/bestPlayersTextView"
-        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/bestPlayersTextView" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="140dp"
+        android:layout_height="70dp"
+        app:cardBackgroundColor="?buttonBackground"
+        app:cardCornerRadius="30dp"
+        app:cardElevation="2dp"
+        android:layout_margin="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:id="@+id/selfRank"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|top"
+            android:fontFamily="@font/century_gothic"
+            android:gravity="center"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:text="-"
+            android:textColor="?wordText"
+            android:textSize="33sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|bottom"
+            android:paddingBottom="10dp"
+            android:textColor="?scoreAndHintsText"
+            android:text="Ваша позиция"
+            android:textSize="15sp" />
+    </androidx.cardview.widget.CardView>
 
     <ImageButton
         android:id="@+id/goBackButton"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:layout_margin="10dp"
         android:adjustViewBounds="true"
         android:background="@drawable/image_button_selector"
+        android:onClick="goBack"
         android:padding="5dp"
         android:scaleType="fitCenter"
-        app:srcCompat="@drawable/ic_left_arrow"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_margin="10dp"
-        android:onClick="goBack" />
+        app:srcCompat="@drawable/ic_left_arrow" />
 
     <ProgressBar
         android:id="@+id/progressBar"

@@ -5,13 +5,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.blogspot.atifsoftwares.animatoolib.Animatoo;
 import com.nestor87.swords.data.DataManager;
+import com.nestor87.swords.data.models.UserRankResponse;
 import com.nestor87.swords.ui.main.MainActivity;
 import com.nestor87.swords.data.network.NetworkService;
 import com.nestor87.swords.data.models.Player;
@@ -23,9 +26,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.nestor87.swords.ui.main.MainActivity.APP_PREFERENCES_FILE_NAME;
+
 public class BestPlayersActivity extends AppCompatActivity {
     ProgressBar progressBar;
+    TextView selfRank;
     PlayersAdapter playersAdapter;
+    String selfName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +40,13 @@ public class BestPlayersActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_best_players);
 
+        SharedPreferences preferences = getSharedPreferences(APP_PREFERENCES_FILE_NAME, MODE_PRIVATE);
+        selfName = preferences.getString("name", "");
+
         progressBar = findViewById(R.id.progressBar);
+        selfRank = findViewById(R.id.selfRank);
+
+        ((View) selfRank.getParent()).setVisibility(View.INVISIBLE);
 
         loadPlayers(false);
 
@@ -63,6 +76,21 @@ public class BestPlayersActivity extends AppCompatActivity {
                         } else {
                             initRecyclerView(response.body());
                         }
+                        NetworkService.getInstance().getSWordsApi().getUserRank(MainActivity.getBearerToken(), selfName).enqueue(
+                                new Callback<UserRankResponse>() {
+                                    @Override
+                                    public void onResponse(Call<UserRankResponse> call, Response<UserRankResponse> response) {
+                                        ((View) selfRank.getParent()).setVisibility(View.VISIBLE);
+                                        selfRank.setText(response.body().getRank() == -1 ? "-" : Integer.toString(response.body().getRank()));
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<UserRankResponse> call, Throwable t) {
+
+                                    }
+                                }
+                        );
+
                     }
 
                     @Override

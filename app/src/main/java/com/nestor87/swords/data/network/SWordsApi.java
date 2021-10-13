@@ -1,5 +1,6 @@
 package com.nestor87.swords.data.network;
 
+import com.nestor87.swords.data.models.UserRankResponse;
 import com.nestor87.swords.data.models.UsernameAvailabilityResponse;
 import com.nestor87.swords.data.models.VersionResponse;
 import com.nestor87.swords.data.models.Word;
@@ -47,4 +48,8 @@ public interface SWordsApi {
 
     @GET("/username_availability")
     Call<UsernameAvailabilityResponse> checkUsernameAvailability(@Header("Authorization") String bearerToken, @Query("username") String username);
+
+    @GET("/user_rank")
+    Call<UserRankResponse> getUserRank(@Header("Authorization") String bearerToken, @Query("name") String name);
+
 }
