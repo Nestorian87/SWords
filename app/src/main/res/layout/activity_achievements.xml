@@ -12,7 +12,6 @@
         android:layout_height="30dp"
         android:layout_marginTop="2dp"
         android:layout_marginEnd="2dp"
-        android:background="@drawable/icon_gradient"
         android:gravity="center"
         android:paddingEnd="50dp"
         android:text="0"
