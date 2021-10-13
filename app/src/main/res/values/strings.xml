@@ -13,4 +13,25 @@
         <item quantity="many">слов</item>
         <item quantity="other">слов</item>
     </plurals>
+
+    <plurals name="time">
+        <item quantity="one">раз</item>
+        <item quantity="few">раза</item>
+        <item quantity="many">раз</item>
+        <item quantity="other">раз</item>
+    </plurals>
+
+    <plurals name="hour">
+        <item quantity="one">час</item>
+        <item quantity="few">часа</item>
+        <item quantity="many">часов</item>
+        <item quantity="other">часов</item>
+    </plurals>
+
+    <plurals name="minute">
+        <item quantity="one">минута</item>
+        <item quantity="few">минуты</item>
+        <item quantity="many">минут</item>
+        <item quantity="other">минут</item>
+    </plurals>
 </resources>

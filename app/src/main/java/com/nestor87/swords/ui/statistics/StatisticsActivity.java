@@ -59,7 +59,7 @@ public class StatisticsActivity extends AppCompatActivity {
 
         int wordsCount = statisticsWords.length;
 
-        int uniqueWordsCount = new HashSet<String>(Arrays.asList(statisticsWords)).size();
+        int uniqueWordsCount = new HashSet<>(Arrays.asList(statisticsWords)).size();
 
         String wordOften = null,
                lastWord = null;
@@ -105,10 +105,10 @@ public class StatisticsActivity extends AppCompatActivity {
         wordsCountTextView.setText(wordsCountTextView.getText() + Integer.toString(wordsCount));
         uniqueWordsCountTextView.setText(uniqueWordsCountTextView.getText() + Integer.toString(uniqueWordsCount));
         todayWordsCountTextView.setText(todayWordsCountTextView.getText() + Integer.toString(todayWordsCount));
-        wordOftenTextView.setText(wordOftenTextView.getText() + (wordOften == null ? "-" : wordOften));
+        wordOftenTextView.setText(wordOftenTextView.getText() + (wordOften == null ? "-" : wordOften + " (" + maxWordOftenCount + " " + getResources().getQuantityString(R.plurals.time, maxWordOftenCount)  +")"));
         wordLongestTextView.setText(wordLongestTextView.getText() + (longestWord == null ? "-" : longestWord));
         wordAverageLengthTextView.setText(wordAverageLengthTextView.getText() + String.format(Locale.US, "%.2f", wordAverageLength));
-        timeInGameTextView.setText(timeInGameTextView.getText().toString() + minutesInGame / 60 + " ч " + minutesInGame % 60 + " мин");
+        timeInGameTextView.setText(timeInGameTextView.getText().toString() + minutesInGame / 60 + " " + getResources().getQuantityString(R.plurals.hour, minutesInGame / 60) + " " + minutesInGame % 60 + " " + getResources().getQuantityString(R.plurals.minute, minutesInGame % 60));
 
     }
 
