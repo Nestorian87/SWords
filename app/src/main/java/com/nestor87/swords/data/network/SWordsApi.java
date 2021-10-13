@@ -18,30 +18,30 @@ import retrofit2.http.PUT;
 import retrofit2.http.Query;
 
 public interface SWordsApi {
-    @GET("/SWordsApi/user.php")
+    @GET("/user")
     Call<List<Player>> getAllUsers(@Header("Authorization") String bearerToken);
 
-    @GET("/SWordsApi/best_players.php")
+    @GET("/best_players")
     Call<List<Player>> getBestPlayers(@Header("Authorization") String bearerToken);
 
-    @PUT("/SWordsApi/user.php")
+    @PUT("/user")
     Call<Void> registerPlayer(@Header("Authorization") String bearerToken, @Body Player player);
 
-    @PATCH("/SWordsApi/user.php")
+    @PATCH("/user")
     Call<Void> updateUser(@Header("Authorization") String bearerToken, @Body Player player);
 
-    @GET("/SWordsApi/meaning.php")
+    @GET("/word_meaning")
     Call<Word> getWordMeaning(@Header("Authorization") String bearerToken, @Query("word") String word);
 
-    @PUT("/SWordsApi/addWord.php")
+    @PUT("/add_word")
     Call<Void> addWordRequest(@Header("Authorization") String bearerToken, @Body HashMap<String, String> body);
 
-    @POST("/SWordsApi/user.php")
+    @POST("/user")
     Call<Void> setStatusOnline(@Header("Authorization") String bearerToken, @Body Player player);
 
-    @GET("/SWordsApi/version.php")
+    @GET("/last_version")
     Call<VersionResponse> getLatestAppVersion(@Header("Authorization") String bearerToken);
 
-    @GET("/SWordsApi/username_availability.php")
+    @GET("/username_availability")
     Call<UsernameAvailabilityResponse> checkUsernameAvailability(@Header("Authorization") String bearerToken, @Query("username") String username);
 }
