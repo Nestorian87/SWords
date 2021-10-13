@@ -58,6 +58,7 @@ public class ThemeChangeActivity extends AppCompatActivity {
 
         currentThemeTextView = findViewById(R.id.currentThemeTextView);
 
+        button.setVisibility(View.INVISIBLE);
 //        MainActivity.buttonSetEnabled(this, button, false);
         dataManager = new DataManager(findViewById(R.id.score), findViewById(R.id.hints), null, new Button[]{}, new DBHelper(this), this);
         dataManager.loadData();
@@ -74,6 +75,7 @@ public class ThemeChangeActivity extends AppCompatActivity {
 //                MainActivity.buttonSetEnabled(getApplicationContext(), button, true);
                 boolean isThemeAvailable = preferences.getBoolean("theme" + themeId, false) || themePrices[themeId] == 0;
                 button.setText(isThemeAvailable ? "Применить" : "Купить");
+                button.setVisibility(View.VISIBLE);
                 previewButton.setVisibility(isThemeAvailable ? View.GONE : View.VISIBLE);
                 if (!isThemeAvailable) {
                     priceTextView.setText("Цена: " + themePrices[themeId]);
@@ -81,6 +83,9 @@ public class ThemeChangeActivity extends AppCompatActivity {
                 } else {
                     priceTextView.setText("");
                     scoreImageView.setVisibility(View.INVISIBLE);
+                    if (preferences.getInt("currentThemeId", 0) == themeId) {
+                        button.setVisibility(View.INVISIBLE);
+                    }
                 }
 
                 showColorPalette(themeId);
