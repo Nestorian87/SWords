@@ -296,7 +296,7 @@ public class MainActivity extends AppCompatActivity {
                                 titleTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                                 titleTextView.setTextSize(22);
                                 titleTextView.setPadding(0, 10, 0, 20);
-                                titleTextView.setTextColor(Color.BLACK);
+                                titleTextView.setTextColor(getColorFromTheme(R.attr.scoreAndHintsText));
                                 titleTextView.setTypeface(Typeface.DEFAULT_BOLD);
                                 titleTextView.setText("Доступна новая версия " + response.body().getName());
 
@@ -742,7 +742,7 @@ public class MainActivity extends AppCompatActivity {
                         customTitleTextView.setTextSize(22);
                         customTitleTextView.setPadding(0, 0, 0, 10);
                         customTitleTextView.setTypeface(Typeface.DEFAULT_BOLD);
-                        customTitleTextView.setTextColor(Color.BLACK);
+                        customTitleTextView.setTextColor(getColorFromTheme(R.attr.scoreAndHintsText));
 
                         LinearLayout layout = new LinearLayout(this);
                         layout.setOrientation(LinearLayout.VERTICAL);
