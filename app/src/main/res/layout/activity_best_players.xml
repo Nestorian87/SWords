@@ -87,6 +87,7 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:visibility="visible"
+        android:indeterminateTint="?hint"
         app:layout_constraintBottom_toBottomOf="@+id/bestPlayersList"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
