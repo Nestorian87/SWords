@@ -22,7 +22,7 @@ import retrofit2.Response;
 
 import static com.nestor87.swords.ui.main.MainActivity.APP_PREFERENCES_FILE_NAME;
 
-public class BackgroundMusicService extends Service {
+public class BackgroundService extends Service {
 
     LoopMediaPlayer player;
     float volume = 0.5f;

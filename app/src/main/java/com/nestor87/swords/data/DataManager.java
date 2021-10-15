@@ -3,11 +3,14 @@ package com.nestor87.swords.data;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -459,6 +462,18 @@ public class DataManager {
                         context.getResources().getDisplayMetrics()
                 )
         );
+    }
+
+    public static void adjustFontScale(Context context) {
+        Configuration configuration = context.getResources().getConfiguration();
+        if (configuration.fontScale > 1f) {
+            configuration.fontScale = 1f;
+            DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+            WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+            wm.getDefaultDisplay().getMetrics(metrics);
+            metrics.scaledDensity = configuration.fontScale * metrics.density;
+            context.getResources().updateConfiguration(configuration, metrics);
+        }
     }
 }
 

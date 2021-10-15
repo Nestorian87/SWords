@@ -7,7 +7,7 @@ import android.os.Bundle;
 
 import com.blogspot.atifsoftwares.animatoolib.Animatoo;
 import com.nestor87.swords.data.DataManager;
-import com.nestor87.swords.data.services.BackgroundMusicService;
+import com.nestor87.swords.data.services.BackgroundService;
 import com.nestor87.swords.data.services.NotificationService;
 import com.nestor87.swords.ui.main.MainActivity;
 
@@ -18,7 +18,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        setContentView(R.layout.activity_splash_screen);
-        startService(new Intent(this, BackgroundMusicService.class));
+        startService(new Intent(this, BackgroundService.class));
     }
 
     @Override

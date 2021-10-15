@@ -29,6 +29,7 @@ public class StatisticsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         DataManager.applyTheme(this);
         super.onCreate(savedInstanceState);
+        DataManager.adjustFontScale(this);
         setContentView(R.layout.activity_statistics);
 
         wordsCountTextView = findViewById(R.id.wordCount);

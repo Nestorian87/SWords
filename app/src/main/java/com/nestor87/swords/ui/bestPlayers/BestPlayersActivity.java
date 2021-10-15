@@ -38,6 +38,7 @@ public class BestPlayersActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         DataManager.applyTheme(this);
         super.onCreate(savedInstanceState);
+        DataManager.adjustFontScale(this);
         setContentView(R.layout.activity_best_players);
 
         SharedPreferences preferences = getSharedPreferences(APP_PREFERENCES_FILE_NAME, MODE_PRIVATE);

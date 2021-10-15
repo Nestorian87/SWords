@@ -22,6 +22,7 @@ public class AchievementsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         DataManager.applyTheme(this);
         super.onCreate(savedInstanceState);
+        DataManager.adjustFontScale(this);
         setContentView(R.layout.activity_achievements);
 
         RecyclerView recyclerView = findViewById(R.id.achievementsList);

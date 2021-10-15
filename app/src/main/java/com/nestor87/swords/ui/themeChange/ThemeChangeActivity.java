@@ -39,6 +39,7 @@ public class ThemeChangeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         DataManager.applyTheme(this);
         super.onCreate(savedInstanceState);
+        DataManager.adjustFontScale(this);
         setContentView(R.layout.activity_theme_change);
         themeSpinner = findViewById(R.id.themeSpinner);
         button = findViewById(R.id.button);

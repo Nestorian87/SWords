@@ -10,7 +10,6 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
@@ -58,7 +57,7 @@ import com.nestor87.swords.data.models.UsernameAvailabilityResponse;
 import com.nestor87.swords.data.models.VersionResponse;
 import com.nestor87.swords.data.models.Word;
 import com.nestor87.swords.data.network.NetworkService;
-import com.nestor87.swords.data.services.BackgroundMusicService;
+import com.nestor87.swords.data.services.BackgroundService;
 import com.nestor87.swords.ui.achievements.AchievementsActivity;
 import com.nestor87.swords.ui.bestPlayers.BestPlayersActivity;
 import com.nestor87.swords.ui.statistics.StatisticsActivity;
@@ -115,6 +114,8 @@ public class MainActivity extends AppCompatActivity {
             setTheme(DataManager.getThemeResIdByThemeId(getIntent().getIntExtra("themePreviewId", -1)));
         }
         super.onCreate(savedInstanceState);
+        DataManager.adjustFontScale(this);
+
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_FULLSCREEN  | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
         setContentView(R.layout.activity_main);
@@ -896,7 +897,7 @@ public class MainActivity extends AppCompatActivity {
     public static void onActivityStop(Context context) {
        startedActivitiesCount--;
        if (startedActivitiesCount == 0) {
-           Intent intent = new Intent(context, BackgroundMusicService.class);
+           Intent intent = new Intent(context, BackgroundService.class);
            intent.putExtra("pause", true);
            context.startService(intent);
        }
@@ -906,7 +907,7 @@ public class MainActivity extends AppCompatActivity {
     public static void onActivityStart(Context context) {
         startedActivitiesCount++;
 
-        Intent intent = new Intent(context, BackgroundMusicService.class);
+        Intent intent = new Intent(context, BackgroundService.class);
         intent.putExtra("resume", true);
         context.startService(intent);
     }
