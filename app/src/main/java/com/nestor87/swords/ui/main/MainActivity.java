@@ -385,8 +385,14 @@ public class MainActivity extends AppCompatActivity {
                 EditText nameEditText = nameView.findViewById(R.id.nameEditText);
                 nameEditText.setText(preferences.getString("name", ""));
                 builder.setCancelable(false).setNeutralButton("OK", (dialog, which) -> {
-                    if (nameEditText.getText().toString().isEmpty()) {
+                    String nickname = nameEditText.getText().toString().trim();
+                    if (nickname.isEmpty()) {
                         Toast.makeText(this, "Введите ник!", Toast.LENGTH_SHORT).show();
+                        dialog.cancel();
+                        isDialogShowing = false;
+                        showNameDialog();
+                    } else if (nickname.contains(" ")) {
+                        Toast.makeText(this, "Ник не должен содержать пробелов", Toast.LENGTH_SHORT).show();
                         dialog.cancel();
                         isDialogShowing = false;
                         showNameDialog();
@@ -396,8 +402,8 @@ public class MainActivity extends AppCompatActivity {
                                     @Override
                                     public void onResponse(Call<UsernameAvailabilityResponse> call, Response<UsernameAvailabilityResponse> response) {
                                         if (response.body().isAvailable()) {
-                                            if (nameEditText.getText().toString().length() <= 20) {
-                                                preferencesEditor.putString("name", nameEditText.getText().toString());
+                                            if (nickname.length() <= 20) {
+                                                preferencesEditor.putString("name", nickname);
                                                 preferencesEditor.apply();
                                                 dataManager.setName(nameEditText.getText().toString());
                                                 if (preferences.getBoolean("isAccountRegistered", false)) {
