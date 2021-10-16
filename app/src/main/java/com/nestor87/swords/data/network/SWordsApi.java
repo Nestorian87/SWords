@@ -1,5 +1,6 @@
 package com.nestor87.swords.data.network;
 
+import com.nestor87.swords.data.models.Message;
 import com.nestor87.swords.data.models.UserRankResponse;
 import com.nestor87.swords.data.models.UsernameAvailabilityResponse;
 import com.nestor87.swords.data.models.VersionResponse;
@@ -52,4 +53,6 @@ public interface SWordsApi {
     @GET("/user_rank")
     Call<UserRankResponse> getUserRank(@Header("Authorization") String bearerToken, @Query("name") String name);
 
+    @PATCH("/message")
+    Call<List<Message>> getUnreceivedMessages(@Header("Authorization") String bearerToken, @Body Player player);
 }
