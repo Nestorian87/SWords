@@ -10,9 +10,9 @@
         android:id="@+id/progressBar"
         android:layout_width="150dp"
         android:layout_height="150dp"
+        android:indeterminateTint="?hint"
         android:translationZ="1000dp"
         android:visibility="invisible"
-        android:indeterminateTint="?hint"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,6 +22,7 @@
         android:id="@+id/menuButton"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:layout_margin="10dp"
         android:adjustViewBounds="true"
         android:background="@drawable/image_button_selector"
         android:onClick="showMenu"
@@ -29,28 +30,28 @@
         android:scaleType="fitCenter"
         android:src="@drawable/icon"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_margin="10dp" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
+        android:id="@+id/useHintButton"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="10dp"
         android:adjustViewBounds="true"
         android:background="@drawable/image_button_selector"
         android:onClick="useHint"
         android:paddingStart="6dp"
         android:scaleType="fitCenter"
         android:src="@drawable/hints_with_question"
-        android:id="@+id/useHintButton"
         app:layout_constraintStart_toEndOf="@id/menuButton"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="30dp"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
         android:id="@+id/dictionaryButton"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="10dp"
         android:adjustViewBounds="true"
         android:background="@drawable/image_button_selector"
@@ -58,11 +59,39 @@
         android:paddingStart="6dp"
         android:scaleType="fitCenter"
         android:src="@drawable/dictionary"
-        android:layout_marginStart="20dp"
         app:layout_constraintStart_toEndOf="@id/useHintButton"
         app:layout_constraintTop_toTopOf="parent"
 
         />
+
+    <ImageButton
+        android:id="@+id/messagesButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:adjustViewBounds="true"
+        android:background="@drawable/image_button_selector"
+        android:onClick="useDictionary"
+        android:paddingStart="6dp"
+        android:scaleType="fitCenter"
+        android:src="@android:drawable/ic_menu_send"
+        app:layout_constraintStart_toEndOf="@id/dictionaryButton"
+        app:layout_constraintTop_toTopOf="parent"
+
+        />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/newMessages"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        app:cardBackgroundColor="?redButton"
+        app:cardCornerRadius="20dp"
+        android:visibility="gone"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintEnd_toEndOf="@+id/messagesButton"
+        app:layout_constraintStart_toStartOf="@+id/messagesButton"
+        app:layout_constraintTop_toTopOf="@+id/messagesButton" />
 
     <TextView
         android:id="@+id/score"
