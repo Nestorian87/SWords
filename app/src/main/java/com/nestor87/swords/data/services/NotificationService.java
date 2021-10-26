@@ -3,6 +3,7 @@ package com.nestor87.swords.data.services;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,17 +11,12 @@ import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
-import android.view.Gravity;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
-import com.blogspot.atifsoftwares.animatoolib.Animatoo;
 import com.nestor87.swords.R;
 import com.nestor87.swords.data.DBHelper;
 import com.nestor87.swords.data.DataManager;
@@ -28,7 +24,9 @@ import com.nestor87.swords.data.models.Message;
 import com.nestor87.swords.data.models.Player;
 import com.nestor87.swords.data.network.NetworkService;
 import com.nestor87.swords.ui.main.MainActivity;
+import com.nestor87.swords.ui.messages.MessagesActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -42,6 +40,9 @@ public class NotificationService extends Service {
     Timer timer;
     private String CHANNEL_ID;
     private DataManager dataManager;
+
+    public static final String NOTIFICATION_RECEIVED_ACTION = "SWords_NOTIFICATION_RECEIVED_ACTION";
+    public static ArrayList<Integer> notCanceledNotificationsIds = new ArrayList<>();
 
     public NotificationService() {
 
@@ -77,6 +78,10 @@ public class NotificationService extends Service {
                                     public void onResponse(Call<List<Message>> call, Response<List<Message>> response) {
 
                                         for (Message message: response.body()) {
+                                            Intent intent = new Intent(NotificationService.this, MessagesActivity.class);
+                                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                            PendingIntent pendingIntent = PendingIntent.getActivity(NotificationService.this, 0, intent, 0);
+
                                             NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
                                                     .setSmallIcon(R.drawable.icon)
                                                     .setContentTitle(message.getTitle())
@@ -84,16 +89,22 @@ public class NotificationService extends Service {
                                                     .setPriority(NotificationCompat.PRIORITY_HIGH)
                                                     .setDefaults(Notification.DEFAULT_ALL)
                                                     .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.icon))
-                                                    .setStyle(new NotificationCompat.BigTextStyle().bigText(message.getBody()));
+                                                    .setStyle(new NotificationCompat.BigTextStyle().bigText(message.getBody()))
+                                                    .setContentIntent(pendingIntent)
+                                                    .setAutoCancel(false);
 
                                             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
                                             notificationManager.notify(notificationId++, builder.build());
+                                            notCanceledNotificationsIds.add(notificationId - 1);
 
                                             if (message.getType().equals(Message.TYPE_WORD_ADDED)) {
                                                 DataManager.loadWords(getApplicationContext());
                                             }
                                         }
 
+                                        if (response.body().size() > 0) {
+                                            sendBroadcast();
+                                        }
 
                                     }
 
@@ -119,6 +130,12 @@ public class NotificationService extends Service {
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }
+    }
+
+    private void sendBroadcast() {
+        Intent intent = new Intent();
+        intent.setAction(NOTIFICATION_RECEIVED_ACTION);
+        sendBroadcast(intent);
     }
 
     @Override

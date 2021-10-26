@@ -13,6 +13,7 @@ import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
+import android.net.Network;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
@@ -53,13 +54,16 @@ import com.nestor87.swords.data.DataManager;
 import com.nestor87.swords.data.markdownviewCssStyle.VersionCssStyle;
 import com.nestor87.swords.data.models.Achievement;
 import com.nestor87.swords.data.models.Letter;
+import com.nestor87.swords.data.models.MessagesCountResponse;
 import com.nestor87.swords.data.models.UsernameAvailabilityResponse;
 import com.nestor87.swords.data.models.VersionResponse;
 import com.nestor87.swords.data.models.Word;
 import com.nestor87.swords.data.network.NetworkService;
 import com.nestor87.swords.data.services.BackgroundService;
+import com.nestor87.swords.data.services.NotificationService;
 import com.nestor87.swords.ui.achievements.AchievementsActivity;
 import com.nestor87.swords.ui.bestPlayers.BestPlayersActivity;
+import com.nestor87.swords.ui.messages.MessagesActivity;
 import com.nestor87.swords.ui.statistics.StatisticsActivity;
 import com.nestor87.swords.ui.themeChange.ThemeChangeActivity;
 
@@ -103,6 +107,8 @@ public class MainActivity extends AppCompatActivity {
     private boolean isThemePreviewMode = false;
 
     public static boolean isNewVersionRequested = false;
+
+    private BroadcastReceiver notificationBroadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -235,6 +241,16 @@ public class MainActivity extends AppCompatActivity {
             dictionaryButton.setEnabled(false);
             mixButton.setEnabled(false);
         }
+
+        checkUnviewedMessages();
+
+        notificationBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                checkUnviewedMessages();
+            }
+        };
+        registerReceiver(notificationBroadcastReceiver, new IntentFilter(NotificationService.NOTIFICATION_RECEIVED_ACTION));
     }
 
     private void requestPermission() {
@@ -900,6 +916,27 @@ public class MainActivity extends AppCompatActivity {
         return "Bearer " + uuid;
     }
 
+    private void checkUnviewedMessages() {
+        NetworkService.getInstance().getSWordsApi().getUnviewedMessagesCount(getBearerToken(), uuid).enqueue(
+                new Callback<MessagesCountResponse>() {
+                    @Override
+                    public void onResponse(Call<MessagesCountResponse> call, Response<MessagesCountResponse> response) {
+                        findViewById(R.id.newMessages).setVisibility(response.body().getCount() > 0 ? View.VISIBLE : View.GONE);
+                    }
+
+                    @Override
+                    public void onFailure(Call<MessagesCountResponse> call, Throwable t) {
+
+                    }
+                }
+        );
+    }
+
+    public void showMessages(View view) {
+        startActivity(new Intent(this, MessagesActivity.class));
+        Animatoo.animateSlideLeft(this);
+    }
+
     public static void onActivityStop(Context context) {
        startedActivitiesCount--;
        if (startedActivitiesCount == 0) {
@@ -957,5 +994,11 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             Animatoo.animateSlideRight(this);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(notificationBroadcastReceiver);
+        super.onDestroy();
     }
 }

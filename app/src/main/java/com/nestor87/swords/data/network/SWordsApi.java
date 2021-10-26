@@ -1,6 +1,9 @@
 package com.nestor87.swords.data.network;
 
 import com.nestor87.swords.data.models.Message;
+import com.nestor87.swords.data.models.MessageInfo;
+import com.nestor87.swords.data.models.MessageRewardReceivedRequest;
+import com.nestor87.swords.data.models.MessagesCountResponse;
 import com.nestor87.swords.data.models.UserRankResponse;
 import com.nestor87.swords.data.models.UsernameAvailabilityResponse;
 import com.nestor87.swords.data.models.VersionResponse;
@@ -55,4 +58,14 @@ public interface SWordsApi {
 
     @PATCH("/message")
     Call<List<Message>> getUnreceivedMessages(@Header("Authorization") String bearerToken, @Body Player player);
+
+    @GET("/messages/unviewed_count")
+    Call<MessagesCountResponse> getUnviewedMessagesCount(@Header("Authorization") String bearerToken, @Query("uuid") String uuid);
+
+    @GET("/message")
+    Call<List<MessageInfo>> getMessages(@Header("Authorization") String bearerToken, @Query("uuid") String uuid);
+
+    @PATCH("/messages/receive_reward")
+    Call<Void> setRewardReceived(@Header("Authorization") String bearerToken, @Body MessageRewardReceivedRequest request);
+
 }

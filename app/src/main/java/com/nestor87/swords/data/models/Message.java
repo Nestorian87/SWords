@@ -3,8 +3,8 @@ package com.nestor87.swords.data.models;
 public class Message {
     public static String TYPE_WORD_ADDED = "word_added";
 
-    String type;
-    String title;
+    String type = "";
+    String title = "";
     String body;
     MessageReward reward;
 

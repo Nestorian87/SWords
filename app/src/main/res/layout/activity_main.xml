@@ -72,7 +72,7 @@
         android:layout_marginTop="10dp"
         android:adjustViewBounds="true"
         android:background="@drawable/image_button_selector"
-        android:onClick="useDictionary"
+        android:onClick="showMessages"
         android:paddingStart="6dp"
         android:scaleType="fitCenter"
         android:src="@android:drawable/ic_menu_send"
