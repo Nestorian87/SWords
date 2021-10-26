@@ -109,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
     public static boolean isNewVersionRequested = false;
 
     private BroadcastReceiver notificationBroadcastReceiver;
+    private boolean isNotificationReceiverRegistered = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -163,12 +164,14 @@ public class MainActivity extends AppCompatActivity {
 
         buttonSetEnabled(setWordButton, false);
 
-        if (preferences.getString("name", "").equals(""))
+        if (preferences.getString("name", "").equals("")) {
             showNameDialog();
+        }
 
 
-        if (!preferences.getBoolean("isAccountRegistered", false) && !preferences.getString("name", "").equals(""))
+        if (!preferences.getBoolean("isAccountRegistered", false) && !preferences.getString("name", "").equals("")) {
             dataManager.registerAccount();
+        }
 
         if (ACHIEVEMENTS.isEmpty()) {
             ACHIEVEMENTS.add(new Achievement(this, "score.beginner", "Начинающий", "Заработать {x}", 100, SCORE_INCREASE_TRIGGER, HINTS_CURRENCY, 20));
@@ -250,7 +253,10 @@ public class MainActivity extends AppCompatActivity {
                 checkUnviewedMessages();
             }
         };
-        registerReceiver(notificationBroadcastReceiver, new IntentFilter(NotificationService.NOTIFICATION_RECEIVED_ACTION));
+        if (!isNotificationReceiverRegistered) {
+            isNotificationReceiverRegistered = true;
+            registerReceiver(notificationBroadcastReceiver, new IntentFilter(NotificationService.NOTIFICATION_RECEIVED_ACTION));
+        }
     }
 
     private void requestPermission() {
