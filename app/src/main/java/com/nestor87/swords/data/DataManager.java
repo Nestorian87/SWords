@@ -18,13 +18,16 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.nestor87.swords.R;
 import com.nestor87.swords.data.models.Achievement;
+import com.nestor87.swords.data.models.ComposedWordsRequest;
 import com.nestor87.swords.data.models.Letter;
 import com.nestor87.swords.data.models.Player;
+import com.nestor87.swords.data.models.UpdateUserResponse;
 import com.nestor87.swords.data.models.Word;
 import com.nestor87.swords.data.network.NetworkService;
 import com.nestor87.swords.ui.main.MainActivity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -36,6 +39,7 @@ import static android.content.Context.MODE_PRIVATE;
 import static com.nestor87.swords.ui.main.MainActivity.APP_PREFERENCES_FILE_NAME;
 import static com.nestor87.swords.ui.main.MainActivity.LOG_TAG;
 import static com.nestor87.swords.ui.main.MainActivity.getColorFromTheme;
+import static com.nestor87.swords.ui.main.MainActivity.uuid;
 
 public class DataManager {
 
@@ -50,6 +54,7 @@ public class DataManager {
     private int hintIndex = 0;
     public ArrayList<Integer> lettersWithHintsIndexes = new ArrayList<>();
     private Player selfPlayer;
+    private long lastTimeAccountUpdate = 0;
 
     public DataManager(TextView scoreTextView, TextView hintsTextView, TextView wordTextView, Button[] letterButtons, DBHelper dbHelper, Context context) {
         this.scoreTextView = scoreTextView;
@@ -261,6 +266,21 @@ public class DataManager {
         return words.toArray(new String[]{});
     }
 
+    public String[] getStatisticsWordsSortedByTime() {
+        ArrayList<String> words = new ArrayList<>();
+        SQLiteDatabase db = dbHelper.openDB();
+        Cursor c = db.rawQuery("SELECT word FROM statisticsWords", null);
+        if (c.moveToFirst()) {
+            do {
+                String word = c.getString(0);
+                words.add(word);
+            } while (c.moveToNext());
+        }
+        c.close();
+        db.close();
+        return words.toArray(new String[]{});
+    }
+
     public void addWordToStatistics(String word) {
         SQLiteDatabase db = dbHelper.openDB();
         ContentValues contentValues = new ContentValues();
@@ -422,19 +442,43 @@ public class DataManager {
     }
 
     public void updateAccount() {
-        NetworkService.getInstance().getSWordsApi().updateUser(MainActivity.getBearerToken(), selfPlayer).enqueue(
-                new Callback<Void>() {
-                    @Override
-                    public void onResponse(Call<Void> call, Response<Void> response) {
-                        Log.i(LOG_TAG, "success");
-                    }
+        if (System.currentTimeMillis() - lastTimeAccountUpdate > 1000) {
+            lastTimeAccountUpdate = System.currentTimeMillis();
+            NetworkService.getInstance().getSWordsApi().updateUser(MainActivity.getBearerToken(), selfPlayer).enqueue(
+                    new Callback<UpdateUserResponse>() {
+                        @Override
+                        public void onResponse(Call<UpdateUserResponse> call, Response<UpdateUserResponse> response) {
+                            Log.i(LOG_TAG, "success");
+                            String[] statisticsWords = getStatisticsWordsSortedByTime();
+                            if (statisticsWords.length > response.body().getWordsCount()) {
+                                String[] words = Arrays.copyOfRange(statisticsWords, response.body().getWordsCount(), statisticsWords.length);
 
-                    @Override
-                    public void onFailure(Call<Void> call, Throwable t) {
-                        Log.i(LOG_TAG, "failure");
+                                for (int i = 0; i < words.length; i++) {
+                                    words[i] = words[i].split("/")[0];
+                                }
+                                NetworkService.getInstance().getSWordsApi().sendComposedWords(MainActivity.getBearerToken(), new ComposedWordsRequest(uuid, Arrays.asList(words))).enqueue(
+                                        new Callback<Void>() {
+                                            @Override
+                                            public void onResponse(Call<Void> call, Response<Void> response) {
+                                                Log.i(LOG_TAG, "success");
+                                            }
+
+                                            @Override
+                                            public void onFailure(Call<Void> call, Throwable t) {
+                                                Log.i(LOG_TAG, "failure");
+                                            }
+                                        }
+                                );
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<UpdateUserResponse> call, Throwable t) {
+                            Log.i(LOG_TAG, "failure");
+                        }
                     }
-                }
-        );
+            );
+        }
     }
 
     public void setName(String name) {

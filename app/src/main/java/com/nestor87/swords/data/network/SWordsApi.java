@@ -1,9 +1,11 @@
 package com.nestor87.swords.data.network;
 
+import com.nestor87.swords.data.models.ComposedWordsRequest;
 import com.nestor87.swords.data.models.Message;
 import com.nestor87.swords.data.models.MessageInfo;
 import com.nestor87.swords.data.models.MessageRewardReceivedRequest;
 import com.nestor87.swords.data.models.MessagesCountResponse;
+import com.nestor87.swords.data.models.UpdateUserResponse;
 import com.nestor87.swords.data.models.UserRankResponse;
 import com.nestor87.swords.data.models.UsernameAvailabilityResponse;
 import com.nestor87.swords.data.models.VersionResponse;
@@ -36,7 +38,7 @@ public interface SWordsApi {
     Call<Void> registerPlayer(@Header("Authorization") String bearerToken, @Body Player player);
 
     @PATCH("/user")
-    Call<Void> updateUser(@Header("Authorization") String bearerToken, @Body Player player);
+    Call<UpdateUserResponse> updateUser(@Header("Authorization") String bearerToken, @Body Player player);
 
     @GET("/word_meaning")
     Call<Word> getWordMeaning(@Header("Authorization") String bearerToken, @Query("word") String word);
@@ -53,7 +55,7 @@ public interface SWordsApi {
     @GET("/username_availability")
     Call<UsernameAvailabilityResponse> checkUsernameAvailability(@Header("Authorization") String bearerToken, @Query("username") String username);
 
-    @GET("/user_rank")
+    @GET("/user/rank")
     Call<UserRankResponse> getUserRank(@Header("Authorization") String bearerToken, @Query("name") String name);
 
     @PATCH("/message")
@@ -67,5 +69,8 @@ public interface SWordsApi {
 
     @PATCH("/messages/receive_reward")
     Call<Void> setRewardReceived(@Header("Authorization") String bearerToken, @Body MessageRewardReceivedRequest request);
+
+    @PUT("/user/composed_words")
+    Call<Void> sendComposedWords(@Header("Authorization") String bearerToken, @Body ComposedWordsRequest request);
 
 }

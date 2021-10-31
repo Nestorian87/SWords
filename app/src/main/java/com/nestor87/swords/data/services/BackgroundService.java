@@ -57,7 +57,7 @@ public class BackgroundService extends Service {
         registerReceiver(screenOffReceiver, filter);
 
 
-        final int interval = 10000;
+        final int interval = 20000;
         SharedPreferences preferences = getApplicationContext().getSharedPreferences(APP_PREFERENCES_FILE_NAME, MODE_PRIVATE);
         handlerRunnable = new Runnable() {
             @Override

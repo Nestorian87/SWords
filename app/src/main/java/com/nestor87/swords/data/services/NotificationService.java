@@ -10,6 +10,8 @@ import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.IBinder;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
@@ -34,6 +36,8 @@ import java.util.TimerTask;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import android.content.Context;
 
 public class NotificationService extends Service {
     int notificationId = 100;
@@ -91,6 +95,7 @@ public class NotificationService extends Service {
                                                     .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.icon))
                                                     .setStyle(new NotificationCompat.BigTextStyle().bigText(message.getBody()))
                                                     .setContentIntent(pendingIntent)
+                                                    .setVibrate(new long[]{ 250, 500, 1000 })
                                                     .setAutoCancel(false);
 
                                             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());

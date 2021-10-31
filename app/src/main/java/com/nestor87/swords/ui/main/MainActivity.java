@@ -245,12 +245,12 @@ public class MainActivity extends AppCompatActivity {
             mixButton.setEnabled(false);
         }
 
-        checkUnviewedMessages();
+        checkUnviewedMessages(true);
 
         notificationBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                checkUnviewedMessages();
+                checkUnviewedMessages(false);
             }
         };
         if (!isNotificationReceiverRegistered) {
@@ -663,6 +663,7 @@ public class MainActivity extends AppCompatActivity {
     public void setWord(View view) {
         MainActivity.playSound(R.raw.set_word, this);
         lastWordMade = dataManager.getWord().getText().toLowerCase();
+        dataManager.addWordToStatistics(lastWordMade);
         ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(200);
         int wordPrice = dataManager.getWord().getWordPrice();
         dataManager.addScore(wordPrice);
@@ -671,7 +672,6 @@ public class MainActivity extends AppCompatActivity {
             dataManager.addHints(dataManager.getWord().getText().length());
         eraseWord(null);
         buttonSetEnabled(setWordButton, false);
-        dataManager.addWordToStatistics(lastWordMade);
 
         Toast wordPriceToast = new Toast(this);
         wordPriceToast.setGravity(Gravity.TOP, 0, 0);
@@ -922,12 +922,14 @@ public class MainActivity extends AppCompatActivity {
         return "Bearer " + uuid;
     }
 
-    private void checkUnviewedMessages() {
+    private void checkUnviewedMessages(boolean isFirstTime) {
         NetworkService.getInstance().getSWordsApi().getUnviewedMessagesCount(getBearerToken(), uuid).enqueue(
                 new Callback<MessagesCountResponse>() {
                     @Override
                     public void onResponse(Call<MessagesCountResponse> call, Response<MessagesCountResponse> response) {
                         findViewById(R.id.newMessages).setVisibility(response.body().getCount() > 0 ? View.VISIBLE : View.GONE);
+                        findViewById(R.id.newMessages).animate().alpha(response.body().getCount() > 0 ? 1f : 0f).setDuration(isFirstTime ? 0 : 500);
+
                     }
 
                     @Override
