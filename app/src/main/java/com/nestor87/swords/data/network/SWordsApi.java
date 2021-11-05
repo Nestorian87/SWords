@@ -1,10 +1,13 @@
 package com.nestor87.swords.data.network;
 
+import com.nestor87.swords.data.models.Achievement;
+import com.nestor87.swords.data.models.AchievementRequest;
 import com.nestor87.swords.data.models.ComposedWordsRequest;
 import com.nestor87.swords.data.models.Message;
 import com.nestor87.swords.data.models.MessageInfo;
 import com.nestor87.swords.data.models.MessageRewardReceivedRequest;
 import com.nestor87.swords.data.models.MessagesCountResponse;
+import com.nestor87.swords.data.models.StatisticsResponse;
 import com.nestor87.swords.data.models.UpdateUserResponse;
 import com.nestor87.swords.data.models.UserRankResponse;
 import com.nestor87.swords.data.models.UsernameAvailabilityResponse;
@@ -72,5 +75,15 @@ public interface SWordsApi {
 
     @PUT("/user/composed_words")
     Call<Void> sendComposedWords(@Header("Authorization") String bearerToken, @Body ComposedWordsRequest request);
+
+    @PUT("/user/achievements")
+    Call<Void> sendAchievement(@Header("Authorization") String bearerToken, @Body AchievementRequest request);
+
+    @GET("/user/achievements")
+    Call<List<Achievement>> getUserAchievements(@Header("Authorization") String bearerToken, @Query("name") String name);
+
+    @GET("/user/statistics")
+    Call<StatisticsResponse> getUserStatistics(@Header("Authorization") String bearerToken, @Query("name") String name);
+
 
 }

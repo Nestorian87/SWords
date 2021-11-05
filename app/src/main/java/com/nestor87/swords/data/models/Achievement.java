@@ -11,9 +11,14 @@ import android.view.View;
 
 import com.blogspot.atifsoftwares.animatoolib.Animatoo;
 import com.google.android.material.snackbar.Snackbar;
+import com.nestor87.swords.data.network.NetworkService;
 import com.nestor87.swords.ui.achievements.AchievementsActivity;
 import com.nestor87.swords.ui.main.MainActivity;
 import com.nestor87.swords.R;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class Achievement implements Comparable {
     public static ArrayList<Achievement> ACHIEVEMENTS = new ArrayList();
@@ -80,13 +85,11 @@ public class Achievement implements Comparable {
         this.isCompleted = true;
         MainActivity.playSound(R.raw.achievement, context);
         View word = ((Activity) context).findViewById(android.R.id.content);
-        ((Snackbar) Snackbar.make(word, (CharSequence) "Достижение \"" + this.title + "\" выполнено", 0).setAnimationMode(1)).setAction((CharSequence) "Забрать награду", (View.OnClickListener) new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent intent = new Intent(context, AchievementsActivity.class);
-                intent.putExtra("scrollTo", Achievement.this.id);
-                context.startActivity(intent);
-                Animatoo.animateSlideRight(context);
-            }
+        ((Snackbar) Snackbar.make(word, (CharSequence) "Достижение \"" + this.title + "\" выполнено", 0).setAnimationMode(1)).setAction((CharSequence) "Забрать награду", v -> {
+            Intent intent = new Intent(context, AchievementsActivity.class);
+            intent.putExtra("scrollTo", Achievement.this.id);
+            context.startActivity(intent);
+            Animatoo.animateSlideRight(context);
         }).setBackgroundTint(MainActivity.getColorFromTheme(android.R.attr.windowBackground, context)).setTextColor(MainActivity.getColorFromTheme(R.attr.scoreAndHintsText, context)).setActionTextColor(MainActivity.getColorFromTheme(R.attr.wordText, context)).show();
     }
 
@@ -98,6 +101,19 @@ public class Achievement implements Comparable {
         for (Achievement achievement : ACHIEVEMENTS) {
             if (achievement.getProgressTrigger() == trigger) {
                 achievement.addProgress(count, context);
+                NetworkService.getInstance().getSWordsApi().sendAchievement(MainActivity.getBearerToken(), new AchievementRequest(MainActivity.uuid, achievement.getId(), achievement.getCurrentProgress())).enqueue(
+                        new Callback<Void>() {
+                            @Override
+                            public void onResponse(Call<Void> call, Response<Void> response) {
+
+                            }
+
+                            @Override
+                            public void onFailure(Call<Void> call, Throwable t) {
+
+                            }
+                        }
+                );
             }
         }
     }
@@ -158,6 +174,35 @@ public class Achievement implements Comparable {
             throw new IllegalArgumentException("Cannot compare achievements from different groups");
         }
         return this.getMaxProgress() - ((Achievement) o).getMaxProgress();
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
+    }
+
+    public void setMaxProgress(int maxProgress) {
+        this.maxProgress = maxProgress;
+        this.isCompleted = currentProgress == this.maxProgress;
+    }
+
+    public void setProgressTrigger(int progressTrigger) {
+        this.progressTrigger = progressTrigger;
+    }
+
+    public void setRewardCount(int rewardCount) {
+        this.rewardCount = rewardCount;
+    }
+
+    public void setRewardCurrency(Currency rewardCurrency) {
+        this.rewardCurrency = rewardCurrency;
+    }
+
+    public void setTask(String task) {
+        this.task = task;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }
 

@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,10 +29,11 @@ public class AchievementAdapter extends RecyclerView.Adapter<AchievementAdapter.
 
     private LayoutInflater inflater;
     private List<List<Achievement>> achievementGroups;
-    public static Context context;
+    public Context context;
     public static DataManager dataManager;
+    private @LayoutRes int layout;
 
-    AchievementAdapter(Context context, List<List<Achievement>> achievementGroups) {
+    public AchievementAdapter(Context context, List<List<Achievement>> achievementGroups, @LayoutRes int layout) {
         this.achievementGroups = achievementGroups;
 //        Collections.sort(this.achievements, (o1, o2) -> {
 //            int progress1 = (int) ((double) o1.getCurrentProgress() / o1.getMaxProgress() * 100);
@@ -41,12 +43,13 @@ public class AchievementAdapter extends RecyclerView.Adapter<AchievementAdapter.
 //        });
         this.inflater = LayoutInflater.from(context);
         this.context = context;
+        this.layout = layout;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.achievement_list_item, parent, false);
+        View view = inflater.inflate(layout, parent, false);
 
         return new ViewHolder(view);
     }

@@ -14,6 +14,7 @@ import com.nestor87.swords.R;
 import com.nestor87.swords.data.models.Achievement;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class AchievementsActivity extends AppCompatActivity {
@@ -26,7 +27,7 @@ public class AchievementsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_achievements);
 
         RecyclerView recyclerView = findViewById(R.id.achievementsList);
-        AchievementAdapter achievementAdapter = new AchievementAdapter( this, getAchievementsSortedByGroupName(Achievement.ACHIEVEMENTS));
+        AchievementAdapter achievementAdapter = new AchievementAdapter( this, getAchievementsSortedByGroupName(Achievement.ACHIEVEMENTS), R.layout.achievement_list_item);
         recyclerView.setAdapter(achievementAdapter);
 
         String scrollToId = getIntent().getStringExtra("scrollTo");
@@ -41,7 +42,7 @@ public class AchievementsActivity extends AppCompatActivity {
         }
     }
 
-    public List<List<Achievement>> getAchievementsSortedByGroupName(List<Achievement> achievements) {
+    public static List<List<Achievement>> getAchievementsSortedByGroupName(List<Achievement> achievements) {
         ArrayList<List<Achievement>> achievementGroups = new ArrayList<>();
         for (Achievement achievement : achievements) {
             boolean isAchievementAdded = false;
@@ -57,6 +58,10 @@ public class AchievementsActivity extends AppCompatActivity {
                 group.add(achievement);
                 achievementGroups.add(group);
             }
+        }
+
+        for (List<Achievement> achievementsGroup : achievementGroups) {
+            Collections.sort(achievementsGroup);
         }
 
         return achievementGroups;

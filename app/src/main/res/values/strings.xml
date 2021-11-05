@@ -1,5 +1,19 @@
 <resources>
     <string name="app_name">SWords</string>
+    <string name="statistics_words_count">Слов составлено:\u0020</string>
+    <string name="statistics_words_unique_count">Уникальных слов составлено:\u0020</string>
+    <string name="statistics_most_frequent_word">Слово, составляемое чаще всего:\u0020</string>
+    <string name="statistics_day_word_count">За последние 24 часа слов составлено:\u0020</string>
+    <string name="statistics_word_longest">Самое длинное составленное слово:\u0020</string>
+    <string name="statistics_word_average_length">Средняя длина составленного слова:\u0020</string>
+    <string name="statistics_time_in_game">Время, проведённое в игре:\u0020</string>
+
+    <string name="statistics_profile_words_count">Слов\nсоставлено:</string>
+    <string name="statistics_profile_words_unique_count">Уникальных слов\nсоставлено:</string>
+    <string name="statistics_profile_most_frequent_word">Любимое\nслово:</string>
+    <string name="statistics_profile_word_longest">Самое длинное\nслово:</string>
+    <string name="statistics_profile_word_average_length">Средняя\nдлина слова:</string>
+
     <string-array name="themes">
         <item>Стандартная</item>
         <item>Тёмная</item>

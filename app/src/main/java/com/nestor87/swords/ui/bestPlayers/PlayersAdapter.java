@@ -1,13 +1,18 @@
 package com.nestor87.swords.ui.bestPlayers;
 
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -15,19 +20,30 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.nestor87.swords.R;
+import com.nestor87.swords.data.models.Achievement;
 import com.nestor87.swords.data.models.Player;
+import com.nestor87.swords.data.models.StatisticsResponse;
+import com.nestor87.swords.data.network.NetworkService;
+import com.nestor87.swords.ui.achievements.AchievementAdapter;
+import com.nestor87.swords.ui.achievements.AchievementsActivity;
 import com.nestor87.swords.ui.main.MainActivity;
 
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class PlayersAdapter extends RecyclerView.Adapter<PlayersAdapter.ViewHolder> {
 
     private LayoutInflater inflater;
     private List<Player> players;
+    private ProgressBar progressBar;
 
-    PlayersAdapter(Context context, List<Player> players) {
+    PlayersAdapter(Context context, List<Player> players, ProgressBar progressBar) {
         this.inflater = LayoutInflater.from(context);
         setPlayers(players);
+        this.progressBar = progressBar;
     }
 
     public void setPlayers(List<Player> players) {
@@ -84,11 +100,87 @@ public class PlayersAdapter extends RecyclerView.Adapter<PlayersAdapter.ViewHold
             holder.nicknameTextView.setTypeface(holder.nicknameTextView.getTypeface(), Typeface.NORMAL);
         }
 //        Toast.makeText(inflater.getContext(), String.valueOf(System.currentTimeMillis() - player.getLastTimeOnline()), Toast.LENGTH_SHORT).show();
-        if (System.currentTimeMillis() - player.getLastTimeOnline() <= 15000) {
+        if (System.currentTimeMillis() - player.getLastTimeOnline() <= 25000) {
             holder.isOnline.setCardBackgroundColor(MainActivity.getColorFromTheme(R.attr.hint, inflater.getContext()));
         }  else {
             holder.isOnline.setVisibility(View.GONE);
         }
+
+        holder.parentLayout.setOnClickListener(v -> {
+            if (progressBar.getVisibility() == View.GONE) {
+                View dialogView = LayoutInflater.from(inflater.getContext()).inflate(R.layout.dialog_profile, null, false);
+
+                progressBar.setVisibility(View.VISIBLE);
+
+                NetworkService.getInstance().getSWordsApi().getUserAchievements(MainActivity.getBearerToken(), player.getName()).enqueue(
+                        new Callback<List<Achievement>>() {
+                            @Override
+                            public void onResponse(Call<List<Achievement>> call, Response<List<Achievement>> response) {
+                                List<Achievement> playerAchievements = response.body();
+
+                                for (Achievement playerAchievement : playerAchievements) {
+                                    for (Achievement achievement : Achievement.ACHIEVEMENTS) {
+                                        if (playerAchievement.getId().equals(achievement.getId())) {
+                                            playerAchievement.setTitle(achievement.getTitle());
+                                            playerAchievement.setTask(achievement.getTask());
+                                            playerAchievement.setMaxProgress(achievement.getMaxProgress());
+                                            playerAchievement.setContext(inflater.getContext());
+                                            playerAchievement.setProgressTrigger(achievement.getProgressTrigger());
+                                            playerAchievement.setRewardReceived(true);
+                                            playerAchievement.setRewardCount(achievement.getRewardCount());
+                                            playerAchievement.setRewardCurrency(achievement.getRewardCurrency());
+                                        }
+                                    }
+                                }
+
+                                NetworkService.getInstance().getSWordsApi().getUserStatistics(MainActivity.getBearerToken(), player.getName()).enqueue(
+                                        new Callback<StatisticsResponse>() {
+                                            @Override
+                                            public void onResponse(Call<StatisticsResponse> call, Response<StatisticsResponse> response) {
+                                                StatisticsResponse statistics = response.body();
+
+                                                ((TextView) dialogView.findViewById(R.id.nameTextView)).setText(statistics.getPlayer().getName());
+                                                ((TextView) dialogView.findViewById(R.id.scoreTextView)).setText(Integer.toString(statistics.getPlayer().getScore()));
+                                                ((TextView) dialogView.findViewById(R.id.hintsTextView)).setText(Integer.toString(statistics.getPlayer().getHints()));
+
+                                                ((TextView) dialogView.findViewById(R.id.wordCount)).setText(statistics.getWordCount());
+                                                ((TextView) dialogView.findViewById(R.id.uniqueWordCount)).setText(statistics.getUniqueWordCount());
+                                                ((TextView) dialogView.findViewById(R.id.mostFrequentWord)).setText(statistics.getMostFrequentWord());
+                                                ((TextView) dialogView.findViewById(R.id.wordAverageLength)).setText(statistics.getAverageWordLength());
+                                                ((TextView) dialogView.findViewById(R.id.wordLongest)).setText(statistics.getLongestWord());
+
+                                                RecyclerView recyclerView = dialogView.findViewById(R.id.achievementsList);
+                                                AchievementAdapter achievementAdapter = new AchievementAdapter(inflater.getContext(), AchievementsActivity.getAchievementsSortedByGroupName(playerAchievements), R.layout.profile_achievement_list_item);
+                                                recyclerView.setAdapter(achievementAdapter);
+
+                                                AlertDialog dialog = new AlertDialog.Builder(inflater.getContext())
+                                                        .setView(dialogView)
+                                                        .create();
+
+                                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                                dialog.show();
+
+                                                progressBar.setVisibility(View.GONE);
+                                            }
+
+                                            @Override
+                                            public void onFailure(Call<StatisticsResponse> call, Throwable t) {
+                                                progressBar.setVisibility(View.GONE);
+                                                Toast.makeText(inflater.getContext(), "Произошла ошибка. Проверьте подключение к интернету", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                );
+                            }
+
+                            @Override
+                            public void onFailure(Call<List<Achievement>> call, Throwable t) {
+                                progressBar.setVisibility(View.GONE);
+                                Toast.makeText(inflater.getContext(), "Произошла ошибка. Проверьте подключение к интернету", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                );
+            }
+        });
     }
 
     @Override

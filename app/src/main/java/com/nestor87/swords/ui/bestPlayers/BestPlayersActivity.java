@@ -123,7 +123,7 @@ public class BestPlayersActivity extends AppCompatActivity {
 
     private void initRecyclerView(List<Player> players) {
         RecyclerView recyclerView = findViewById(R.id.bestPlayersList);
-        playersAdapter = new PlayersAdapter(BestPlayersActivity.this, players);
+        playersAdapter = new PlayersAdapter(BestPlayersActivity.this, players, progressBar);
         recyclerView.setAdapter(playersAdapter);
     }
 

@@ -93,79 +93,142 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/wordCount"
-                    android:layout_width="match_parent"
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginVertical="10dp"
-                    android:text="Слов составлено: "
-                    android:textColor="?scoreAndHintsText"
-                    android:textSize="20sp"
-                    android:textAlignment="center"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    app:cardCornerRadius="10dp"
+                    android:layout_margin="15dp"
+                    android:layout_gravity="center"
+                    app:cardBackgroundColor="?buttonBackground">
+                    <TextView
+                        android:padding="10dp"
+                        android:id="@+id/wordCount"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="10dp"
+                        android:text="@string/statistics_words_count"
+                        android:textColor="?scoreAndHintsText"
+                        android:textSize="20sp"
+                        android:textAlignment="center"
+                        app:layout_constraintStart_toStartOf="parent" />
+                </androidx.cardview.widget.CardView>
 
-                <TextView
-                    android:id="@+id/uniqueWordCount"
-                    android:layout_width="match_parent"
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginVertical="10dp"
-                    android:text="Уникальных слов составлено: "
-                    android:textColor="?scoreAndHintsText"
-                    android:textSize="20sp"
-                    android:textAlignment="center"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    app:cardCornerRadius="10dp"
+                    android:layout_margin="15dp"
+                    app:cardBackgroundColor="?buttonBackground"
+                    android:layout_gravity="center">
+                    <TextView
+                        android:padding="10dp"
+                        android:id="@+id/uniqueWordCount"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="10dp"
+                        android:text="@string/statistics_words_unique_count"
+                        android:textColor="?scoreAndHintsText"
+                        android:textSize="20sp"
+                        android:textAlignment="center"
+                        app:layout_constraintStart_toStartOf="parent" />
+                </androidx.cardview.widget.CardView>
 
-                <TextView
-                    android:id="@+id/todayWordCount"
-                    android:layout_width="match_parent"
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginVertical="10dp"
-                    android:text="За последние 24 часа слов составлено: "
-                    android:textColor="?scoreAndHintsText"
-                    android:textSize="20sp"
-                    android:textAlignment="center"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    app:cardCornerRadius="10dp"
+                    android:layout_margin="15dp"
+                    app:cardBackgroundColor="?buttonBackground"
+                    android:layout_gravity="center">
+                    <TextView
+                        android:padding="10dp"
+                        android:id="@+id/todayWordCount"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="10dp"
+                        android:text="@string/statistics_day_word_count"
+                        android:textColor="?scoreAndHintsText"
+                        android:textSize="20sp"
+                        android:textAlignment="center"
+                        app:layout_constraintStart_toStartOf="parent" />
+                </androidx.cardview.widget.CardView>
 
-                <TextView
-                    android:id="@+id/wordOften"
-                    android:layout_width="match_parent"
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Слово, составляемое чаще всего: "
-                    android:textAlignment="center"
-                    android:textColor="?scoreAndHintsText"
-                    android:textSize="20sp"
-                    android:layout_marginVertical="10dp"
-                    />
+                    app:cardCornerRadius="10dp"
+                    android:layout_margin="15dp"
+                    app:cardBackgroundColor="?buttonBackground"
+                    android:layout_gravity="center">
+                    <TextView
+                        android:padding="10dp"
+                        android:id="@+id/wordOften"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/statistics_most_frequent_word"
+                        android:textAlignment="center"
+                        android:textColor="?scoreAndHintsText"
+                        android:textSize="20sp"
+                        android:layout_marginVertical="10dp"
+                        />
+                </androidx.cardview.widget.CardView>
 
-                <TextView
-                    android:id="@+id/wordLongest"
-                    android:layout_width="match_parent"
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginVertical="10dp"
-                    android:text="Самое длинное составленное слово: "
-                    android:textAlignment="center"
-                    android:textColor="?scoreAndHintsText"
-                    android:textSize="20sp" />
+                    app:cardCornerRadius="10dp"
+                    android:layout_margin="15dp"
+                    app:cardBackgroundColor="?buttonBackground"
+                    android:layout_gravity="center">
+                    <TextView
+                        android:padding="10dp"
+                        android:id="@+id/wordLongest"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="10dp"
+                        android:text="@string/statistics_word_longest"
+                        android:textAlignment="center"
+                        android:textColor="?scoreAndHintsText"
+                        android:textSize="20sp" />
+                </androidx.cardview.widget.CardView>
 
-                <TextView
-                    android:id="@+id/wordAverageLength"
-                    android:layout_width="match_parent"
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginVertical="10dp"
-                    android:text="Средняя длина составленного слова: "
-                    android:textAlignment="center"
-                    android:textColor="?scoreAndHintsText"
-                    android:textSize="20sp" />
+                    app:cardCornerRadius="10dp"
+                    android:layout_margin="15dp"
+                    app:cardBackgroundColor="?buttonBackground"
+                    android:layout_gravity="center">
+                    <TextView
+                        android:layout_margin="10dp"
+                        android:id="@+id/wordAverageLength"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="10dp"
+                        android:text="@string/statistics_word_average_length"
+                        android:textAlignment="center"
+                        android:textColor="?scoreAndHintsText"
+                        android:textSize="20sp" />
+                </androidx.cardview.widget.CardView>
 
-                <TextView
-                    android:id="@+id/timeInGame"
-                    android:layout_width="match_parent"
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginVertical="10dp"
-                    android:text="Время, проведённое в игре: "
-                    android:textAlignment="center"
-                    android:textColor="?scoreAndHintsText"
-                    android:textSize="20sp" />
+                    app:cardCornerRadius="10dp"
+                    android:layout_margin="15dp"
+                    app:cardBackgroundColor="?buttonBackground"
+                    android:layout_gravity="center">
+                    <TextView
+                        android:padding="10dp"
+                        android:id="@+id/timeInGame"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="10dp"
+                        android:text="@string/statistics_time_in_game"
+                        android:textAlignment="center"
+                        android:textColor="?scoreAndHintsText"
+                        android:textSize="20sp" />
+                </androidx.cardview.widget.CardView>
             </LinearLayout>
         </ScrollView>
 
