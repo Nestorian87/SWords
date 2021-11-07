@@ -126,7 +126,6 @@ public class PlayersAdapter extends RecyclerView.Adapter<PlayersAdapter.ViewHold
                                             playerAchievement.setMaxProgress(achievement.getMaxProgress());
                                             playerAchievement.setContext(inflater.getContext());
                                             playerAchievement.setProgressTrigger(achievement.getProgressTrigger());
-                                            playerAchievement.setRewardReceived(true);
                                             playerAchievement.setRewardCount(achievement.getRewardCount());
                                             playerAchievement.setRewardCurrency(achievement.getRewardCurrency());
                                         }

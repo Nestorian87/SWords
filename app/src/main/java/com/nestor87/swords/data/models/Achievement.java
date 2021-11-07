@@ -34,7 +34,7 @@ public class Achievement implements Comparable {
     private int currentProgress;
     private String id;
     private boolean isCompleted;
-    private boolean isRewardReceived;
+    private boolean isRewardReceived = true;
     private int maxProgress;
     private int progressTrigger;
     private int rewardCount;
