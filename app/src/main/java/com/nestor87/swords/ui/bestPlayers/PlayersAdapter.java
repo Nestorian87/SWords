@@ -20,6 +20,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.nestor87.swords.R;
+import com.nestor87.swords.data.DataManager;
 import com.nestor87.swords.data.models.Achievement;
 import com.nestor87.swords.data.models.Player;
 import com.nestor87.swords.data.models.StatisticsResponse;
@@ -28,7 +29,9 @@ import com.nestor87.swords.ui.achievements.AchievementAdapter;
 import com.nestor87.swords.ui.achievements.AchievementsActivity;
 import com.nestor87.swords.ui.main.MainActivity;
 
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -63,8 +66,8 @@ public class PlayersAdapter extends RecyclerView.Adapter<PlayersAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Player player = players.get(position);
         holder.nicknameTextView.setText(player.getName());
-        holder.scoreTextView.setText(Integer.toString(player.getScore()));
-        holder.hintsTextView.setText(Integer.toString(player.getHints()));
+        holder.scoreTextView.setText(DataManager.formatNumberToStringWithSpacingDecimalPlaces(player.getScore()));
+        holder.hintsTextView.setText(DataManager.formatNumberToStringWithSpacingDecimalPlaces(player.getHints()));
         holder.orderNumberTextView.setText(Integer.toString(position + 1));
 
         SharedPreferences preferences = inflater.getContext().getSharedPreferences(MainActivity.APP_PREFERENCES_FILE_NAME, Context.MODE_PRIVATE);
@@ -139,8 +142,8 @@ public class PlayersAdapter extends RecyclerView.Adapter<PlayersAdapter.ViewHold
                                                 StatisticsResponse statistics = response.body();
 
                                                 ((TextView) dialogView.findViewById(R.id.nameTextView)).setText(statistics.getPlayer().getName());
-                                                ((TextView) dialogView.findViewById(R.id.scoreTextView)).setText(Integer.toString(statistics.getPlayer().getScore()));
-                                                ((TextView) dialogView.findViewById(R.id.hintsTextView)).setText(Integer.toString(statistics.getPlayer().getHints()));
+                                                ((TextView) dialogView.findViewById(R.id.scoreTextView)).setText(DataManager.formatNumberToStringWithSpacingDecimalPlaces(statistics.getPlayer().getScore()));
+                                                ((TextView) dialogView.findViewById(R.id.hintsTextView)).setText(DataManager.formatNumberToStringWithSpacingDecimalPlaces(statistics.getPlayer().getHints()));
 
                                                 ((TextView) dialogView.findViewById(R.id.wordCount)).setText(statistics.getWordCount());
                                                 ((TextView) dialogView.findViewById(R.id.uniqueWordCount)).setText(statistics.getUniqueWordCount());

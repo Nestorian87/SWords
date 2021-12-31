@@ -68,8 +68,8 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
             MessageReward messageReward = message.getMessage().getReward();
             if (messageReward != null && messageReward.getScore() != 0 || messageReward.getHints() != 0) {
                 holder.rewardGroup.setVisibility(View.VISIBLE);
-                holder.scoreRewardCountTextView.setText(Integer.toString(messageReward.getScore()));
-                holder.hintsRewardCountTextView.setText(Integer.toString(messageReward.getHints()));
+                holder.scoreRewardCountTextView.setText(DataManager.formatNumberToStringWithSpacingDecimalPlaces(messageReward.getScore()));
+                holder.hintsRewardCountTextView.setText(DataManager.formatNumberToStringWithSpacingDecimalPlaces(messageReward.getHints()));
                 holder.rewardTitleTextView.setText(messageReward.getTitle() + ":");
 
                 if (messageReward.getScore() != 0) {

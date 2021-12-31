@@ -26,10 +26,12 @@ import com.nestor87.swords.data.models.Word;
 import com.nestor87.swords.data.network.NetworkService;
 import com.nestor87.swords.ui.main.MainActivity;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -103,7 +105,7 @@ public class DataManager {
         }
 
         this.score = score;
-        scoreTextView.setText(Integer.toString(score));
+        scoreTextView.setText(DataManager.formatNumberToStringWithSpacingDecimalPlaces(score));
         saveData();
 
 
@@ -128,7 +130,7 @@ public class DataManager {
             throw new IllegalArgumentException("Hints count must be greater than 0");
         }
         this.hints = hints;
-        hintsTextView.setText(Integer.toString(hints));
+        hintsTextView.setText(DataManager.formatNumberToStringWithSpacingDecimalPlaces(hints));
         saveData();
     }
 
@@ -518,6 +520,11 @@ public class DataManager {
             metrics.scaledDensity = configuration.fontScale * metrics.density;
             context.getResources().updateConfiguration(configuration, metrics);
         }
+    }
+
+    public static String formatNumberToStringWithSpacingDecimalPlaces(int number) {
+        NumberFormat nf = NumberFormat.getInstance(new Locale("ru", "RU"));
+        return nf.format(number);
     }
 }
 
