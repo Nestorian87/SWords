@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="400dp"
+    android:layout_height="match_parent"
+    app:cardBackgroundColor="?android:windowBackground"
+    app:cardElevation="15dp"
+    app:cardCornerRadius="20dp"
+    android:clipToPadding="false"
+    android:padding="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="300dp"
+            android:layout_height="300dp">
+
+            <rubikstudio.library.LuckyWheelView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:lkwBackgroundColor="?hint"
+                app:lkwEdgeWidth="1"
+                app:lkwEdgeColor="?wordText"
+                app:lkwTopTextColor="?wordText"
+                app:lkwCenterImage="@drawable/lucky_wheel_center"
+                app:lkwCursor="@drawable/lucky_wheel_cursor"
+                app:lkwSecondaryTextSize="17sp"
+                android:id="@+id/luckyWheel"
+                android:padding="10dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:entries="@array/days" />
+
+        <Button
+            android:id="@+id/spinButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Вращать" />
+
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

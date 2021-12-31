@@ -1,5 +1,7 @@
 package com.nestor87.swords.data.models;
 
+import androidx.annotation.IdRes;
+
 import java.util.Objects;
 
 public class Currency {
@@ -14,6 +16,11 @@ public class Currency {
     public Currency(String text2) {
         this.text = text2;
         this.custom = true;
+    }
+
+    public Currency(int icon, String text) {
+        this.icon = icon;
+        this.text = text;
     }
 
     public int getIcon() {

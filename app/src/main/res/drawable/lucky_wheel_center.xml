@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape
+            android:shape="oval">
+
+            <solid android:color="?android:windowBackground" />
+            <stroke
+                android:width="14dp"
+                android:color="?hint" />
+
+            <size
+                android:width="50dp"
+                android:height="50dp" />
+        </shape>
+    </item>
+    <item>
+        <inset android:drawable="@drawable/icon"
+            android:inset="100dp" />
+    </item>
+</layer-list>
+

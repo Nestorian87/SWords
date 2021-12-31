@@ -59,7 +59,7 @@ public class AchievementAdapter extends RecyclerView.Adapter<AchievementAdapter.
 
         List<Achievement> achievementGroup = achievementGroups.get(position);
         for (Achievement achievement : achievementGroup) {
-            if (achievement.isRewardReceived() && achievement.isCompleted() && achievementGroup.indexOf(achievement) != achievementGroup.size() - 1) {
+            if (achievement.isRewardReceived() || layout == R.layout.profile_achievement_list_item && achievement.isCompleted() && achievementGroup.indexOf(achievement) != achievementGroup.size() - 1) {
                 continue;
             }
 
@@ -97,7 +97,7 @@ public class AchievementAdapter extends RecyclerView.Adapter<AchievementAdapter.
                 holder.progressBar.getProgressDrawable().setColorFilter(MainActivity.getColorFromTheme(R.attr.hint, context), PorterDuff.Mode.SRC_IN);
                 holder.titleTextView.setTypeface(null, Typeface.BOLD);
 
-                if (!achievement.isRewardReceived())
+                if (!achievement.isRewardReceived() && layout != R.layout.profile_achievement_list_item)
                     holder.rewardButton.setVisibility(View.VISIBLE);
             } else {
                 holder.titleTextView.setTextColor(MainActivity.getColorFromTheme(R.attr.scoreAndHintsText, context));

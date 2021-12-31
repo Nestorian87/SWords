@@ -259,4 +259,19 @@
             android:textSize="12.5sp" />
 
     </GridLayout>
+
+    <com.jetradarmobile.snowfall.SnowfallView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:snowflakesNum="78"
+        app:snowflakeAlphaMin="70"
+        app:snowflakeAlphaMax="200"
+        app:snowflakeAngleMax="13"
+        app:snowflakeSizeMin="0.5dp"
+        app:snowflakeSizeMax="5dp"
+        app:snowflakeSpeedMin="1"
+        app:snowflakeSpeedMax="2"
+        app:snowflakesFadingEnabled="true"
+        app:snowflakesAlreadyFalling="false" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
