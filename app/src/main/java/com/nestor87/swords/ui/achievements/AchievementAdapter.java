@@ -59,7 +59,13 @@ public class AchievementAdapter extends RecyclerView.Adapter<AchievementAdapter.
 
         List<Achievement> achievementGroup = achievementGroups.get(position);
         for (Achievement achievement : achievementGroup) {
-            if (achievement.isRewardReceived() || layout == R.layout.profile_achievement_list_item && achievement.isCompleted() && achievementGroup.indexOf(achievement) != achievementGroup.size() - 1) {
+            if (
+                    achievement.isRewardReceived()
+                    && achievementGroup.indexOf(achievement) != achievementGroup.size() - 1
+                    || layout == R.layout.profile_achievement_list_item
+                    && achievement.isCompleted()
+                    && achievementGroup.indexOf(achievement) != achievementGroup.size() - 1
+            ) {
                 continue;
             }
 
