@@ -56,29 +56,33 @@ public class BackgroundService extends Service {
         screenOffReceiver = new ScreenOffReceiver();
         registerReceiver(screenOffReceiver, filter);
 
-
         final int interval = 20000;
         SharedPreferences preferences = getApplicationContext().getSharedPreferences(APP_PREFERENCES_FILE_NAME, MODE_PRIVATE);
+        setStatusOnline(preferences.getString("accountId", ""));
         handlerRunnable = new Runnable() {
             @Override
             public void run() {
-                NetworkService.getInstance().getSWordsApi().setStatusOnline(MainActivity.getBearerToken(), new Player(preferences.getString("accountId", ""))).enqueue(
-                        new Callback<Void>() {
-                            @Override
-                            public void onResponse(Call<Void> call, Response<Void> response) {
-
-                            }
-
-                            @Override
-                            public void onFailure(Call<Void> call, Throwable t) {
-
-                            }
-                        }
-                );
+                setStatusOnline(preferences.getString("accountId", ""));
                 handler.postDelayed(this, interval);
             }
         };
         handler.postDelayed(handlerRunnable, interval);
+    }
+
+    private void setStatusOnline(String accountId) {
+        NetworkService.getInstance().getSWordsApi().setStatusOnline(MainActivity.getBearerToken(), new Player(accountId)).enqueue(
+                new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+
+                    }
+                }
+        );
     }
 
     @Override

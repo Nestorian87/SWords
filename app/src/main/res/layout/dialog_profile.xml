@@ -43,13 +43,30 @@
                         android:maxLines="1"
                         android:minWidth="200dp"
                         android:padding="10dp"
-                        android:text="Eliz_GD_ADMIN"
+                        android:layout_marginBottom="1dp"
+                        android:text="Eliz71"
                         android:textAlignment="center"
                         android:textColor="?wordText"
                         android:textSize="26sp"
                         android:textStyle="bold" />
 
                 </HorizontalScrollView>
+
+                <TextView
+                    android:id="@+id/statusTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/status_online"
+                    android:textSize="11sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/scrollView2"
+                    app:layout_constraintStart_toStartOf="@+id/scrollView2"
+                    android:fontFamily="@font/century_gothic"
+                    android:shadowColor="#00FFFFFF"
+                    android:shadowDx="48"
+                    android:shadowDy="0"
+                    android:shadowRadius="1"
+                    android:textColor="?hint" />
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardView2"
@@ -126,7 +143,7 @@
                 android:id="@+id/view"
                 android:layout_width="match_parent"
                 android:layout_height="1.25dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="1dp"
                 android:background="?wordText"
                 app:layout_constraintTop_toBottomOf="@id/layout2" />
 

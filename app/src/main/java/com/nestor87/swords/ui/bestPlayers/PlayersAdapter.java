@@ -1,12 +1,14 @@
 package com.nestor87.swords.ui.bestPlayers;
 
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +32,9 @@ import com.nestor87.swords.ui.achievements.AchievementsActivity;
 import com.nestor87.swords.ui.main.MainActivity;
 
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -137,6 +142,7 @@ public class PlayersAdapter extends RecyclerView.Adapter<PlayersAdapter.ViewHold
 
                                 NetworkService.getInstance().getSWordsApi().getUserStatistics(MainActivity.getBearerToken(), player.getName()).enqueue(
                                         new Callback<StatisticsResponse>() {
+                                            @SuppressLint("SetTextI18n")
                                             @Override
                                             public void onResponse(Call<StatisticsResponse> call, Response<StatisticsResponse> response) {
                                                 StatisticsResponse statistics = response.body();
@@ -144,6 +150,25 @@ public class PlayersAdapter extends RecyclerView.Adapter<PlayersAdapter.ViewHold
                                                 ((TextView) dialogView.findViewById(R.id.nameTextView)).setText(statistics.getPlayer().getName());
                                                 ((TextView) dialogView.findViewById(R.id.scoreTextView)).setText(DataManager.formatNumberToStringWithSpacingDecimalPlaces(statistics.getPlayer().getScore()));
                                                 ((TextView) dialogView.findViewById(R.id.hintsTextView)).setText(DataManager.formatNumberToStringWithSpacingDecimalPlaces(statistics.getPlayer().getHints()));
+
+                                                if (System.currentTimeMillis() - statistics.getPlayer().getLastTimeOnline() <= 25000) {
+                                                    ((TextView) dialogView.findViewById(R.id.statusTextView)).setText(inflater.getContext().getString(R.string.status_online));
+                                                    ((TextView) dialogView.findViewById(R.id.statusTextView)).setTextColor(MainActivity.getColorFromTheme(R.attr.hint, inflater.getContext()));
+                                                } else {
+                                                    Date dateLastTimeOnline = new Date(statistics.getPlayer().getLastTimeOnline());
+                                                    String dateFormat = "";
+                                                    if (DateUtils.isToday(dateLastTimeOnline.getTime())) {
+                                                        dateFormat = "'сегодня' 'в' HH:mm";
+                                                    } else {
+                                                        dateFormat = "d MMM 'в' HH:mm";
+                                                    }
+
+                                                    String stringDateLastTimeOnline = new SimpleDateFormat(dateFormat, Locale.getDefault()).format(dateLastTimeOnline);
+                                                    ((TextView) dialogView.findViewById(R.id.statusTextView)).setText(inflater.getContext().getString(R.string.status_online) + " " + stringDateLastTimeOnline);
+                                                    ((TextView) dialogView.findViewById(R.id.statusTextView)).setTextColor(MainActivity.getColorFromTheme(R.attr.scoreAndHintsText, inflater.getContext()));
+                                                }
+
+
 
                                                 ((TextView) dialogView.findViewById(R.id.wordCount)).setText(statistics.getWordCount());
                                                 ((TextView) dialogView.findViewById(R.id.uniqueWordCount)).setText(statistics.getUniqueWordCount());

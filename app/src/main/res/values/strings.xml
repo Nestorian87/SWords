@@ -13,6 +13,7 @@
     <string name="statistics_profile_most_frequent_word">Любимое\nслово:</string>
     <string name="statistics_profile_word_longest">Самое длинное\nслово:</string>
     <string name="statistics_profile_word_average_length">Средняя\nдлина слова:</string>
+    <string name="status_online">В сети</string>
 
     <string-array name="themes">
         <item>Стандартная</item>
