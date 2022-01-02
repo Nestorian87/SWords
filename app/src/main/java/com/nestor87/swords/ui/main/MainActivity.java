@@ -316,7 +316,7 @@ public class MainActivity extends AppCompatActivity {
                         public void onResponse(Call<VersionResponse> call, Response<VersionResponse> response) {
                             if (response.body().getCode() > BuildConfig.VERSION_CODE) {
                                 MarkdownView markdownView = new MarkdownView(MainActivity.this);
-                                markdownView.addStyleSheet(new VersionCssStyle());
+                                markdownView.addStyleSheet(new VersionCssStyle(MainActivity.this));
                                 markdownView.loadMarkdown(response.body().getChanges());
                                 markdownView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
 
