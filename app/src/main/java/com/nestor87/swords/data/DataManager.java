@@ -57,6 +57,7 @@ public class DataManager {
     public ArrayList<Integer> lettersWithHintsIndexes = new ArrayList<>();
     private Player selfPlayer;
     private long lastTimeAccountUpdate = 0;
+    private boolean isHintsLoaded = false;
 
     public DataManager(TextView scoreTextView, TextView hintsTextView, TextView wordTextView, Button[] letterButtons, DBHelper dbHelper, Context context) {
         this.scoreTextView = scoreTextView;
@@ -131,6 +132,7 @@ public class DataManager {
         }
         this.hints = hints;
         hintsTextView.setText(DataManager.formatNumberToStringWithSpacingDecimalPlaces(hints));
+        isHintsLoaded = true;
         saveData();
     }
 
@@ -250,7 +252,9 @@ public class DataManager {
         selfPlayer.setScore(score);
         selfPlayer.setHints(hints);
 
-        updateAccount();
+        if (isHintsLoaded) {
+            updateAccount();
+        }
     }
 
     public String[] getStatisticsWords() {
