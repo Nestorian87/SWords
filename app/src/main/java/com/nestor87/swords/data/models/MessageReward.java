@@ -5,6 +5,7 @@ public class MessageReward {
     int hints = 0;
     String title = "Награда";
     boolean isReceived;
+    String sharedPreferencesKey, sharedPreferencesValue, sharedPreferencesType;
 
     public int getScore() {
         return score;
@@ -20,5 +21,21 @@ public class MessageReward {
 
     public boolean isReceived() {
         return isReceived;
+    }
+
+    public boolean hasSharedPreferencesModification() {
+        return !sharedPreferencesKey.isEmpty() && !sharedPreferencesValue.isEmpty() && !sharedPreferencesType.isEmpty();
+    }
+
+    public String getSharedPreferencesKey() {
+        return sharedPreferencesKey;
+    }
+
+    public String getSharedPreferencesValue() {
+        return sharedPreferencesValue;
+    }
+
+    public String getSharedPreferencesType() {
+        return sharedPreferencesType;
     }
 }

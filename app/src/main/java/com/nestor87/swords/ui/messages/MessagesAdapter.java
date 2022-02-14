@@ -37,11 +37,13 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
     private LayoutInflater inflater;
     private List<MessageInfo> messages;
     private DataManager dataManager;
+    private SharedPreferences.Editor sharedPreferencesEditor;
 
     MessagesAdapter(Context context, List<MessageInfo> messages, DataManager dataManager) {
         this.inflater = LayoutInflater.from(context);
         this.dataManager = dataManager;
         setMessages(messages);
+        sharedPreferencesEditor = context.getSharedPreferences(MainActivity.APP_PREFERENCES_FILE_NAME, 0).edit();
     }
 
     public void setMessages(List<MessageInfo> messages) {
@@ -66,7 +68,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
             holder.dateTimeTextView.setText(message.getDateTime());
 
             MessageReward messageReward = message.getMessage().getReward();
-            if (messageReward != null && messageReward.getScore() != 0 || messageReward.getHints() != 0) {
+            if (messageReward != null && messageReward.getScore() != 0 || messageReward.getHints() != 0 || messageReward.hasSharedPreferencesModification()) {
                 holder.rewardGroup.setVisibility(View.VISIBLE);
                 holder.scoreRewardCountTextView.setText(DataManager.formatNumberToStringWithSpacingDecimalPlaces(messageReward.getScore()));
                 holder.hintsRewardCountTextView.setText(DataManager.formatNumberToStringWithSpacingDecimalPlaces(messageReward.getHints()));
@@ -109,6 +111,31 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
                                                 dataManager.removeHints(-messageReward.getHints());
                                             }
                                         }
+                                        if (messageReward.hasSharedPreferencesModification()) {
+                                            try {
+                                                if (messageReward.getSharedPreferencesType().equals("int")) {
+                                                    sharedPreferencesEditor.putInt(
+                                                            messageReward.getSharedPreferencesKey(),
+                                                            Integer.parseInt(
+                                                                    messageReward.getSharedPreferencesValue()
+                                                            )
+                                                    ).apply();
+                                                } else if (messageReward.getSharedPreferencesType().equals("boolean")) {
+                                                    sharedPreferencesEditor.putBoolean(
+                                                            messageReward.getSharedPreferencesKey(),
+                                                            messageReward.getSharedPreferencesValue().equals("true")
+                                                    ).apply();
+                                                } else if (messageReward.getSharedPreferencesType().equals("string")) {
+                                                    sharedPreferencesEditor.putString(
+                                                            messageReward.getSharedPreferencesKey(),
+                                                            messageReward.getSharedPreferencesValue()
+                                                    ).apply();
+                                                }
+                                            } catch (NumberFormatException e) {
+
+                                            }
+                                        }
+
                                         MainActivity.playSound(R.raw.buy, inflater.getContext());
                                         holder.getRewardButton.setVisibility(View.GONE);
                                     }
