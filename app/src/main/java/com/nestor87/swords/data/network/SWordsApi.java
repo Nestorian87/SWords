@@ -3,6 +3,7 @@ package com.nestor87.swords.data.network;
 import com.nestor87.swords.data.models.Achievement;
 import com.nestor87.swords.data.models.AchievementRequest;
 import com.nestor87.swords.data.models.ComposedWordsRequest;
+import com.nestor87.swords.data.models.CrashInfo;
 import com.nestor87.swords.data.models.Message;
 import com.nestor87.swords.data.models.MessageInfo;
 import com.nestor87.swords.data.models.MessageRewardReceivedRequest;
@@ -85,5 +86,7 @@ public interface SWordsApi {
     @GET("/user/statistics")
     Call<StatisticsResponse> getUserStatistics(@Header("Authorization") String bearerToken, @Query("name") String name);
 
+    @PUT("/crash")
+    Call<Void> sendCrashInfo(@Header("Authorization") String bearerToken, @Body CrashInfo crashInfo);
 
 }

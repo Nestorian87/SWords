@@ -14,6 +14,9 @@
     <string name="statistics_profile_word_longest">Самое длинное\nслово:</string>
     <string name="statistics_profile_word_average_length">Средняя\nдлина слова:</string>
     <string name="status_online">В сети</string>
+    <string name="enter_nickname_with_greeting">Добро пожаловать в SWords!\n Введите cвой игровой ник. Под этим ником Вас будут видеть другие игроки</string>
+    <string name="enter_nickname_without_greeting">Введите cвой игровой ник. Под этим ником Вас будут видеть другие игроки</string>
+
 
     <string-array name="themes">
         <item>Стандартная</item>

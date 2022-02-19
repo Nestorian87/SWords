@@ -27,7 +27,8 @@
 
         <activity
             android:name=".ui.messages.MessagesActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape"
+            android:exported="true" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -41,7 +42,8 @@
 
         <activity
             android:name=".ui.bestPlayers.BestPlayersActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape"
+            android:exported="false" />
 
         <receiver
             android:name=".data.receiver.RestartServiceReceiver"
@@ -59,7 +61,8 @@
 
         <activity
             android:name=".ui.splashScreen.SplashScreenActivity"
-            android:screenOrientation="landscape">
+            android:screenOrientation="landscape"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -89,7 +92,8 @@
             android:screenOrientation="landscape" />
         <activity
             android:name=".ui.main.MainActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape"
+            android:exported="true" />
     </application>
 
 </manifest>

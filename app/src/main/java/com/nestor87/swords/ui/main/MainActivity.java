@@ -426,6 +426,11 @@ public class MainActivity extends AppCompatActivity {
                 View nameView = layoutInflater.inflate(R.layout.input_name_dialog, null);
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setView(nameView);
+
+                if (preferences.getBoolean("isAccountRegistered", false)) {
+                    ((TextView) nameView.findViewById(R.id.titleTextView)).setText(R.string.enter_nickname_without_greeting);
+                }
+
                 EditText nameEditText = nameView.findViewById(R.id.nameEditText);
                 nameEditText.setText(preferences.getString("name", ""));
                 builder.setCancelable(false).setNeutralButton("OK", (dialog, which) -> {
@@ -456,14 +461,14 @@ public class MainActivity extends AppCompatActivity {
                                                     dataManager.registerAccount();
 
                                                     switch (nameEditText.getText().toString()) {
-                                                        case "Lydmila":
-                                                            dataManager.setScore(20064);
-                                                            dataManager.setHints(377);
-                                                            break;
-                                                        case "Eliz71":
-                                                            dataManager.setScore(2860);
-                                                            dataManager.setHints(57);
-                                                            break;
+//                                                        case "Lydmila":
+//                                                            dataManager.setScore(20064);
+//                                                            dataManager.setHints(377);
+//                                                            break;
+//                                                        case "Eliz71":
+//                                                            dataManager.setScore(2860);
+//                                                            dataManager.setHints(57);
+//                                                            break;
                                                     }
 
                                                     dataManager.updateAccount();

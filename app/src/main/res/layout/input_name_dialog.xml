@@ -7,9 +7,10 @@
     android:paddingTop="10dp">
 
     <TextView
+        android:id="@+id/titleTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Добро пожаловать в SWords!\n Введите cвой игровой ник. Под этим ником Вас будут видеть другие игроки"
+        android:text="@string/enter_nickname_with_greeting"
         android:textAlignment="center"
         android:textColor="?scoreAndHintsText"
         android:textSize="18sp"
