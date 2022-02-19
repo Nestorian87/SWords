@@ -52,6 +52,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.blogspot.atifsoftwares.animatoolib.Animatoo;
+import com.jetradarmobile.snowfall.SnowfallView;
 import com.nestor87.swords.BuildConfig;
 import com.nestor87.swords.R;
 import com.nestor87.swords.data.DBHelper;
@@ -74,8 +75,10 @@ import com.nestor87.swords.ui.messages.MessagesActivity;
 import com.nestor87.swords.ui.statistics.StatisticsActivity;
 import com.nestor87.swords.ui.themeChange.ThemeChangeActivity;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -102,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
     private DBHelper dbHelper;
     private ProgressBar progressBar;
     private ImageButton menuButton, hintsButton, dictionaryButton;
+    private SnowfallView snowfallView;
 
     private int permissionCheck;
 
@@ -157,6 +161,12 @@ public class MainActivity extends AppCompatActivity {
         dictionaryButton = findViewById(R.id.dictionaryButton);
         hintsButton = findViewById(R.id.useHintButton);
 
+        int currentMonth = Integer.parseInt((new SimpleDateFormat("M")).format(new Date()));
+        if (currentMonth < 3 || currentMonth == 12) {
+            findViewById(R.id.snowfallView).setVisibility(View.VISIBLE);
+        } else {
+            findViewById(R.id.snowfallView).setVisibility(View.GONE);
+        }
 
         letterButtons = new Button[] {
                 findViewById(R.id.letter1), findViewById(R.id.letter2), findViewById(R.id.letter3), findViewById(R.id.letter4),
