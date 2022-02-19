@@ -25,6 +25,10 @@
         android:testOnly="false"
         android:theme="@style/SplashTheme">
 
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="@string/admob_app_id"/>
+
         <activity
             android:name=".ui.messages.MessagesActivity"
             android:screenOrientation="landscape" />

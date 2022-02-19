@@ -1,5 +1,8 @@
 package com.nestor87.swords.ui;
+
 import android.app.Application;
+
+import com.google.android.gms.ads.MobileAds;
 
 public class App extends Application {
     private static App singleton;
@@ -13,6 +16,8 @@ public class App extends Application {
         super.onCreate();
         singleton = this;
 
+        MobileAds.initialize(this, initializationStatus -> {
 
+        });
     }
 }
