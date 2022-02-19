@@ -27,7 +27,7 @@
 
         <activity
             android:name=".ui.messages.MessagesActivity"
-            android:screenOrientation="landscape"
+            android:screenOrientation="sensorLandscape"
             android:exported="true" />
 
         <provider
@@ -42,7 +42,7 @@
 
         <activity
             android:name=".ui.bestPlayers.BestPlayersActivity"
-            android:screenOrientation="landscape"
+            android:screenOrientation="sensorLandscape"
             android:exported="false" />
 
         <receiver
@@ -61,7 +61,7 @@
 
         <activity
             android:name=".ui.splashScreen.SplashScreenActivity"
-            android:screenOrientation="landscape"
+            android:screenOrientation="sensorLandscape"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -77,7 +77,7 @@
 
         <activity
             android:name=".ui.statistics.StatisticsActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="sensorLandscape" />
 
         <service
             android:name=".data.services.BackgroundService"
@@ -86,13 +86,13 @@
 
         <activity
             android:name=".ui.achievements.AchievementsActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="sensorLandscape" />
         <activity
             android:name=".ui.themeChange.ThemeChangeActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="sensorLandscape" />
         <activity
             android:name=".ui.main.MainActivity"
-            android:screenOrientation="landscape"
+            android:screenOrientation="sensorLandscape"
             android:exported="true" />
     </application>
 
