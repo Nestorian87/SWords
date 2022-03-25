@@ -63,9 +63,11 @@ public class NotificationService extends Service {
         SharedPreferences preferences = getSharedPreferences(MainActivity.APP_PREFERENCES_FILE_NAME, MODE_PRIVATE);
         CHANNEL_ID = getString(R.string.app_name) + "NotificationChannelID";
         createNotificationChannel();
+        DBHelper dbHelper = new DBHelper(this);
+        dbHelper.copyDBIfNotExists();
         dataManager = new DataManager(
                 new TextView(getApplicationContext()), new TextView(getApplicationContext()),
-                null, new Button[]{}, new DBHelper(getApplicationContext()), getApplicationContext());
+                null, new Button[]{}, dbHelper, getApplicationContext());
         dataManager.loadData();
 
         if (timer == null) {
