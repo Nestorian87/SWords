@@ -86,7 +86,4 @@ public interface SWordsApi {
     @GET("/user/statistics")
     Call<StatisticsResponse> getUserStatistics(@Header("Authorization") String bearerToken, @Query("name") String name);
 
-    @PUT("/crash")
-    Call<Void> sendCrashInfo(@Header("Authorization") String bearerToken, @Body CrashInfo crashInfo);
-
 }
