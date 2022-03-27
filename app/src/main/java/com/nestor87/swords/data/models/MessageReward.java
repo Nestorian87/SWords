@@ -24,7 +24,12 @@ public class MessageReward {
     }
 
     public boolean hasSharedPreferencesModification() {
-        return !sharedPreferencesKey.isEmpty() && !sharedPreferencesValue.isEmpty() && !sharedPreferencesType.isEmpty();
+        return sharedPreferencesKey != null
+                && sharedPreferencesType != null
+                && sharedPreferencesValue != null
+                && !sharedPreferencesKey.isEmpty()
+                && !sharedPreferencesValue.isEmpty()
+                && !sharedPreferencesType.isEmpty();
     }
 
     public String getSharedPreferencesKey() {
