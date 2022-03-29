@@ -499,6 +499,8 @@ public class DataManager {
                 return R.style.SWords_white;
             case 3:
                 return R.style.SWords_darkBlue;
+            case 4:
+                return R.style.SWords_spring;
             default:
                 return R.style.SWords_standard;
         }

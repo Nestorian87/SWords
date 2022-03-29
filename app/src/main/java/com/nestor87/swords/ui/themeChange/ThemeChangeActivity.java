@@ -33,7 +33,7 @@ public class ThemeChangeActivity extends AppCompatActivity {
     DataManager dataManager;
     CardView colorCardView1, colorCardView2, colorCardView3, colorCardView4, colorCardView5, colorCardView6, colorCardView7, colorCardView8, colorCardView9;
 
-    int[] themePrices = new int[] {0, 0, 2500, 5000};
+    int[] themePrices = new int[] {0, 0, 2500, 5000, 4000};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

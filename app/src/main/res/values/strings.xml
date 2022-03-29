@@ -14,8 +14,10 @@
     <string name="statistics_profile_word_longest">Самое длинное\nслово:</string>
     <string name="statistics_profile_word_average_length">Средняя\nдлина слова:</string>
     <string name="status_online">В сети</string>
-    <string name="enter_nickname_with_greeting">Добро пожаловать в SWords!\n Введите cвой игровой ник. Под этим ником Вас будут видеть другие игроки</string>
-    <string name="enter_nickname_without_greeting">Введите cвой игровой ник. Под этим ником Вас будут видеть другие игроки</string>
+    <string name="enter_nickname_with_greeting">Добро пожаловать в SWords!\n Введите свой игровой ник. Под этим ником Вас будут видеть другие игроки</string>
+    <string name="enter_nickname_without_greeting">Введите свой игровой ник. Под этим ником Вас будут видеть другие игроки</string>
+    <string name="daily_reward_dialog_title">Ежедневная награда: день <b>%1$d</b> из <b>%2$d</b></string>
+    <string name="spin">Вращать колесо</string>
 
 
     <string-array name="themes">
@@ -23,6 +25,7 @@
         <item>Тёмная</item>
         <item>Белая</item>
         <item>Тёмно-синяя</item>
+        <item>Весенняя</item>
     </string-array>
 
     <string-array name="days">

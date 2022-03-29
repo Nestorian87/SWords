@@ -14,4 +14,5 @@
     <color name="background_white">#faebd7</color>
     <color name="dark_theme_background">#282828</color>
     <color name="dark_blue_theme_background">#282832</color>
+    <color name="green_theme_background">#cfffd0</color>
 </resources>

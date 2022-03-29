@@ -1,5 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/User/Desktop/Programs/Android/SWords/app/src/main/res/drawable/daily_reward_button_animator.xml" value="0.1395" />
+        <entry key="..\:/Users/User/Desktop/Programs/Android/SWords/app/src/main/res/drawable/dialog_daily_reward_button_state_list_animator.xml" value="0.1395" />
+        <entry key="..\:/Users/User/Desktop/Programs/Android/SWords/app/src/main/res/drawable/icon_gradient.xml" value="0.1395" />
+        <entry key="..\:/Users/User/Desktop/Programs/Android/SWords/app/src/main/res/drawable/launch_screen.xml" value="0.1395" />
+        <entry key="..\:/Users/User/Desktop/Programs/Android/SWords/app/src/main/res/drawable/letter_button.xml" value="0.1395" />
+        <entry key="..\:/Users/User/Desktop/Programs/Android/SWords/app/src/main/res/drawable/lucky_wheel_center.xml" value="0.1395" />
+        <entry key="..\:/Users/User/Desktop/Programs/Android/SWords/app/src/main/res/drawable/lucky_wheel_cursor.xml" value="0.1395" />
+        <entry key="..\:/Users/User/Desktop/Programs/Android/SWords/app/src/main/res/drawable/ukraine_background.xml" value="0.1395" />
+        <entry key="..\:/Users/User/Desktop/Programs/Android/SWords/app/src/main/res/drawable/ukrainian_flag_background.xml" value="0.15" />
+        <entry key="..\:/Users/User/Desktop/Programs/Android/SWords/app/src/main/res/drawable/ukrainian_flag_gradient.xml" value="0.1395" />
+        <entry key="..\:/Users/User/Desktop/Programs/Android/SWords/app/src/main/res/layout/activity_main.xml" value="0.33" />
+        <entry key="..\:/Users/User/Desktop/Programs/Android/SWords/app/src/main/res/layout/dialog_daily_reward.xml" value="0.25" />
+        <entry key="..\:/Users/User/Desktop/Programs/Android/SWords/luckyWheel/src/main/res/layout/lucky_wheel_layout.xml" value="0.1675213675213675" />
+      </map>
+    </option>
+  </component>
   <component name="NullableNotNullManager">
     <option name="myDefaultNullable" value="org.jetbrains.annotations.Nullable" />
     <option name="myDefaultNotNull" value="androidx.annotation.RecentlyNonNull" />

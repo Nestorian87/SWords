@@ -81,6 +81,25 @@
         <item name="yellowButtonDisabled">#959953</item>
     </style>
 
+    <style name="SWords.spring" parent="SWords.base.light">
+        <item name="android:windowBackground">@color/green_theme_background</item>
+        <item name="buttonBackground">#b5f2b3</item>
+        <item name="buttonPressedBackground">#4df09e</item>
+        <item name="buttonText">#248ebf</item>
+        <item name="buttonBorder">#53a35e</item>
+        <item name="scoreAndHintsText">#026948</item>
+        <item name="wordText">#9354d1</item>
+        <item name="disabled">#436330</item>
+        <item name="hint">#a7abfc</item>
+        <item name="redButton">#fc387c</item>
+        <item name="redButtonDisabled">#9C4E6C</item>
+        <item name="blueButton">#1c3cd6</item>
+        <item name="blueButtonDisabled">#444880</item>
+        <item name="yellowButton">#edca51</item>
+        <item name="yellowButtonDisabled">#968138</item>
+    </style>
+
+
     <style name="SplashTheme" parent="SWords.base.light">
         <item name="android:windowBackground">@drawable/launch_screen</item>
     </style>

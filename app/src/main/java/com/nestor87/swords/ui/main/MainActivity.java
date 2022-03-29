@@ -10,12 +10,9 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.ColorDrawable;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
-import android.net.Network;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
@@ -27,12 +24,10 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.webkit.MimeTypeMap;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -41,7 +36,6 @@ import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,11 +50,11 @@ import com.jetradarmobile.snowfall.SnowfallView;
 import com.nestor87.swords.BuildConfig;
 import com.nestor87.swords.R;
 import com.nestor87.swords.data.DBHelper;
+import com.nestor87.swords.data.DailyRewardDialog;
 import com.nestor87.swords.data.DataManager;
 import com.nestor87.swords.data.markdownviewCssStyle.VersionCssStyle;
 import com.nestor87.swords.data.models.Achievement;
 import com.nestor87.swords.data.models.Currencies;
-import com.nestor87.swords.data.models.DailyRewardVariant;
 import com.nestor87.swords.data.models.Letter;
 import com.nestor87.swords.data.models.MessagesCountResponse;
 import com.nestor87.swords.data.models.UsernameAvailabilityResponse;
@@ -86,9 +80,6 @@ import br.tiagohm.markdownview.MarkdownView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import rubikstudio.library.LuckyWheelView;
-import rubikstudio.library.PielView;
-import rubikstudio.library.model.LuckyItem;
 
 import static com.nestor87.swords.data.models.Achievement.ACHIEVEMENTS;
 import static com.nestor87.swords.data.models.Achievement.HINTS_CURRENCY;
@@ -278,7 +269,7 @@ public class MainActivity extends AppCompatActivity {
             registerReceiver(notificationBroadcastReceiver, new IntentFilter(NotificationService.NOTIFICATION_RECEIVED_ACTION));
         }
 
-//        showDailyRewardDialog();
+
     }
 
     private void requestPermission() {
@@ -296,6 +287,7 @@ public class MainActivity extends AppCompatActivity {
                     .show();
 
         } else {
+            showDailyRewardDialog();
             checkForNewVersion();
         }
     }
@@ -1013,65 +1005,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showDailyRewardDialog() {
-        View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_daily_reward, null, false);
-
-
-        Spinner spinner = dialogView.findViewById(R.id.spinner);
-
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                ArrayList<DailyRewardVariant> rewardVariants = DailyRewardVariant.dailyRewardVariants.get(DailyRewardVariant.Days.values()[position]);
-                Collections.shuffle(rewardVariants);
-                LuckyWheelView luckyWheelView = dialogView.findViewById(R.id.luckyWheel);
-                ArrayList<LuckyItem> data = new ArrayList<>();
-                for (DailyRewardVariant reward : rewardVariants) {
-                    LuckyItem luckyItem = new LuckyItem();
-                    luckyItem.topText = "";
-                    luckyItem.secondaryText = reward.getCurrency() != null ? Integer.toString(reward.getCount()) : "";
-                    luckyItem.secondaryText = luckyItem.secondaryText.length() == 1 ? "  " + luckyItem.secondaryText : luckyItem.secondaryText.length() == 2 ? " " + luckyItem.secondaryText : luckyItem.secondaryText;
-                    luckyItem.icon = reward.getCurrency() != null ? reward.getCurrency().getIcon() : 0;
-                    luckyItem.color = getColorFromTheme(R.attr.buttonBackground);
-                    data.add(luckyItem);
-                }
-
-                luckyWheelView.setData(data);
-
-                dialogView.findViewById(R.id.spinButton).setOnClickListener(v -> {
-                    ArrayList<DailyRewardVariant> rewards = new ArrayList<>();
-                    for (DailyRewardVariant reward : rewardVariants) {
-                        for (int i = 0; i < reward.getChance(); i++) {
-                            rewards.add(reward);
-                        }
-                    }
-
-                    luckyWheelView.startLuckyWheelWithTargetIndex(rewardVariants.indexOf((DailyRewardVariant) getRandomElementFromArrayList(rewards)));
-
-                });
+        DailyRewardDialog dailyRewardDialog = new DailyRewardDialog(this);
+        dailyRewardDialog.setOnRewardGottenListener(reward -> {
+            if (reward.getCurrencyEnum() == Currencies.SCORE) {
+                dataManager.addScore(reward.getCount());
+            } else if (reward.getCurrencyEnum() == Currencies.HINTS) {
+                dataManager.addHints(reward.getCount());
             }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
+            return true;
         });
-
-
-//        luckyWheelView.setOnRotateWheelListener(new PielView.PieRotateListener() {
-//            @Override
-//            public void rotateDone(int index) {
-//                new AlertDialog.Builder(MainActivity.this)
-//                        .setTitle("Ежедневная награда")
-//                        .show();
-//            }
-//        });
-
-        AlertDialog dialog = new AlertDialog.Builder(this)
-                .setView(dialogView)
-                .create();
-
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.show();
+        dailyRewardDialog.show();
     }
 
     @Override

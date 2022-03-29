@@ -15,4 +15,5 @@
         <item name="android:textSize">20sp</item>
 <!--        <item name="android:typeface">@font/tahoma</item>-->
     </style>
+
 </resources>

@@ -151,6 +151,7 @@
         android:textColor="?wordText"
         android:textSize="34sp"
         android:textStyle="bold"
+        tools:text="СЛОВО"
         app:layout_constraintBottom_toTopOf="@+id/keyboard"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -178,15 +179,18 @@
 
         <Button
             android:id="@+id/letter1"
+            tools:textColor="?redButton"
 
             style="@style/KeyboardButtonStyle.LetterButton" />
 
         <Button
             android:id="@+id/letter2"
+            tools:textColor="?yellowButton"
             style="@style/KeyboardButtonStyle.LetterButton" />
 
         <Button
             android:id="@+id/letter3"
+            tools:textColor="?blueButton"
             style="@style/KeyboardButtonStyle.LetterButton" />
 
         <Button
