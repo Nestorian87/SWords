@@ -55,12 +55,12 @@ class DailyRewardDialog(private val context: Context) {
         var dayOfCurrentReward = DailyRewardVariant.Days.DAY1
         var needToShow = true
 
-        if (dayOfLastReward == 0 || dayOfLastReward == DailyRewardVariant.Days.values().size) {
+        if (dayOfLastReward == 0) {
             dayOfCurrentReward = DailyRewardVariant.Days.DAY1
         } else {
             val yesterday = Date(openDate.time - 86400000)
             if (SimpleDateFormat("d").format(dateOfLastRewardReceived) == SimpleDateFormat("d").format(yesterday)) {
-                dayOfCurrentReward = DailyRewardVariant.Days.values()[dayOfLastReward]
+                dayOfCurrentReward = DailyRewardVariant.Days.values().getOrElse(dayOfLastReward) { DailyRewardVariant.Days.DAY1 }
             } else {
                 if (SimpleDateFormat("d").format(dateOfLastRewardReceived) == SimpleDateFormat("d").format(openDate)) {
                     needToShow = false
