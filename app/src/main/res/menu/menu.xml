@@ -5,6 +5,7 @@
     <item android:title="Достижения" android:id="@+id/achievementsButton" />
     <item android:title="Статистика" android:id="@+id/statistics" />
     <item android:title="Лучшие игроки" android:id="@+id/bestPlayers" />
+    <item android:title="Бонусы" android:id="@+id/bonuses" />
     <item android:title="Слово отсутствует" android:id="@+id/addWord" />
     <item android:title="Изменить никнейм" android:id="@+id/changeName" />
     <item android:title="Выход" android:id="@+id/exit" />

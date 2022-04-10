@@ -167,6 +167,10 @@ public class Letter implements Cloneable {
     public void coloredLetterChance() {
         int coloredLetterChance = (int) (Math.random() * 100 + 1);
 
+        if (Bonus.Companion.isActive("colorLetters")) {
+            coloredLetterChance /= 2;
+        }
+
         if (coloredLetterChance <= 5) {
             int colorChance = (int) (Math.random() * 100 + 1);
             if (colorChance >= 50)

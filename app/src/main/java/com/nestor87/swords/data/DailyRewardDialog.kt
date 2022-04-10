@@ -115,7 +115,6 @@ class DailyRewardDialog(private val context: Context) {
 
         luckyWheelView.setOnRotateWheelListener {
             if (onRewardGottenListener?.invoke(reward!!) == true) {
-                makeToastWithIcon("+ ${reward!!.count}", reward!!.currency.icon)
                 setDateLastRewardReceivedAndDay(openDate, dayOfCurrentReward.ordinal + 1)
             }
             Handler(Looper.getMainLooper()).post {
@@ -129,25 +128,5 @@ class DailyRewardDialog(private val context: Context) {
             dialog.show()
         }
 
-    }
-
-    private fun makeToastWithIcon(text: String, @DrawableRes icon: Int) {
-        val toast = Toast(context)
-        toast.setGravity(Gravity.TOP, 0, 0)
-        toast.duration = Toast.LENGTH_LONG
-        val layout = LinearLayout(context)
-        layout.orientation = LinearLayout.HORIZONTAL
-        val textView = TextView(context)
-        textView.text = "$text "
-        textView.setTextColor(MainActivity.getColorFromTheme(R.attr.wordText, context))
-        layout.addView(textView)
-        val imageView = ImageView(context)
-        imageView.adjustViewBounds = true
-        imageView.maxWidth = 43
-        imageView.maxHeight = 43
-        imageView.setImageResource(icon)
-        layout.addView(imageView)
-        toast.setView(layout)
-        toast.show()
     }
 }

@@ -5,7 +5,7 @@ import android.app.Application;
 public class App extends Application {
     private static App singleton;
 
-    public App getInstance(){
+    public static App getInstance(){
         return singleton;
     }
 

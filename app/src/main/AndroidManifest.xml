@@ -91,6 +91,9 @@
             android:name=".ui.themeChange.ThemeChangeActivity"
             android:screenOrientation="sensorLandscape" />
         <activity
+            android:name=".ui.bonuses.BonusesActivity"
+            android:screenOrientation="sensorLandscape" />
+        <activity
             android:name=".ui.main.MainActivity"
             android:screenOrientation="sensorLandscape"
             android:exported="true" />

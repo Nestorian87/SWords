@@ -60,7 +60,7 @@ public class Achievement implements Comparable {
         this.progressTrigger = progressTrigger;
         this.rewardCurrency = rewardCurrency;
         this.rewardCount = rewardCount;
-        SharedPreferences sharedPreferences = context.getSharedPreferences(MainActivity.APP_PREFERENCES_FILE_NAME, 0);
+        SharedPreferences sharedPreferences = context.getSharedPreferences(MainActivity.APP_PREFERENCES_FILE_NAME, Context.MODE_PRIVATE);
         int i = sharedPreferences.getInt("Progress.Achievement." + id, 0);
         this.currentProgress = i;
         this.isCompleted = i == this.maxProgress;
@@ -203,6 +203,32 @@ public class Achievement implements Comparable {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+    
+    public static void initAchievements(Context context) {
+        ACHIEVEMENTS.add(new Achievement(context, "score.beginner", "Начинающий", "Заработать {x}", 100, SCORE_INCREASE_TRIGGER, HINTS_CURRENCY, 20));
+        ACHIEVEMENTS.add(new Achievement(context, "score.advanced", "Продвинутый", "Заработать {x}", 500, SCORE_INCREASE_TRIGGER, HINTS_CURRENCY, 50));
+        ACHIEVEMENTS.add(new Achievement(context, "score.pro", "Профессионал", "Заработать {x}", 2000, SCORE_INCREASE_TRIGGER, HINTS_CURRENCY, 100));
+        ACHIEVEMENTS.add(new Achievement(context, "score.master", "Мастер", "Заработать {x}", 8000, SCORE_INCREASE_TRIGGER, HINTS_CURRENCY, 200));
+        ACHIEVEMENTS.add(new Achievement(context, "score.expert", "Эксперт", "Заработать {x}", 15000, SCORE_INCREASE_TRIGGER, HINTS_CURRENCY, 400));
+        ACHIEVEMENTS.add(new Achievement(context, "score.champion", "Чемпион", "Заработать {x}", 30000, SCORE_INCREASE_TRIGGER, HINTS_CURRENCY, 1000));
+        ACHIEVEMENTS.add(new Achievement(context, "score.fan", "Фанат", "Заработать {x}", 50000, SCORE_INCREASE_TRIGGER, HINTS_CURRENCY, 1500));
+        ACHIEVEMENTS.add(new Achievement(context, "score.crazy", "Чокнутый", "Заработать {x}", 100000, SCORE_INCREASE_TRIGGER, HINTS_CURRENCY, 2000));
+
+        ACHIEVEMENTS.add(new Achievement(context, "hints.curious", "Любопытный", "Использовать {x}", 50, HINTS_REDUCE_TRIGGER, SCORE_CURRENCY, 200));
+        ACHIEVEMENTS.add(new Achievement(context, "hints.veryCurious", "Очень любопытный", "Использовать {x}", 250, HINTS_REDUCE_TRIGGER, SCORE_CURRENCY, 600));
+        ACHIEVEMENTS.add(new Achievement(context, "hints.lazy", "Лентяй", "Использовать {x}", 500, HINTS_REDUCE_TRIGGER, SCORE_CURRENCY, 1000));
+        ACHIEVEMENTS.add(new Achievement(context, "hints.DStudent", "Двоечник", "Использовать {x}", 1000, HINTS_REDUCE_TRIGGER, SCORE_CURRENCY, 2500));
+//            ACHIEVEMENTS.add(new Achievement(context, "hints.DStudent", "Двоечник", "Использовать {x}", 3500, HINTS_REDUCE_TRIGGER, SCORE_CURRENCY, 5000));
+
+//            ACHIEVEMENTS.add(new Achievement(context, "words.1", "1", "Составить {x} {w}", 20, WORD_COMPOSING_TRIGGER, HINTS_CURRENCY, 10));
+//            ACHIEVEMENTS.add(new Achievement(context, "words.2", "2", "Составить {x} {w}", 50, WORD_COMPOSING_TRIGGER, SCORE_CURRENCY, 75));
+//            ACHIEVEMENTS.add(new Achievement(context, "words.3", "3", "Составить {x} {w}", 100, WORD_COMPOSING_TRIGGER, HINTS_CURRENCY, 30));
+//            ACHIEVEMENTS.add(new Achievement(context, "words.4", "4", "Составить {x} {w}", 200, WORD_COMPOSING_TRIGGER, SCORE_CURRENCY, 200));
+//            ACHIEVEMENTS.add(new Achievement(context, "words.5", "5", "Составить {x} {w}", 500, WORD_COMPOSING_TRIGGER, HINTS_CURRENCY, 85));
+//            ACHIEVEMENTS.add(new Achievement(context, "words.6", "6", "Составить {x} {w}", 750, WORD_COMPOSING_TRIGGER, SCORE_CURRENCY, 500));
+//            ACHIEVEMENTS.add(new Achievement(context, "words.7", "7", "Составить {x} {w}", 750, WORD_COMPOSING_TRIGGER, SCORE_CURRENCY, 500));
+
     }
 }
 

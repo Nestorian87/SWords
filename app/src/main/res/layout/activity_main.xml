@@ -32,6 +32,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <androidx.cardview.widget.CardView
+        android:id="@+id/bonusActive"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        app:cardBackgroundColor="?hint"
+        app:cardCornerRadius="20dp"
+        android:visibility="gone"
+        android:animateLayoutChanges="true"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintEnd_toEndOf="@+id/menuButton"
+        app:layout_constraintStart_toStartOf="@+id/menuButton"
+        app:layout_constraintTop_toTopOf="@+id/menuButton" />
+
+
     <ImageButton
         android:id="@+id/useHintButton"
         android:layout_width="50dp"

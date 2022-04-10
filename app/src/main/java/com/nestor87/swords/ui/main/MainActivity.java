@@ -18,6 +18,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.os.Vibrator;
 import android.text.InputType;
 import android.util.Log;
@@ -42,6 +43,7 @@ import android.widget.Toast;
 import androidx.annotation.ColorInt;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -54,6 +56,7 @@ import com.nestor87.swords.data.DailyRewardDialog;
 import com.nestor87.swords.data.DataManager;
 import com.nestor87.swords.data.markdownviewCssStyle.VersionCssStyle;
 import com.nestor87.swords.data.models.Achievement;
+import com.nestor87.swords.data.models.Bonus;
 import com.nestor87.swords.data.models.Currencies;
 import com.nestor87.swords.data.models.Letter;
 import com.nestor87.swords.data.models.MessagesCountResponse;
@@ -65,6 +68,7 @@ import com.nestor87.swords.data.services.BackgroundService;
 import com.nestor87.swords.data.services.NotificationService;
 import com.nestor87.swords.ui.achievements.AchievementsActivity;
 import com.nestor87.swords.ui.bestPlayers.BestPlayersActivity;
+import com.nestor87.swords.ui.bonuses.BonusesActivity;
 import com.nestor87.swords.ui.messages.MessagesActivity;
 import com.nestor87.swords.ui.statistics.StatisticsActivity;
 import com.nestor87.swords.ui.themeChange.ThemeChangeActivity;
@@ -74,6 +78,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 import br.tiagohm.markdownview.MarkdownView;
@@ -185,29 +190,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (ACHIEVEMENTS.isEmpty()) {
-            ACHIEVEMENTS.add(new Achievement(this, "score.beginner", "Начинающий", "Заработать {x}", 100, SCORE_INCREASE_TRIGGER, HINTS_CURRENCY, 20));
-            ACHIEVEMENTS.add(new Achievement(this, "score.advanced", "Продвинутый", "Заработать {x}", 500, SCORE_INCREASE_TRIGGER, HINTS_CURRENCY, 50));
-            ACHIEVEMENTS.add(new Achievement(this, "score.pro", "Профессионал", "Заработать {x}", 2000, SCORE_INCREASE_TRIGGER, HINTS_CURRENCY, 100));
-            ACHIEVEMENTS.add(new Achievement(this, "score.master", "Мастер", "Заработать {x}", 8000, SCORE_INCREASE_TRIGGER, HINTS_CURRENCY, 200));
-            ACHIEVEMENTS.add(new Achievement(this, "score.expert", "Эксперт", "Заработать {x}", 15000, SCORE_INCREASE_TRIGGER, HINTS_CURRENCY, 400));
-            ACHIEVEMENTS.add(new Achievement(this, "score.champion", "Чемпион", "Заработать {x}", 30000, SCORE_INCREASE_TRIGGER, HINTS_CURRENCY, 1000));
-            ACHIEVEMENTS.add(new Achievement(this, "score.fan", "Фанат", "Заработать {x}", 50000, SCORE_INCREASE_TRIGGER, HINTS_CURRENCY, 1500));
-            ACHIEVEMENTS.add(new Achievement(this, "score.crazy", "Чокнутый", "Заработать {x}", 100000, SCORE_INCREASE_TRIGGER, HINTS_CURRENCY, 2000));
-
-            ACHIEVEMENTS.add(new Achievement(this, "hints.curious", "Любопытный", "Использовать {x}", 50, HINTS_REDUCE_TRIGGER, SCORE_CURRENCY, 200));
-            ACHIEVEMENTS.add(new Achievement(this, "hints.veryCurious", "Очень любопытный", "Использовать {x}", 250, HINTS_REDUCE_TRIGGER, SCORE_CURRENCY, 600));
-            ACHIEVEMENTS.add(new Achievement(this, "hints.lazy", "Лентяй", "Использовать {x}", 500, HINTS_REDUCE_TRIGGER, SCORE_CURRENCY, 1000));
-            ACHIEVEMENTS.add(new Achievement(this, "hints.DStudent", "Двоечник", "Использовать {x}", 1000, HINTS_REDUCE_TRIGGER, SCORE_CURRENCY, 2500));
-//            ACHIEVEMENTS.add(new Achievement(this, "hints.DStudent", "Двоечник", "Использовать {x}", 3500, HINTS_REDUCE_TRIGGER, SCORE_CURRENCY, 5000));
-
-//            ACHIEVEMENTS.add(new Achievement(this, "words.1", "1", "Составить {x} {w}", 20, WORD_COMPOSING_TRIGGER, HINTS_CURRENCY, 10));
-//            ACHIEVEMENTS.add(new Achievement(this, "words.2", "2", "Составить {x} {w}", 50, WORD_COMPOSING_TRIGGER, SCORE_CURRENCY, 75));
-//            ACHIEVEMENTS.add(new Achievement(this, "words.3", "3", "Составить {x} {w}", 100, WORD_COMPOSING_TRIGGER, HINTS_CURRENCY, 30));
-//            ACHIEVEMENTS.add(new Achievement(this, "words.4", "4", "Составить {x} {w}", 200, WORD_COMPOSING_TRIGGER, SCORE_CURRENCY, 200));
-//            ACHIEVEMENTS.add(new Achievement(this, "words.5", "5", "Составить {x} {w}", 500, WORD_COMPOSING_TRIGGER, HINTS_CURRENCY, 85));
-//            ACHIEVEMENTS.add(new Achievement(this, "words.6", "6", "Составить {x} {w}", 750, WORD_COMPOSING_TRIGGER, SCORE_CURRENCY, 500));
-//            ACHIEVEMENTS.add(new Achievement(this, "words.7", "7", "Составить {x} {w}", 750, WORD_COMPOSING_TRIGGER, SCORE_CURRENCY, 500));
+            Achievement.initAchievements(this);
         }
+
+        if (Bonus.Companion.getBONUSES().isEmpty()) {
+            Bonus.Companion.initBonuses();
+        }
+
 
         eraseButton.setOnLongClickListener(v -> {
             MainActivity.playSound(R.raw.erase, this);
@@ -269,7 +258,7 @@ public class MainActivity extends AppCompatActivity {
             registerReceiver(notificationBroadcastReceiver, new IntentFilter(NotificationService.NOTIFICATION_RECEIVED_ACTION));
         }
 
-
+        checkBonuses();
     }
 
     private void requestPermission() {
@@ -691,25 +680,6 @@ public class MainActivity extends AppCompatActivity {
             dataManager.addHints(dataManager.getWord().getText().length());
         eraseWord(null);
         buttonSetEnabled(setWordButton, false);
-
-        Toast wordPriceToast = new Toast(this);
-        wordPriceToast.setGravity(Gravity.TOP, 0, 0);
-        wordPriceToast.setDuration(Toast.LENGTH_SHORT);
-        LinearLayout layout = new LinearLayout(this);
-        layout.setOrientation(LinearLayout.HORIZONTAL);
-        TextView textView = new TextView(this);
-        textView.setText("+ " + wordPrice + " ");
-        textView.setTextColor(getColorFromTheme(R.attr.wordText));
-        layout.addView(textView);
-        ImageView imageView = new ImageView(this);
-        imageView.setAdjustViewBounds(true);
-        imageView.setMaxWidth(43);
-        imageView.setMaxHeight(43);
-        imageView.setImageResource(R.drawable.score);
-        layout.addView(imageView);
-        wordPriceToast.setView(layout);
-        wordPriceToast.show();
-
         Achievement.addProgress(Achievement.WORD_COMPOSING_TRIGGER, 1, this);
 
     }
@@ -760,6 +730,10 @@ public class MainActivity extends AppCompatActivity {
             PopupMenu menu = new PopupMenu(this, view);
             menu.setOnMenuItemClickListener(item -> {
                 switch (item.getItemId()) {
+                    case R.id.bonuses:
+                        startActivity(new Intent(this, BonusesActivity.class));
+                        Animatoo.animateSlideLeft(this);
+                        return true;
                     case R.id.themeChange:
                         startActivity(new Intent(this, ThemeChangeActivity.class));
                         Animatoo.animateSlideLeft(this);
@@ -1015,6 +989,20 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
         dailyRewardDialog.show();
+    }
+
+    private void checkBonuses() {
+        List<Bonus> activeBonuses = Bonus.Companion.getActiveBonuses();
+        if (!activeBonuses.isEmpty()) {
+            findViewById(R.id.bonusActive).setVisibility(View.VISIBLE);
+        }
+        for (Bonus bonus: activeBonuses) {
+            new Handler().postDelayed((Runnable) () -> {
+                if (Bonus.Companion.getActiveBonuses().isEmpty()) {
+                    findViewById(R.id.bonusActive).animate().alpha(0f).setDuration(300);
+                }
+            }, bonus.getExpireTime() - System.currentTimeMillis());
+        }
     }
 
     @Override

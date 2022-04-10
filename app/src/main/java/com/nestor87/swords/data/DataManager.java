@@ -9,15 +9,22 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.DrawableRes;
 import androidx.appcompat.app.AlertDialog;
+import androidx.cardview.widget.CardView;
 
 import com.nestor87.swords.R;
 import com.nestor87.swords.data.models.Achievement;
+import com.nestor87.swords.data.models.Bonus;
 import com.nestor87.swords.data.models.ComposedWordsRequest;
 import com.nestor87.swords.data.models.Letter;
 import com.nestor87.swords.data.models.Player;
@@ -114,13 +121,20 @@ public class DataManager {
 
     public void addScore(int value) {
         try {
+            boolean bonusUsed = false;
+            if (Bonus.Companion.isActive("doubleScore") && value <= 500) {
+                value *= 2;
+                bonusUsed = true;
+            }
             setScore(getScore() + value);
             Achievement.addProgress(Achievement.SCORE_INCREASE_TRIGGER, value, context);
+            makeToastWithIcon("+ " + value, R.drawable.score, bonusUsed);
         } catch (IllegalArgumentException e) {}
     }
 
     public void removeScore(int value) {
         setScore(getScore() - value);
+        makeToastWithIcon("- " + value, R.drawable.score, false);
     }
 
     public void setHints(int hints) {
@@ -137,13 +151,20 @@ public class DataManager {
     }
 
     public void addHints(int value) {
+        boolean bonusUsed = false;
+        if (Bonus.Companion.isActive("doubleHints") && value <= 100) {
+            value *= 2;
+            bonusUsed = true;
+        }
         setHints(getHints() + value);
+        makeToastWithIcon("+ " + value, R.drawable.hints, bonusUsed);
     }
 
     public void removeHints(int value) {
         try {
             setHints(getHints() - value);
             Achievement.addProgress(Achievement.HINTS_REDUCE_TRIGGER, value, context);
+            makeToastWithIcon("- " + value, R.drawable.hints, false);
         } catch (IllegalArgumentException e) {}
     }
 
@@ -531,6 +552,31 @@ public class DataManager {
     public static String formatNumberToStringWithSpacingDecimalPlaces(int number) {
         NumberFormat nf = NumberFormat.getInstance(new Locale("ru", "RU"));
         return nf.format(number);
+    }
+
+    private void makeToastWithIcon(String text, @DrawableRes int icon, boolean bonusUsed) {
+        Toast toast = new Toast(context);
+        toast.setGravity(Gravity.TOP, 0, 0);
+        toast.setDuration(Toast.LENGTH_SHORT);
+        LinearLayout layout = new LinearLayout(context);
+        layout.setOrientation(LinearLayout.HORIZONTAL);
+        CardView cardView = new CardView(context);
+        cardView.setCardBackgroundColor(MainActivity.getColorFromTheme(android.R.attr.windowBackground, context));
+        cardView.setRadius(10);
+        TextView textView = new TextView(context);
+        textView.setText(text + "  ");
+        textView.setTextColor(MainActivity.getColorFromTheme(bonusUsed ? R.attr.hint : R.attr.wordText, context));
+        layout.addView(textView);
+        layout.setPadding(15, 15, 15, 15);
+        ImageView imageView = new ImageView(context);
+        imageView.setAdjustViewBounds(true);
+        imageView.setMaxWidth(38);
+        imageView.setMaxHeight(38);
+        imageView.setImageResource(icon);
+        layout.addView(imageView);
+        cardView.addView(layout);
+        toast.setView(cardView);
+        toast.show();
     }
 }
 

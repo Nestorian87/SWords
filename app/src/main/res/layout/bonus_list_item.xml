@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="20dp"
+    android:clipToPadding="false">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="270dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:cardBackgroundColor="?buttonBackground"
+        app:cardElevation="5dp"
+        app:cardCornerRadius="15dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="20dp"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/bonusIcon"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/score"
+                android:paddingBottom="5dp" />
+
+            <TextView
+                android:id="@+id/bonusTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Удвоение очков"
+                android:fontFamily="@font/century_gothic"
+                android:textColor="?wordText"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textSize="25sp" />
+
+            <TextView
+                android:id="@+id/clockTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="?yellowButton"
+                android:textStyle="bold"
+                android:textSize="22sp"
+                android:fontFamily="@font/century_gothic"
+                android:text="01:00:00"
+                android:visibility="gone"
+                android:layout_marginBottom="10dp" />
+
+            <TextView
+                android:id="@+id/bonusCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/bonus_count"
+                android:textStyle="italic"
+                android:textColor="?wordText" />
+
+            <TextView
+                android:id="@+id/bonusDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="Удваивает все получаемые очки, количество которых не превышает 500"
+                android:fontFamily="@font/calibri"
+                android:textColor="?scoreAndHintsText"
+                android:gravity="center"
+                android:textSize="16.5sp" />
+
+            <TextView
+                android:id="@+id/bonusDuration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/bonus_duration"
+                android:textColor="?scoreAndHintsText"
+                android:textSize="16sp"
+                android:paddingVertical="10dp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/bonusPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/bonus_price"
+                    android:textColor="?wordText"
+                    android:textSize="18sp"
+                    android:paddingVertical="5dp" />
+
+                <ImageView
+                    android:id="@+id/currencyImageView"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/score"
+                    android:layout_marginStart="6dp" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/bonusUseButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/use"
+                    style="@style/KeyboardButtonStyle"
+                    android:layout_margin="10dp"
+                    android:paddingHorizontal="10dp"
+                    android:textSize="13sp"
+                    android:backgroundTint="?hint" />
+
+                <Button
+                    android:id="@+id/bonusBuyButton"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:text="@string/plus"
+                    style="@style/KeyboardButtonStyle"
+                    android:layout_margin="10dp"
+                    android:paddingHorizontal="10dp"
+                    android:textSize="20sp"
+                    android:backgroundTint="?blueButton" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
