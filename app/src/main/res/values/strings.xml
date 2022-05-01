@@ -24,6 +24,10 @@
     <string name="use">Использовать</string>
     <string name="plus">+</string>
     <string name="bonuses">Бонусы</string>
+    <string name="bonus_purchase_confirmation_dialog_title">Подтверждение покупки</string>
+    <string name="bonus_purchase_confirmation_dialog_message">Вы точно хотите купить этот бонус?</string>
+    <string name="yes">Да</string>
+    <string name="cancel">Отмена</string>
 
 
     <string-array name="themes">

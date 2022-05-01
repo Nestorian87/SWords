@@ -693,7 +693,9 @@ public class MainActivity extends AppCompatActivity {
                 }
                 if (dataManager.getHintIndex() < dataManager.getHintWord().getText().length()) {
                     runOnUiThread(() -> {
-                       dataManager.removeHints(1);
+                        try {
+                            dataManager.removeHints(1);
+                        } catch (IllegalArgumentException e) { }
                     });
                     MainActivity.playSound(R.raw.hint, this);
                     Letter hintLetter = dataManager.getHintWord().getLetters().get(dataManager.getHintIndex());
@@ -721,7 +723,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             try {
                 dataManager.removeHints(1);
-            } catch (IllegalArgumentException e) {};
+            } catch (IllegalArgumentException e) { }
         }
     }
 

@@ -103,7 +103,6 @@ public class DataManager {
         return hints;
     }
 
-
     public void setScore(int score) {
         if (score < 0) {
             MainActivity.playSound(R.raw.error, context);
@@ -161,11 +160,11 @@ public class DataManager {
     }
 
     public void removeHints(int value) {
-        try {
-            setHints(getHints() - value);
-            Achievement.addProgress(Achievement.HINTS_REDUCE_TRIGGER, value, context);
+        setHints(getHints() - value);
+        Achievement.addProgress(Achievement.HINTS_REDUCE_TRIGGER, value, context);
+        if (value > 1) {
             makeToastWithIcon("- " + value, R.drawable.hints, false);
-        } catch (IllegalArgumentException e) {}
+        }
     }
 
     public Word getWord() {
@@ -316,7 +315,6 @@ public class DataManager {
         db.close();
     }
 
-
     public String findWord(ArrayList<Letter> letters, boolean shortest) {
         ((MainActivity) context).runOnUiThread(() -> {
             ((MainActivity) context).findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
@@ -446,7 +444,6 @@ public class DataManager {
                 }
         );
     }
-
 
     public void registerAccount() {
         NetworkService.getInstance().getSWordsApi().registerPlayer("Bearer " + MainActivity.accountManagerPassword, selfPlayer).enqueue(

@@ -108,7 +108,9 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
                                             if (messageReward.getHints() > 0) {
                                                 dataManager.addHints(messageReward.getHints());
                                             } else {
-                                                dataManager.removeHints(-messageReward.getHints());
+                                                try {
+                                                    dataManager.removeHints(-messageReward.getHints());
+                                                } catch (IllegalArgumentException e) { }
                                             }
                                         }
                                         if (messageReward.hasSharedPreferencesModification()) {
