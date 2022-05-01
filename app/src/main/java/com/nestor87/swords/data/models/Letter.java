@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 
 import com.nestor87.swords.ui.main.MainActivity;
 import com.nestor87.swords.R;
+import com.nestor87.swords.utils.SystemUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -184,13 +185,13 @@ public class Letter implements Cloneable {
 
     public @ColorInt int getButtonTextColor(Context context) {
         if (color == COLOR_RED)
-            return MainActivity.getColorFromTheme(R.attr.redButton, context);
+            return SystemUtils.getColorFromTheme(R.attr.redButton, context);
         else if (color == COLOR_BLUE)
-            return MainActivity.getColorFromTheme(R.attr.blueButton, context);
+            return SystemUtils.getColorFromTheme(R.attr.blueButton, context);
         else if (color == COLOR_YELLOW)
-            return MainActivity.getColorFromTheme(R.attr.yellowButton, context);
+            return SystemUtils.getColorFromTheme(R.attr.yellowButton, context);
         else
-            return MainActivity.getColorFromTheme(R.attr.buttonText, context);
+            return SystemUtils.getColorFromTheme(R.attr.buttonText, context);
     }
 
 

@@ -3,7 +3,6 @@ package com.nestor87.swords.ui.themeChange;
 import android.content.Intent;
 import android.content.SharedPreferences;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
 import android.content.res.Resources;
@@ -17,14 +16,16 @@ import android.widget.TextView;
 
 import com.blogspot.atifsoftwares.animatoolib.Animatoo;
 import com.nestor87.swords.R;
-import com.nestor87.swords.data.DBHelper;
-import com.nestor87.swords.data.DataManager;
+import com.nestor87.swords.data.helpers.DBHelper;
+import com.nestor87.swords.data.managers.DataManager;
+import com.nestor87.swords.ui.BaseActivity;
 import com.nestor87.swords.ui.main.MainActivity;
+import com.nestor87.swords.utils.SystemUtils;
 
 import static com.nestor87.swords.ui.main.MainActivity.APP_PREFERENCES_FILE_NAME;
-import static com.nestor87.swords.ui.main.MainActivity.getColorFromTheme;
+import static com.nestor87.swords.utils.SystemUtils.getColorFromTheme;
 
-public class ThemeChangeActivity extends AppCompatActivity {
+public class ThemeChangeActivity extends BaseActivity {
 
     Spinner themeSpinner;
     Button button, previewButton;
@@ -37,9 +38,7 @@ public class ThemeChangeActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        DataManager.applyTheme(this);
         super.onCreate(savedInstanceState);
-        DataManager.adjustFontScale(this);
         setContentView(R.layout.activity_theme_change);
         themeSpinner = findViewById(R.id.themeSpinner);
         button = findViewById(R.id.button);
@@ -93,7 +92,6 @@ public class ThemeChangeActivity extends AppCompatActivity {
             }
 
 
-
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
@@ -136,17 +134,17 @@ public class ThemeChangeActivity extends AppCompatActivity {
 
     private void showColorPalette(int themeId) {
         Resources.Theme selectedTheme = getResources().newTheme();
-        selectedTheme.applyStyle(DataManager.getThemeResIdByThemeId(themeId), true);
+        selectedTheme.applyStyle(SystemUtils.getThemeResIdByThemeId(themeId), true);
 
-        colorCardView1.setCardBackgroundColor(getColorFromTheme(android.R.attr.windowBackground, selectedTheme, this));
-        colorCardView2.setCardBackgroundColor(getColorFromTheme(R.attr.buttonBackground, selectedTheme, this));
-        colorCardView3.setCardBackgroundColor(getColorFromTheme(R.attr.buttonPressedBackground, selectedTheme, this));
-        colorCardView4.setCardBackgroundColor(getColorFromTheme(R.attr.buttonText, selectedTheme, this));
-        colorCardView5.setCardBackgroundColor(getColorFromTheme(R.attr.buttonBorder, selectedTheme, this));
-        colorCardView6.setCardBackgroundColor(getColorFromTheme(R.attr.scoreAndHintsText, selectedTheme, this));
-        colorCardView7.setCardBackgroundColor(getColorFromTheme(R.attr.wordText, selectedTheme, this));
-        colorCardView8.setCardBackgroundColor(getColorFromTheme(R.attr.disabled, selectedTheme, this));
-        colorCardView9.setCardBackgroundColor(getColorFromTheme(R.attr.hint, selectedTheme, this));
+        colorCardView1.setCardBackgroundColor(getColorFromTheme(android.R.attr.windowBackground, selectedTheme));
+        colorCardView2.setCardBackgroundColor(getColorFromTheme(R.attr.buttonBackground, selectedTheme));
+        colorCardView3.setCardBackgroundColor(getColorFromTheme(R.attr.buttonPressedBackground, selectedTheme));
+        colorCardView4.setCardBackgroundColor(getColorFromTheme(R.attr.buttonText, selectedTheme));
+        colorCardView5.setCardBackgroundColor(getColorFromTheme(R.attr.buttonBorder, selectedTheme));
+        colorCardView6.setCardBackgroundColor(getColorFromTheme(R.attr.scoreAndHintsText, selectedTheme));
+        colorCardView7.setCardBackgroundColor(getColorFromTheme(R.attr.wordText, selectedTheme));
+        colorCardView8.setCardBackgroundColor(getColorFromTheme(R.attr.disabled, selectedTheme));
+        colorCardView9.setCardBackgroundColor(getColorFromTheme(R.attr.hint, selectedTheme));
     }
 
     public void showPreview(View view) {
@@ -165,17 +163,5 @@ public class ThemeChangeActivity extends AppCompatActivity {
 
     public void goBack(View view) {
         onBackPressed();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        MainActivity.onActivityStart(this);
-    }
-
-    @Override
-    protected void onStop() {
-        MainActivity.onActivityStop(this);
-        super.onStop();
     }
 }

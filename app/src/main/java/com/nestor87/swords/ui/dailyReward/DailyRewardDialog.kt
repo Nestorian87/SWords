@@ -1,22 +1,18 @@
-package com.nestor87.swords.data
+package com.nestor87.swords.ui.dailyReward
 
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Handler
 import android.os.Looper
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
-import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AlertDialog
 import com.nestor87.swords.R
 import com.nestor87.swords.data.models.DailyRewardVariant
 import com.nestor87.swords.ui.main.MainActivity
+import com.nestor87.swords.utils.SystemUtils
 import rubikstudio.library.LuckyWheelView
 import rubikstudio.library.model.LuckyItem
 import java.text.SimpleDateFormat
@@ -89,7 +85,7 @@ class DailyRewardDialog(private val context: Context) {
             luckyItem.secondaryText =
                 if (luckyItem.secondaryText.length == 1) "  " + luckyItem.secondaryText else if (luckyItem.secondaryText.length == 2) " " + luckyItem.secondaryText else luckyItem.secondaryText
             luckyItem.icon = if (reward!!.currency != null) reward!!.currency.icon else 0
-            luckyItem.color = MainActivity.getColorFromTheme(R.attr.buttonBackground, context)
+            luckyItem.color = SystemUtils.getColorFromTheme(R.attr.buttonBackground, context)
             data.add(luckyItem)
         }
         luckyWheelView.setData(data)

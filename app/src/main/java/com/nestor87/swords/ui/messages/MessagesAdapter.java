@@ -3,7 +3,6 @@ package com.nestor87.swords.ui.messages;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,18 +12,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.nestor87.swords.R;
-import com.nestor87.swords.data.DataManager;
+import com.nestor87.swords.data.managers.DataManager;
 import com.nestor87.swords.data.models.MessageInfo;
 import com.nestor87.swords.data.models.MessageReward;
 import com.nestor87.swords.data.models.MessageRewardReceivedRequest;
-import com.nestor87.swords.data.models.Player;
 import com.nestor87.swords.data.network.NetworkService;
 import com.nestor87.swords.ui.main.MainActivity;
+import com.nestor87.swords.utils.SystemUtils;
 
 import java.util.List;
 
@@ -70,8 +67,8 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
             MessageReward messageReward = message.getMessage().getReward();
             if (messageReward != null && messageReward.getScore() != 0 || messageReward.getHints() != 0 || messageReward.hasSharedPreferencesModification()) {
                 holder.rewardGroup.setVisibility(View.VISIBLE);
-                holder.scoreRewardCountTextView.setText(DataManager.formatNumberToStringWithSpacingDecimalPlaces(messageReward.getScore()));
-                holder.hintsRewardCountTextView.setText(DataManager.formatNumberToStringWithSpacingDecimalPlaces(messageReward.getHints()));
+                holder.scoreRewardCountTextView.setText(SystemUtils.formatBigNumber(messageReward.getScore()));
+                holder.hintsRewardCountTextView.setText(SystemUtils.formatBigNumber(messageReward.getHints()));
                 holder.rewardTitleTextView.setText(messageReward.getTitle() + ":");
 
                 if (messageReward.getScore() != 0) {

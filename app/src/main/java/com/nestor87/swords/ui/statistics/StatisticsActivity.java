@@ -1,7 +1,5 @@
 package com.nestor87.swords.ui.statistics;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -10,8 +8,9 @@ import android.widget.TextView;
 
 import com.blogspot.atifsoftwares.animatoolib.Animatoo;
 import com.nestor87.swords.R;
-import com.nestor87.swords.data.DBHelper;
-import com.nestor87.swords.data.DataManager;
+import com.nestor87.swords.data.helpers.DBHelper;
+import com.nestor87.swords.data.managers.DataManager;
+import com.nestor87.swords.ui.BaseActivity;
 import com.nestor87.swords.ui.main.MainActivity;
 
 import java.util.Arrays;
@@ -21,15 +20,13 @@ import java.util.Locale;
 import static com.nestor87.swords.ui.achievements.AchievementAdapter.dataManager;
 import static com.nestor87.swords.ui.main.MainActivity.APP_PREFERENCES_FILE_NAME;
 
-public class StatisticsActivity extends AppCompatActivity {
+public class StatisticsActivity extends BaseActivity {
 
     TextView wordsCountTextView, wordOftenTextView, wordLongestTextView, wordAverageLengthTextView, timeInGameTextView, uniqueWordsCountTextView, todayWordsCountTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        DataManager.applyTheme(this);
         super.onCreate(savedInstanceState);
-        DataManager.adjustFontScale(this);
         setContentView(R.layout.activity_statistics);
 
         wordsCountTextView = findViewById(R.id.wordCount);
@@ -121,17 +118,5 @@ public class StatisticsActivity extends AppCompatActivity {
 
     public void goBack(View view) {
         onBackPressed();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        MainActivity.onActivityStart(this);
-    }
-
-    @Override
-    protected void onStop() {
-        MainActivity.onActivityStop(this);
-        super.onStop();
     }
 }

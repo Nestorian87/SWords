@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.nestor87.swords.R;
 import com.nestor87.swords.ui.main.MainActivity;
+import com.nestor87.swords.utils.SystemUtils;
 
 import br.tiagohm.markdownview.css.styles.Github;
 
@@ -17,7 +18,7 @@ public class VersionCssStyle extends Github {
     }
 
     private String getColorFromThemeAsHEX(Context context, int attr) {
-        int colorInt = MainActivity.getColorFromTheme(attr, context);
+        int colorInt = SystemUtils.getColorFromTheme(attr, context);
         return String.format("#%06X", (0xFFFFFF & colorInt));
     }
 }

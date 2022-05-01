@@ -71,7 +71,8 @@ public class BackgroundService extends Service {
         int[] music = new int[] {
                 R.raw.swords_theme_1,
                 R.raw.swords_theme_2,
-                R.raw.swords_theme_3
+                R.raw.swords_theme_3,
+                R.raw.swords_theme_4
         };
         final int[] currentMusicIndex = {new Random().nextInt(music.length)};
         player = MediaPlayer.create(this, music[currentMusicIndex[0]]);

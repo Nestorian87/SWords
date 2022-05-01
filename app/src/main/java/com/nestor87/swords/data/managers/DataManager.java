@@ -1,17 +1,13 @@
-package com.nestor87.swords.data;
+package com.nestor87.swords.data.managers;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -23,6 +19,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
 
 import com.nestor87.swords.R;
+import com.nestor87.swords.data.helpers.DBHelper;
 import com.nestor87.swords.data.models.Achievement;
 import com.nestor87.swords.data.models.Bonus;
 import com.nestor87.swords.data.models.ComposedWordsRequest;
@@ -32,6 +29,7 @@ import com.nestor87.swords.data.models.UpdateUserResponse;
 import com.nestor87.swords.data.models.Word;
 import com.nestor87.swords.data.network.NetworkService;
 import com.nestor87.swords.ui.main.MainActivity;
+import com.nestor87.swords.utils.SystemUtils;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -47,7 +45,7 @@ import retrofit2.Response;
 import static android.content.Context.MODE_PRIVATE;
 import static com.nestor87.swords.ui.main.MainActivity.APP_PREFERENCES_FILE_NAME;
 import static com.nestor87.swords.ui.main.MainActivity.LOG_TAG;
-import static com.nestor87.swords.ui.main.MainActivity.getColorFromTheme;
+import static com.nestor87.swords.utils.SystemUtils.getColorFromTheme;
 import static com.nestor87.swords.ui.main.MainActivity.uuid;
 
 public class DataManager {
@@ -112,7 +110,7 @@ public class DataManager {
         }
 
         this.score = score;
-        scoreTextView.setText(DataManager.formatNumberToStringWithSpacingDecimalPlaces(score));
+        scoreTextView.setText(SystemUtils.formatBigNumber(score));
         saveData();
 
 
@@ -144,7 +142,7 @@ public class DataManager {
             throw new IllegalArgumentException("Hints count must be greater than 0");
         }
         this.hints = hints;
-        hintsTextView.setText(DataManager.formatNumberToStringWithSpacingDecimalPlaces(hints));
+        hintsTextView.setText(SystemUtils.formatBigNumber(hints));
         isHintsLoaded = true;
         saveData();
     }
@@ -406,7 +404,7 @@ public class DataManager {
 
     public static void applyTheme(Context context) {
         SharedPreferences preferences = context.getSharedPreferences(APP_PREFERENCES_FILE_NAME, MODE_PRIVATE);
-        context.setTheme(getThemeResIdByThemeId(preferences.getInt("currentThemeId", 0)));
+        context.setTheme(SystemUtils.getThemeResIdByThemeId(preferences.getInt("currentThemeId", 0)));
     }
 
     public static void loadWords(Context context) {
@@ -509,48 +507,6 @@ public class DataManager {
         selfPlayer.setName(name);
     }
 
-    public static int getThemeResIdByThemeId(int themeId) {
-        switch (themeId) {
-            case 1:
-                return R.style.SWords_dark;
-            case 2:
-                return R.style.SWords_white;
-            case 3:
-                return R.style.SWords_darkBlue;
-            case 4:
-                return R.style.SWords_spring;
-            default:
-                return R.style.SWords_standard;
-        }
-    }
-
-    public int dpToPx(int dp) {
-        return (int) Math.round(
-                TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP,
-                        dp,
-                        context.getResources().getDisplayMetrics()
-                )
-        );
-    }
-
-    public static void adjustFontScale(Context context) {
-        Configuration configuration = context.getResources().getConfiguration();
-        if (configuration.fontScale > 1f) {
-            configuration.fontScale = 1f;
-            DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-            WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-            wm.getDefaultDisplay().getMetrics(metrics);
-            metrics.scaledDensity = configuration.fontScale * metrics.density;
-            context.getResources().updateConfiguration(configuration, metrics);
-        }
-    }
-
-    public static String formatNumberToStringWithSpacingDecimalPlaces(int number) {
-        NumberFormat nf = NumberFormat.getInstance(new Locale("ru", "RU"));
-        return nf.format(number);
-    }
-
     private void makeToastWithIcon(String text, @DrawableRes int icon, boolean bonusUsed) {
         Toast toast = new Toast(context);
         toast.setGravity(Gravity.TOP, 0, 0);
@@ -558,11 +514,11 @@ public class DataManager {
         LinearLayout layout = new LinearLayout(context);
         layout.setOrientation(LinearLayout.HORIZONTAL);
         CardView cardView = new CardView(context);
-        cardView.setCardBackgroundColor(MainActivity.getColorFromTheme(android.R.attr.windowBackground, context));
+        cardView.setCardBackgroundColor(SystemUtils.getColorFromTheme(android.R.attr.windowBackground, context));
         cardView.setRadius(10);
         TextView textView = new TextView(context);
         textView.setText(text + "  ");
-        textView.setTextColor(MainActivity.getColorFromTheme(bonusUsed ? R.attr.hint : R.attr.wordText, context));
+        textView.setTextColor(SystemUtils.getColorFromTheme(bonusUsed ? R.attr.hint : R.attr.wordText, context));
         layout.addView(textView);
         layout.setPadding(15, 15, 15, 15);
         ImageView imageView = new ImageView(context);

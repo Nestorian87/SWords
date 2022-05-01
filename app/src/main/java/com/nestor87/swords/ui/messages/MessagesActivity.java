@@ -13,17 +13,16 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.blogspot.atifsoftwares.animatoolib.Animatoo;
 import com.nestor87.swords.R;
-import com.nestor87.swords.data.DBHelper;
-import com.nestor87.swords.data.DataManager;
+import com.nestor87.swords.data.helpers.DBHelper;
+import com.nestor87.swords.data.managers.DataManager;
 import com.nestor87.swords.data.models.MessageInfo;
 import com.nestor87.swords.data.network.NetworkService;
 import com.nestor87.swords.data.services.NotificationService;
-import com.nestor87.swords.ui.bestPlayers.BestPlayersActivity;
+import com.nestor87.swords.ui.BaseActivity;
 import com.nestor87.swords.ui.main.MainActivity;
 
 import java.util.List;
@@ -32,10 +31,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.nestor87.swords.ui.achievements.AchievementAdapter.dataManager;
 import static com.nestor87.swords.ui.main.MainActivity.APP_PREFERENCES_FILE_NAME;
 
-public class MessagesActivity extends AppCompatActivity {
+public class MessagesActivity extends BaseActivity {
     MessagesAdapter messagesAdapter;
     String selfUuid;
     ProgressBar progressBar;
@@ -45,9 +43,7 @@ public class MessagesActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        DataManager.applyTheme(this);
         super.onCreate(savedInstanceState);
-        DataManager.adjustFontScale(this);
         setContentView(R.layout.activity_messages);
 
         progressBar = findViewById(R.id.progressBar);
@@ -125,18 +121,6 @@ public class MessagesActivity extends AppCompatActivity {
 
     public void goBack(View view) {
         onBackPressed();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        MainActivity.onActivityStart(this);
-    }
-
-    @Override
-    protected void onStop() {
-        MainActivity.onActivityStop(this);
-        super.onStop();
     }
 
     @Override

@@ -16,11 +16,12 @@ import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.nestor87.swords.data.DBHelper;
-import com.nestor87.swords.data.DataManager;
+import com.nestor87.swords.data.helpers.DBHelper;
+import com.nestor87.swords.data.managers.DataManager;
 import com.nestor87.swords.ui.main.MainActivity;
 import com.nestor87.swords.R;
 import com.nestor87.swords.data.models.Achievement;
+import com.nestor87.swords.utils.SystemUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,12 +36,6 @@ public class AchievementAdapter extends RecyclerView.Adapter<AchievementAdapter.
 
     public AchievementAdapter(Context context, List<List<Achievement>> achievementGroups, @LayoutRes int layout) {
         this.achievementGroups = achievementGroups;
-//        Collections.sort(this.achievements, (o1, o2) -> {
-//            int progress1 = (int) ((double) o1.getCurrentProgress() / o1.getMaxProgress() * 100);
-//            int progress2 = (int) ((double) o2.getCurrentProgress() / o2.getMaxProgress() * 100);
-//
-//            return progress2 - progress1;
-//        });
         this.inflater = LayoutInflater.from(context);
         this.context = context;
         this.layout = layout;
@@ -69,11 +64,18 @@ public class AchievementAdapter extends RecyclerView.Adapter<AchievementAdapter.
                 continue;
             }
 
-            holder.progressTextView.setText(achievement.getCurrentProgress() + " / " + achievement.getMaxProgress());
+            holder.progressTextView.setText(
+                    SystemUtils.formatBigNumber(achievement.getCurrentProgress())
+                    + " / "
+                    +  SystemUtils.formatBigNumber(achievement.getMaxProgress())
+            );
             holder.titleTextView.setText(achievement.getTitle());
             holder.progressBar.setMax(achievement.getMaxProgress());
             holder.progressBar.setProgress(achievement.getCurrentProgress());
-            String taskString = achievement.getTask().replace("{x}", Integer.toString(achievement.getMaxProgress())) + " ";
+            String taskString = achievement.getTask().replace(
+                    "{x}",
+                    SystemUtils.formatBigNumber(achievement.getMaxProgress()) + " "
+            );
             if (achievement.getPluralsResource() != -1)
                 taskString = taskString.replace("{w}", context.getResources().getQuantityString(achievement.getPluralsResource(), achievement.getMaxProgress()));
             holder.taskTextView.setText(taskString);
@@ -91,7 +93,7 @@ public class AchievementAdapter extends RecyclerView.Adapter<AchievementAdapter.
             if (!isCustomCurrencyReward) {
                 holder.currencyImageView2.setVisibility(View.VISIBLE);
                 holder.currencyImageView2.setImageResource(achievement.getRewardCurrency().getIcon());
-                holder.rewardTextView.setText("Награда: " + Integer.toString(achievement.getRewardCount()) + " ");
+                holder.rewardTextView.setText("Награда: " + SystemUtils.formatBigNumber(achievement.getRewardCount()) + " ");
             } else {
                 holder.rewardTextView.setText("Награда: " + achievement.getRewardCurrency().getText() + " ");
             }
@@ -99,15 +101,15 @@ public class AchievementAdapter extends RecyclerView.Adapter<AchievementAdapter.
             if (achievement.isCompleted()) {
 
                 holder.titleTextView.setText(holder.titleTextView.getText() + " ✓");
-                holder.titleTextView.setTextColor(MainActivity.getColorFromTheme(R.attr.hint, context));
-                holder.progressBar.getProgressDrawable().setColorFilter(MainActivity.getColorFromTheme(R.attr.hint, context), PorterDuff.Mode.SRC_IN);
+                holder.titleTextView.setTextColor(SystemUtils.getColorFromTheme(R.attr.hint, context));
+                holder.progressBar.getProgressDrawable().setColorFilter(SystemUtils.getColorFromTheme(R.attr.hint, context), PorterDuff.Mode.SRC_IN);
                 holder.titleTextView.setTypeface(null, Typeface.BOLD);
 
                 if (!achievement.isRewardReceived() && layout != R.layout.profile_achievement_list_item)
                     holder.rewardButton.setVisibility(View.VISIBLE);
             } else {
-                holder.titleTextView.setTextColor(MainActivity.getColorFromTheme(R.attr.scoreAndHintsText, context));
-                holder.progressBar.getProgressDrawable().setColorFilter(MainActivity.getColorFromTheme(R.attr.buttonText, context), PorterDuff.Mode.SRC_IN);
+                holder.titleTextView.setTextColor(SystemUtils.getColorFromTheme(R.attr.scoreAndHintsText, context));
+                holder.progressBar.getProgressDrawable().setColorFilter(SystemUtils.getColorFromTheme(R.attr.buttonText, context), PorterDuff.Mode.SRC_IN);
                 holder.titleTextView.setTypeface(null, Typeface.NORMAL);
             }
 
@@ -133,7 +135,7 @@ public class AchievementAdapter extends RecyclerView.Adapter<AchievementAdapter.
 
             holder.stageTextView.setText("Этап " + (achievementGroup.indexOf(achievement) + 1) + " из " + achievementGroup.size());
             if (achievementGroup.indexOf(achievement) == achievementGroup.size() - 1) {
-                holder.stageTextView.setTextColor(MainActivity.getColorFromTheme(R.attr.hint, context));
+                holder.stageTextView.setTextColor(SystemUtils.getColorFromTheme(R.attr.hint, context));
             }
         break;
         }

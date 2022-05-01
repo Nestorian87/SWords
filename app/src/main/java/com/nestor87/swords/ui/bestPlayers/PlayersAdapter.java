@@ -22,7 +22,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.nestor87.swords.R;
-import com.nestor87.swords.data.DataManager;
+import com.nestor87.swords.data.managers.DataManager;
 import com.nestor87.swords.data.models.Achievement;
 import com.nestor87.swords.data.models.Player;
 import com.nestor87.swords.data.models.StatisticsResponse;
@@ -30,10 +30,9 @@ import com.nestor87.swords.data.network.NetworkService;
 import com.nestor87.swords.ui.achievements.AchievementAdapter;
 import com.nestor87.swords.ui.achievements.AchievementsActivity;
 import com.nestor87.swords.ui.main.MainActivity;
+import com.nestor87.swords.utils.SystemUtils;
 
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.time.Duration;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -71,35 +70,35 @@ public class PlayersAdapter extends RecyclerView.Adapter<PlayersAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Player player = players.get(position);
         holder.nicknameTextView.setText(player.getName());
-        holder.scoreTextView.setText(DataManager.formatNumberToStringWithSpacingDecimalPlaces(player.getScore()));
-        holder.hintsTextView.setText(DataManager.formatNumberToStringWithSpacingDecimalPlaces(player.getHints()));
+        holder.scoreTextView.setText(SystemUtils.formatBigNumber(player.getScore()));
+        holder.hintsTextView.setText(SystemUtils.formatBigNumber(player.getHints()));
         holder.orderNumberTextView.setText(Integer.toString(position + 1));
 
         SharedPreferences preferences = inflater.getContext().getSharedPreferences(MainActivity.APP_PREFERENCES_FILE_NAME, Context.MODE_PRIVATE);
         boolean isSelfPlayer = preferences.getString("name", "").equals(player.getName());
 
         if (isSelfPlayer) {
-            holder.parentLayout.setBackgroundColor(MainActivity.getColorFromTheme(R.attr.buttonBackground, inflater.getContext()));
+            holder.parentLayout.setBackgroundColor(SystemUtils.getColorFromTheme(R.attr.buttonBackground, inflater.getContext()));
         } else {
-            holder.parentLayout.setBackgroundColor(MainActivity.getColorFromTheme(android.R.attr.windowBackground, inflater.getContext()));
+            holder.parentLayout.setBackgroundColor(SystemUtils.getColorFromTheme(android.R.attr.windowBackground, inflater.getContext()));
         }
 
-        holder.nicknameTextView.setTextColor(MainActivity.getColorFromTheme(R.attr.buttonText, inflater.getContext()));
+        holder.nicknameTextView.setTextColor(SystemUtils.getColorFromTheme(R.attr.buttonText, inflater.getContext()));
 
         if (position < 3) {
-            holder.orderNumberTextView.setTextColor(MainActivity.getColorFromTheme(R.attr.wordText, inflater.getContext()));
+            holder.orderNumberTextView.setTextColor(SystemUtils.getColorFromTheme(R.attr.wordText, inflater.getContext()));
         } else {
-            holder.orderNumberTextView.setTextColor(MainActivity.getColorFromTheme(R.attr.buttonText, inflater.getContext()));
+            holder.orderNumberTextView.setTextColor(SystemUtils.getColorFromTheme(R.attr.buttonText, inflater.getContext()));
         }
         if (position == 0) {
-            holder.nicknameTextView.setTextColor(MainActivity.getColorFromTheme(R.attr.redButton, inflater.getContext()));
-            holder.orderNumberTextView.setTextColor(MainActivity.getColorFromTheme(R.attr.redButton, inflater.getContext()));
+            holder.nicknameTextView.setTextColor(SystemUtils.getColorFromTheme(R.attr.redButton, inflater.getContext()));
+            holder.orderNumberTextView.setTextColor(SystemUtils.getColorFromTheme(R.attr.redButton, inflater.getContext()));
         } else if (position == 1) {
-            holder.nicknameTextView.setTextColor(MainActivity.getColorFromTheme(R.attr.blueButton, inflater.getContext()));
-            holder.orderNumberTextView.setTextColor(MainActivity.getColorFromTheme(R.attr.blueButton, inflater.getContext()));
+            holder.nicknameTextView.setTextColor(SystemUtils.getColorFromTheme(R.attr.blueButton, inflater.getContext()));
+            holder.orderNumberTextView.setTextColor(SystemUtils.getColorFromTheme(R.attr.blueButton, inflater.getContext()));
         } else if (position == 2) {
-            holder.nicknameTextView.setTextColor(MainActivity.getColorFromTheme(R.attr.yellowButton, inflater.getContext()));
-            holder.orderNumberTextView.setTextColor(MainActivity.getColorFromTheme(R.attr.yellowButton, inflater.getContext()));
+            holder.nicknameTextView.setTextColor(SystemUtils.getColorFromTheme(R.attr.yellowButton, inflater.getContext()));
+            holder.orderNumberTextView.setTextColor(SystemUtils.getColorFromTheme(R.attr.yellowButton, inflater.getContext()));
         }
 
         if (position < 10) {
@@ -109,7 +108,7 @@ public class PlayersAdapter extends RecyclerView.Adapter<PlayersAdapter.ViewHold
         }
 //        Toast.makeText(inflater.getContext(), String.valueOf(System.currentTimeMillis() - player.getLastTimeOnline()), Toast.LENGTH_SHORT).show();
         if (System.currentTimeMillis() - player.getLastTimeOnline() <= 25000) {
-            holder.isOnline.setCardBackgroundColor(MainActivity.getColorFromTheme(R.attr.hint, inflater.getContext()));
+            holder.isOnline.setCardBackgroundColor(SystemUtils.getColorFromTheme(R.attr.hint, inflater.getContext()));
         }  else {
             holder.isOnline.setVisibility(View.GONE);
         }
@@ -148,12 +147,12 @@ public class PlayersAdapter extends RecyclerView.Adapter<PlayersAdapter.ViewHold
                                                 StatisticsResponse statistics = response.body();
 
                                                 ((TextView) dialogView.findViewById(R.id.nameTextView)).setText(statistics.getPlayer().getName());
-                                                ((TextView) dialogView.findViewById(R.id.scoreTextView)).setText(DataManager.formatNumberToStringWithSpacingDecimalPlaces(statistics.getPlayer().getScore()));
-                                                ((TextView) dialogView.findViewById(R.id.hintsTextView)).setText(DataManager.formatNumberToStringWithSpacingDecimalPlaces(statistics.getPlayer().getHints()));
+                                                ((TextView) dialogView.findViewById(R.id.scoreTextView)).setText(SystemUtils.formatBigNumber(statistics.getPlayer().getScore()));
+                                                ((TextView) dialogView.findViewById(R.id.hintsTextView)).setText(SystemUtils.formatBigNumber(statistics.getPlayer().getHints()));
 
                                                 if (System.currentTimeMillis() - statistics.getPlayer().getLastTimeOnline() <= 25000) {
                                                     ((TextView) dialogView.findViewById(R.id.statusTextView)).setText(inflater.getContext().getString(R.string.status_online));
-                                                    ((TextView) dialogView.findViewById(R.id.statusTextView)).setTextColor(MainActivity.getColorFromTheme(R.attr.hint, inflater.getContext()));
+                                                    ((TextView) dialogView.findViewById(R.id.statusTextView)).setTextColor(SystemUtils.getColorFromTheme(R.attr.hint, inflater.getContext()));
                                                 } else {
                                                     Date dateLastTimeOnline = new Date(statistics.getPlayer().getLastTimeOnline());
                                                     String dateFormat = "";
@@ -165,7 +164,7 @@ public class PlayersAdapter extends RecyclerView.Adapter<PlayersAdapter.ViewHold
 
                                                     String stringDateLastTimeOnline = new SimpleDateFormat(dateFormat, Locale.getDefault()).format(dateLastTimeOnline);
                                                     ((TextView) dialogView.findViewById(R.id.statusTextView)).setText(inflater.getContext().getString(R.string.status_online) + " " + stringDateLastTimeOnline);
-                                                    ((TextView) dialogView.findViewById(R.id.statusTextView)).setTextColor(MainActivity.getColorFromTheme(R.attr.scoreAndHintsText, inflater.getContext()));
+                                                    ((TextView) dialogView.findViewById(R.id.statusTextView)).setTextColor(SystemUtils.getColorFromTheme(R.attr.scoreAndHintsText, inflater.getContext()));
                                                 }
 
 

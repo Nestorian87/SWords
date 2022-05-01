@@ -15,6 +15,7 @@ import com.nestor87.swords.data.network.NetworkService;
 import com.nestor87.swords.ui.achievements.AchievementsActivity;
 import com.nestor87.swords.ui.main.MainActivity;
 import com.nestor87.swords.R;
+import com.nestor87.swords.utils.SystemUtils;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -90,7 +91,7 @@ public class Achievement implements Comparable {
             intent.putExtra("scrollTo", Achievement.this.id);
             context.startActivity(intent);
             Animatoo.animateSlideRight(context);
-        }).setBackgroundTint(MainActivity.getColorFromTheme(android.R.attr.windowBackground, context)).setTextColor(MainActivity.getColorFromTheme(R.attr.scoreAndHintsText, context)).setActionTextColor(MainActivity.getColorFromTheme(R.attr.wordText, context)).show();
+        }).setBackgroundTint(SystemUtils.getColorFromTheme(android.R.attr.windowBackground, context)).setTextColor(SystemUtils.getColorFromTheme(R.attr.scoreAndHintsText, context)).setActionTextColor(SystemUtils.getColorFromTheme(R.attr.wordText, context)).show();
     }
 
     public boolean isCompleted() {

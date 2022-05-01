@@ -1,4 +1,4 @@
-package com.nestor87.swords.data;
+package com.nestor87.swords.data.helpers;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

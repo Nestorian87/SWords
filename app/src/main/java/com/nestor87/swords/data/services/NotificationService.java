@@ -10,8 +10,6 @@ import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.IBinder;
-import android.os.VibrationEffect;
-import android.os.Vibrator;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
@@ -20,8 +18,8 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.nestor87.swords.R;
-import com.nestor87.swords.data.DBHelper;
-import com.nestor87.swords.data.DataManager;
+import com.nestor87.swords.data.helpers.DBHelper;
+import com.nestor87.swords.data.managers.DataManager;
 import com.nestor87.swords.data.models.Message;
 import com.nestor87.swords.data.models.Player;
 import com.nestor87.swords.data.network.NetworkService;
@@ -36,8 +34,6 @@ import java.util.TimerTask;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import android.content.Context;
 
 public class NotificationService extends Service {
     int notificationId = 100;

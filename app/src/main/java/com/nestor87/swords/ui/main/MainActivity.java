@@ -27,12 +27,10 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
@@ -42,8 +40,6 @@ import android.widget.Toast;
 
 import androidx.annotation.ColorInt;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -51,9 +47,9 @@ import com.blogspot.atifsoftwares.animatoolib.Animatoo;
 import com.jetradarmobile.snowfall.SnowfallView;
 import com.nestor87.swords.BuildConfig;
 import com.nestor87.swords.R;
-import com.nestor87.swords.data.DBHelper;
-import com.nestor87.swords.data.DailyRewardDialog;
-import com.nestor87.swords.data.DataManager;
+import com.nestor87.swords.data.helpers.DBHelper;
+import com.nestor87.swords.ui.dailyReward.DailyRewardDialog;
+import com.nestor87.swords.data.managers.DataManager;
 import com.nestor87.swords.data.markdownviewCssStyle.VersionCssStyle;
 import com.nestor87.swords.data.models.Achievement;
 import com.nestor87.swords.data.models.Bonus;
@@ -64,14 +60,15 @@ import com.nestor87.swords.data.models.UsernameAvailabilityResponse;
 import com.nestor87.swords.data.models.VersionResponse;
 import com.nestor87.swords.data.models.Word;
 import com.nestor87.swords.data.network.NetworkService;
-import com.nestor87.swords.data.services.BackgroundService;
 import com.nestor87.swords.data.services.NotificationService;
+import com.nestor87.swords.ui.BaseActivity;
 import com.nestor87.swords.ui.achievements.AchievementsActivity;
 import com.nestor87.swords.ui.bestPlayers.BestPlayersActivity;
 import com.nestor87.swords.ui.bonuses.BonusesActivity;
 import com.nestor87.swords.ui.messages.MessagesActivity;
 import com.nestor87.swords.ui.statistics.StatisticsActivity;
 import com.nestor87.swords.ui.themeChange.ThemeChangeActivity;
+import com.nestor87.swords.utils.SystemUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -87,12 +84,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.nestor87.swords.data.models.Achievement.ACHIEVEMENTS;
-import static com.nestor87.swords.data.models.Achievement.HINTS_CURRENCY;
-import static com.nestor87.swords.data.models.Achievement.HINTS_REDUCE_TRIGGER;
-import static com.nestor87.swords.data.models.Achievement.SCORE_CURRENCY;
-import static com.nestor87.swords.data.models.Achievement.SCORE_INCREASE_TRIGGER;
+import static com.nestor87.swords.utils.SystemUtils.getColorFromTheme;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     private TextView scoreTextView, hintsTextView, wordTextView;
     private DataManager dataManager;
@@ -108,7 +102,6 @@ public class MainActivity extends AppCompatActivity {
     public static final String LOG_TAG = "SWORDS_DEBUG";
     public static final String APP_PREFERENCES_FILE_NAME = "preferences";
     private String lastWordMade = null;
-    public static int startedActivitiesCount = 0;
     public static final String accountManagerPassword = "$2y$10$6UiaU230HP2IuSn.QUeyoulrm7YUBvSMv44QThkasbkQQagZvBj3K";
     public static String uuid;
 
@@ -125,16 +118,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         isThemePreviewMode = getIntent().getIntExtra("themePreviewId", -1) != -1;
 
-        if (!isThemePreviewMode) {
-            DataManager.applyTheme(this);
-        } else {
-            setTheme(DataManager.getThemeResIdByThemeId(getIntent().getIntExtra("themePreviewId", -1)));
+        if (isThemePreviewMode) {
+            setTheme(SystemUtils.getThemeResIdByThemeId(getIntent().getIntExtra("themePreviewId", -1)));
+            setNeedToChangeTheme(false);
         }
         super.onCreate(savedInstanceState);
-        DataManager.adjustFontScale(this);
-
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_FULLSCREEN  | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
         setContentView(R.layout.activity_main);
 
         SharedPreferences preferences = getSharedPreferences(APP_PREFERENCES_FILE_NAME, MODE_PRIVATE);
@@ -206,12 +194,12 @@ public class MainActivity extends AppCompatActivity {
                 Letter lastLetter = lettersPressed.remove(lettersPressed.size() - 1);
                 for (Button letterButton : letterButtons) {
                     if (!letterButton.isEnabled() && letterButton.getText().equals(Character.toString(lastLetter.getSymbol()).toUpperCase())) {
-                        Log.i(LOG_TAG, "btn color: " + letterButton.getCurrentTextColor() + "\nlet color: " + lastLetter.getColor() + "\n" + getColorFromTheme(R.attr.redButtonDisabled) + "\n" + getColorFromTheme(R.attr.buttonText));
+                        Log.i(LOG_TAG, "btn color: " + letterButton.getCurrentTextColor() + "\nlet color: " + lastLetter.getColor() + "\n" + getColorFromTheme(R.attr.redButtonDisabled, MainActivity.this) + "\n" + getColorFromTheme(R.attr.buttonText, MainActivity.this));
                         if (
-                                (letterButton.getCurrentTextColor() == getColorFromTheme(R.attr.redButtonDisabled) && lastLetter.getColor() == Letter.COLOR_RED)
-                                || (letterButton.getCurrentTextColor() == getColorFromTheme(R.attr.blueButtonDisabled) && lastLetter.getColor() == Letter.COLOR_BLUE)
-                                || (letterButton.getCurrentTextColor() == getColorFromTheme(R.attr.yellowButtonDisabled) && lastLetter.getColor() == Letter.COLOR_YELLOW)
-                                || (letterButton.getCurrentTextColor() == getColorFromTheme(R.attr.disabled) && lastLetter.getColor() == Letter.COLOR_NONE)
+                                (letterButton.getCurrentTextColor() == getColorFromTheme(R.attr.redButtonDisabled, MainActivity.this) && lastLetter.getColor() == Letter.COLOR_RED)
+                                || (letterButton.getCurrentTextColor() == getColorFromTheme(R.attr.blueButtonDisabled, MainActivity.this) && lastLetter.getColor() == Letter.COLOR_BLUE)
+                                || (letterButton.getCurrentTextColor() == getColorFromTheme(R.attr.yellowButtonDisabled, MainActivity.this) && lastLetter.getColor() == Letter.COLOR_YELLOW)
+                                || (letterButton.getCurrentTextColor() == getColorFromTheme(R.attr.disabled, MainActivity.this) && lastLetter.getColor() == Letter.COLOR_NONE)
 
                         ) {
                             buttonSetEnabled(letterButton, true);
@@ -315,14 +303,14 @@ public class MainActivity extends AppCompatActivity {
                                 scrollView.addView(markdownView);
 
                                 scrollView.setLayoutParams(
-                                        new ViewGroup.LayoutParams(dataManager.dpToPx(350), dataManager.dpToPx(30))
+                                        new ViewGroup.LayoutParams(SystemUtils.dpToPx(350), SystemUtils.dpToPx(30))
                                 );
 
                                 TextView titleTextView = new TextView(MainActivity.this);
                                 titleTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                                 titleTextView.setTextSize(22);
                                 titleTextView.setPadding(0, 10, 0, 20);
-                                titleTextView.setTextColor(getColorFromTheme(R.attr.scoreAndHintsText));
+                                titleTextView.setTextColor(getColorFromTheme(R.attr.scoreAndHintsText, MainActivity.this));
                                 titleTextView.setTypeface(Typeface.DEFAULT_BOLD);
                                 titleTextView.setText("Доступна новая версия " + response.body().getName());
 
@@ -355,7 +343,7 @@ public class MainActivity extends AppCompatActivity {
                                                 if (intent.getAction().equals(DownloadManager.ACTION_DOWNLOAD_COMPLETE)) {
                                                     ((Button) button).setText("Скачать");
                                                     ((Button) button).setEnabled(true);
-                                                    if (isSamsung()) {
+                                                    if (SystemUtils.isSamsung()) {
                                                         Intent intent1 = getPackageManager()
                                                                 .getLaunchIntentForPackage("com.sec.android.app.myfiles");
                                                         intent1.setAction("samsung.myfiles.intent.action.LAUNCH_MY_FILES");
@@ -388,13 +376,6 @@ public class MainActivity extends AppCompatActivity {
             );
         }
     }
-
-    public static boolean isSamsung() {
-        String manufacturer = Build.MANUFACTURER;
-        if (manufacturer != null) return manufacturer.toLowerCase().equals("samsung");
-        return false;
-    }
-
 
     private void showNameDialog() {
         if (isConnectedToInternet()) {
@@ -494,11 +475,11 @@ public class MainActivity extends AppCompatActivity {
             MainActivity.playSound(R.raw.click, this);
             Button pressedButton = (Button) view;
             Letter pressedLetter = Letter.getLetter(pressedButton.getText().charAt(0)).clone();
-            if (pressedButton.getCurrentTextColor() == getColorFromTheme(R.attr.redButton))
+            if (pressedButton.getCurrentTextColor() == getColorFromTheme(R.attr.redButton, MainActivity.this))
                 pressedLetter.setColor(Letter.COLOR_RED);
-            else if (pressedButton.getCurrentTextColor() == getColorFromTheme(R.attr.blueButton))
+            else if (pressedButton.getCurrentTextColor() == getColorFromTheme(R.attr.blueButton, MainActivity.this))
                 pressedLetter.setColor(Letter.COLOR_BLUE);
-            else if (pressedButton.getCurrentTextColor() == getColorFromTheme(R.attr.yellowButton))
+            else if (pressedButton.getCurrentTextColor() == getColorFromTheme(R.attr.yellowButton, MainActivity.this))
                 pressedLetter.setColor(Letter.COLOR_YELLOW);
 
             buttonSetEnabled(pressedButton, false);
@@ -619,27 +600,14 @@ public class MainActivity extends AppCompatActivity {
 
     private void buttonSetEnabled(Button btn, boolean isEnabled) {
 
-        if (btn.getCurrentTextColor() == getColorFromTheme(R.attr.redButton) || btn.getCurrentTextColor() == getColorFromTheme(R.attr.redButtonDisabled))
-            btn.setTextColor(isEnabled ? getColorFromTheme(R.attr.redButton) : getColorFromTheme(R.attr.redButtonDisabled));
-        else if (btn.getCurrentTextColor() == getColorFromTheme(R.attr.blueButton) || btn.getCurrentTextColor() == getColorFromTheme(R.attr.blueButtonDisabled))
-            btn.setTextColor(isEnabled ? getColorFromTheme(R.attr.blueButton) : getColorFromTheme(R.attr.blueButtonDisabled));
-        else if (btn.getCurrentTextColor() == getColorFromTheme(R.attr.yellowButton) || btn.getCurrentTextColor() == getColorFromTheme(R.attr.yellowButtonDisabled))
-            btn.setTextColor(isEnabled ? getColorFromTheme(R.attr.yellowButton) : getColorFromTheme(R.attr.yellowButtonDisabled));
+        if (btn.getCurrentTextColor() == getColorFromTheme(R.attr.redButton, MainActivity.this) || btn.getCurrentTextColor() == getColorFromTheme(R.attr.redButtonDisabled, MainActivity.this))
+            btn.setTextColor(isEnabled ? getColorFromTheme(R.attr.redButton, MainActivity.this) : getColorFromTheme(R.attr.redButtonDisabled, MainActivity.this));
+        else if (btn.getCurrentTextColor() == getColorFromTheme(R.attr.blueButton, MainActivity.this) || btn.getCurrentTextColor() == getColorFromTheme(R.attr.blueButtonDisabled, MainActivity.this))
+            btn.setTextColor(isEnabled ? getColorFromTheme(R.attr.blueButton, MainActivity.this) : getColorFromTheme(R.attr.blueButtonDisabled, MainActivity.this));
+        else if (btn.getCurrentTextColor() == getColorFromTheme(R.attr.yellowButton, MainActivity.this) || btn.getCurrentTextColor() == getColorFromTheme(R.attr.yellowButtonDisabled, MainActivity.this))
+            btn.setTextColor(isEnabled ? getColorFromTheme(R.attr.yellowButton, MainActivity.this) : getColorFromTheme(R.attr.yellowButtonDisabled, MainActivity.this));
         else
-            btn.setTextColor(isEnabled ? getColorFromTheme(R.attr.buttonText) : getColorFromTheme(R.attr.disabled));
-
-//        else {
-//            double disabledColorCoefficient = 1.2;
-//            if (btn.isEnabled() && !isEnabled) {
-//                btn.setTextColor(Color.rgb((int) Math.round(Color.red(btn.getCurrentTextColor()) / disabledColorCoefficient),
-//                                (int) Math.round(Color.green(btn.getCurrentTextColor()) / disabledColorCoefficient),
-//                                (int) Math.round(Color.blue(btn.getCurrentTextColor()) / disabledColorCoefficient)));
-//            } else if (!btn.isEnabled() && isEnabled) {
-//                btn.setTextColor(Color.rgb((int) Math.round(Color.red(btn.getCurrentTextColor()) * disabledColorCoefficient),
-//                        (int) Math.round(Color.green(btn.getCurrentTextColor()) * disabledColorCoefficient),
-//                        (int) Math.round(Color.blue(btn.getCurrentTextColor()) * disabledColorCoefficient)));
-//            }
-//        }
+            btn.setTextColor(isEnabled ? getColorFromTheme(R.attr.buttonText, MainActivity.this) : getColorFromTheme(R.attr.disabled, MainActivity.this));
 
         btn.setEnabled(isEnabled);
 
@@ -648,24 +616,6 @@ public class MainActivity extends AppCompatActivity {
     public static void buttonSetEnabled(Context context, Button btn, boolean isEnabled) {
         btn.setEnabled(isEnabled);
         btn.setTextColor(isEnabled ? getColorFromTheme(R.attr.buttonText, context) : getColorFromTheme(R.attr.disabled, context));
-    }
-
-    private @ColorInt int getColorFromTheme(int attr) {
-        TypedValue typedValue = new TypedValue();
-        getTheme().resolveAttribute(attr, typedValue, true);
-        return typedValue.data;
-    }
-
-    public static @ColorInt int getColorFromTheme(int attr, Context context) {
-        TypedValue typedValue = new TypedValue();
-        context.getTheme().resolveAttribute(attr, typedValue, true);
-        return typedValue.data;
-    }
-
-    public static @ColorInt int getColorFromTheme(int attr, Resources.Theme theme, Context context) {
-        TypedValue typedValue = new TypedValue();
-        theme.resolveAttribute(attr, typedValue, true);
-        return typedValue.data;
     }
 
     public void setWord(View view) {
@@ -766,7 +716,7 @@ public class MainActivity extends AppCompatActivity {
                         customTitleTextView.setTextSize(22);
                         customTitleTextView.setPadding(0, 0, 0, 10);
                         customTitleTextView.setTypeface(Typeface.DEFAULT_BOLD);
-                        customTitleTextView.setTextColor(getColorFromTheme(R.attr.scoreAndHintsText));
+                        customTitleTextView.setTextColor(getColorFromTheme(R.attr.scoreAndHintsText, MainActivity.this));
 
                         LinearLayout layout = new LinearLayout(this);
                         layout.setOrientation(LinearLayout.VERTICAL);
@@ -938,36 +888,6 @@ public class MainActivity extends AppCompatActivity {
     public void showMessages(View view) {
         startActivity(new Intent(this, MessagesActivity.class));
         Animatoo.animateSlideLeft(this);
-    }
-
-    public static void onActivityStop(Context context) {
-       startedActivitiesCount--;
-       if (startedActivitiesCount == 0) {
-           Intent intent = new Intent(context, BackgroundService.class);
-           intent.putExtra("pause", true);
-           context.startService(intent);
-       }
-
-    }
-
-    public static void onActivityStart(Context context) {
-        startedActivitiesCount++;
-
-        Intent intent = new Intent(context, BackgroundService.class);
-        intent.putExtra("resume", true);
-        context.startService(intent);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        onActivityStart(this);
-    }
-
-    @Override
-    protected void onStop() {
-        onActivityStop(this);
-        super.onStop();
     }
 
     public static void playSound(int resId, Context context) {

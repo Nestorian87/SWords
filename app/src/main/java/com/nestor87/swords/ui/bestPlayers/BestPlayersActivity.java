@@ -1,7 +1,6 @@
 package com.nestor87.swords.ui.bestPlayers;
 
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
@@ -13,12 +12,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.blogspot.atifsoftwares.animatoolib.Animatoo;
-import com.nestor87.swords.data.DataManager;
 import com.nestor87.swords.data.models.UserRankResponse;
+import com.nestor87.swords.ui.BaseActivity;
 import com.nestor87.swords.ui.main.MainActivity;
 import com.nestor87.swords.data.network.NetworkService;
 import com.nestor87.swords.data.models.Player;
 import com.nestor87.swords.R;
+import com.nestor87.swords.utils.SystemUtils;
 
 import java.util.List;
 
@@ -28,7 +28,7 @@ import retrofit2.Response;
 
 import static com.nestor87.swords.ui.main.MainActivity.APP_PREFERENCES_FILE_NAME;
 
-public class BestPlayersActivity extends AppCompatActivity {
+public class BestPlayersActivity extends BaseActivity {
     ProgressBar progressBar;
     TextView selfRank;
     PlayersAdapter playersAdapter;
@@ -36,9 +36,7 @@ public class BestPlayersActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        DataManager.applyTheme(this);
         super.onCreate(savedInstanceState);
-        DataManager.adjustFontScale(this);
         setContentView(R.layout.activity_best_players);
 
         SharedPreferences preferences = getSharedPreferences(APP_PREFERENCES_FILE_NAME, MODE_PRIVATE);
@@ -84,13 +82,13 @@ public class BestPlayersActivity extends AppCompatActivity {
                                         ((View) selfRank.getParent()).setVisibility(View.VISIBLE);
                                         selfRank.setText(response.body().getRank() == -1 ? "-" : Integer.toString(response.body().getRank()));
                                         if (response.body().getRank() == 1) {
-                                            selfRank.setTextColor(MainActivity.getColorFromTheme(R.attr.redButton, BestPlayersActivity.this));
+                                            selfRank.setTextColor(SystemUtils.getColorFromTheme(R.attr.redButton, BestPlayersActivity.this));
                                         } else if (response.body().getRank() == 2) {
-                                            selfRank.setTextColor(MainActivity.getColorFromTheme(R.attr.blueButton, BestPlayersActivity.this));
+                                            selfRank.setTextColor(SystemUtils.getColorFromTheme(R.attr.blueButton, BestPlayersActivity.this));
                                         } else if (response.body().getRank() == 3) {
-                                            selfRank.setTextColor(MainActivity.getColorFromTheme(R.attr.yellowButton, BestPlayersActivity.this));
+                                            selfRank.setTextColor(SystemUtils.getColorFromTheme(R.attr.yellowButton, BestPlayersActivity.this));
                                         } else {
-                                            selfRank.setTextColor(MainActivity.getColorFromTheme(R.attr.wordText, BestPlayersActivity.this));
+                                            selfRank.setTextColor(SystemUtils.getColorFromTheme(R.attr.wordText, BestPlayersActivity.this));
                                         }
                                     }
 
@@ -135,17 +133,5 @@ public class BestPlayersActivity extends AppCompatActivity {
     public void onBackPressed() {
         startActivity(new Intent(this, MainActivity.class));
         Animatoo.animateSlideRight(this);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        MainActivity.onActivityStart(this);
-    }
-
-    @Override
-    protected void onStop() {
-        MainActivity.onActivityStop(this);
-        super.onStop();
     }
 }

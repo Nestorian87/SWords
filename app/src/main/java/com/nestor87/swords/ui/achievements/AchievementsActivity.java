@@ -1,14 +1,13 @@
 package com.nestor87.swords.ui.achievements;
 
 import android.content.Intent;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.blogspot.atifsoftwares.animatoolib.Animatoo;
-import com.nestor87.swords.data.DataManager;
+import com.nestor87.swords.ui.BaseActivity;
 import com.nestor87.swords.ui.main.MainActivity;
 import com.nestor87.swords.R;
 import com.nestor87.swords.data.models.Achievement;
@@ -17,13 +16,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class AchievementsActivity extends AppCompatActivity {
+public class AchievementsActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        DataManager.applyTheme(this);
         super.onCreate(savedInstanceState);
-        DataManager.adjustFontScale(this);
         setContentView(R.layout.activity_achievements);
 
         RecyclerView recyclerView = findViewById(R.id.achievementsList);
@@ -75,17 +72,5 @@ public class AchievementsActivity extends AppCompatActivity {
     public void onBackPressed() {
         startActivity(new Intent(this, MainActivity.class));
         Animatoo.animateSlideRight(this);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        MainActivity.onActivityStart(this);
-    }
-
-    @Override
-    protected void onStop() {
-        MainActivity.onActivityStop(this);
-        super.onStop();
     }
 }
